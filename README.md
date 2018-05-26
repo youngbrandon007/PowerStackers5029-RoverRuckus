@@ -1,14 +1,5 @@
-## Welcome!
+# Powerstackers-5029 Rover Rukus Repository
 
+The repository will have all code of Powerstackers for the 2018-2019 season. 
 
-
-
-
-
-## Getting Help
-*FIRST* 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ftctechnh.github.io/ftc_app/doc/javadoc/index.html    
-
-### Online User Forum
-# Release Information
 **************************************************************************************
