@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
  * Created by Brandon on 7/14/2017.
  */
 
-@TeleOp(name = "PineEx-Tele", group = "Linear Opmode")
+@TeleOp(name = "PineEx-WorldTele", group = "Linear Opmode")
 @Disabled
 
 public class DriveTeleOpExample extends LinearOpMode {

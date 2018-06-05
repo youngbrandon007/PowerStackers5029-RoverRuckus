@@ -4,8 +4,6 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.ConfigExam
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigLinearOpMode;
-
 /**
  * Created by Brandon on 3/31/2017.
  */

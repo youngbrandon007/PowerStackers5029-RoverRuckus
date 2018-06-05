@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensor;
  * Created by ftcpi on 8/7/2017.
  */
 
-public class PineappleColorSensor extends org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensor {
+public class PineappleColorSensor extends PineappleSensor {
     public ColorSensor colorSensor;
     private PineappleResources resources;
 

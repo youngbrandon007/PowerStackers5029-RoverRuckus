@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 
-import org.opencv.core.Scalar;
-
 /**
  * Created by ftcpi on 8/7/2017.
  */

@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResources;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PineappleGyroSensor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleStaticFunction;
 
 import static java.lang.Math.abs;
@@ -17,7 +16,6 @@ import static java.lang.Math.sqrt;
  */
 
 public class PineappleMecanumDrive extends PineappleDriveAbstract {
-
 
     PineappleMecanumDrive(PineappleResources r) {
         super(r);
@@ -54,6 +52,7 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract {
 
 
     }
+
     public void updateMecanum(Gamepad pad, double scale) {
 
         double angle = mecDirectionFromJoystick(pad);
@@ -72,6 +71,18 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract {
 
         setMecanum(angle, speed, rotation, scale);
 
+    }
+
+    public void updateMecanumThirdPerson(Gamepad pad, double scale, double gyroAngle){
+        double angle = mecDirectionFromJoystick(pad);
+        double speed = mecSpeedFromJoystick(pad);
+        double rotation = mecSpinFromJoystick(pad);
+
+        setMecanumThridPerson(angle, speed, rotation, scale, gyroAngle);
+    }
+
+    public void setMecanumThridPerson(double angle, double speed, double rotation, double scale, double gyroAngle){
+        setMecanum(angle - gyroAngle, speed, rotation, scale);
     }
 
     public void setMecanum(double angle, double speed, double rotation, double scale) {
@@ -100,55 +111,10 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract {
         }
 
 
-        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, multipliers[0] * scale, false);
-        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, multipliers[1] * scale, false);
-        setMotor(PineappleEnum.MotorLoc.LEFTBACK, multipliers[2] * scale, false);
-        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, multipliers[3] * scale, false);
-
-    }
-
-
-    public void encoderMecanum(double angle, double speed, String dis, double wheelSize, PineappleGyroSensor gyroSensor) throws InterruptedException {
-        double defaultDirection = gyroSensor.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING);
-
-        angle = angle * Math.PI / 180;
-
-        PineappleEnum.MotorValueType type = getUnit(dis);
-        double distance = getVal(dis);
-
-        int counts = PineappleStaticFunction.distToCounts(distance, type, wheelSize, getDriveCPR());
-
-        double rotation = 0.0;
-
-        double sinDir = sin(angle);
-        double cosDir = cos(angle);
-        int LFTarget = (int) (counts * sinDir);
-        int RFTarget = (int) (counts * cosDir);
-        int LBTarget = (int) (counts * -cosDir);
-        int RBTarget = (int) (counts * -sinDir);
-
-
-        resources.feedBack.sayFeedBack("LeftFront Target", LFTarget);
-        resources.feedBack.sayFeedBack("RightFront Target", RFTarget);
-        resources.feedBack.sayFeedBack("LeftBack Target", LBTarget);
-        resources.feedBack.sayFeedBack("RightBack Target", RBTarget);
-        resources.telemetry.update();
-
-        Thread.sleep(4000);
-
-        startEncoderDrive(PineappleEnum.MotorLoc.LEFTFRONT, 0, LFTarget);
-        startEncoderDrive(PineappleEnum.MotorLoc.RIGHTFRONT, 0, RFTarget);
-        startEncoderDrive(PineappleEnum.MotorLoc.LEFTBACK, 0, LBTarget);
-        startEncoderDrive(PineappleEnum.MotorLoc.RIGHTBACK, 0, RBTarget);
-
-        setMecanum(angle, speed, rotation, 1);
-
-        while (resources.linearOpMode.opModeIsActive() && isBusy()) {
-            //rotation = (gyroSensor.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING) - defaultDirection)/90;
-            setMecanum(angle, speed, rotation, 1);
-            resources.telemetry.update();
-        }
-        stop();
+        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, multipliers[0] * scale, true);
+        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, multipliers[1] * scale, true);
+        setMotor(PineappleEnum.MotorLoc.LEFTBACK, multipliers[2] * scale, true);
+        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, multipliers[3] * scale, true);
 
     }
 

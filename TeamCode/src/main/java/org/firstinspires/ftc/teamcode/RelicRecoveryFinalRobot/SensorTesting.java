@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
  * Created by young on 2/9/2018.
  */
 @Autonomous(name = "Sensor Test", group = "")
+@Disabled
 public class SensorTesting extends Config {
     @Override
     public void runOpMode() throws InterruptedException {

@@ -64,8 +64,6 @@ public class PineappleMotor {
 
     private void setupEncoder(){
         motorObject.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        resources.linearOpMode.idle();
-
         motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
@@ -102,64 +100,65 @@ public class PineappleMotor {
 
     //Function called by user
 
-    public void encoderDrive(double speed, double value, PineappleEnum.MotorValueType motorValueType, double wheelSize) {
-        if (motorValueType == PineappleEnum.MotorValueType.COUNTS) {
-            encoderDriveCounts(speed, (int) value);
-        } else {
-            encoderDriveDist(speed, value, wheelSize, motorValueType);
-
-        }
-    }
+//    public void encoderDrive(double speed, double value, PineappleEnum.MotorValueType motorValueType, double wheelSize) {
+//        if (motorValueType == PineappleEnum.MotorValueType.COUNTS) {
+//            encoderDriveCounts(speed, (int) value);
+//        } else {
+//            encoderDriveDist(speed, value, wheelSize, motorValueType);
+//
+//        }
+//    }
 
     //Main encoder drive function
 
-    private void encoderDriveCounts(double speed, int counts){
-        int target;
-        if(resources.linearOpMode.opModeIsActive()){
-            if (PineappleStaticFunction.isPositive(speed) != PineappleStaticFunction.isPositive(counts)){counts=-counts;}
-
-            target = motorObject.getCurrentPosition() + counts;
-
-            motorObject.setTargetPosition(target);
-            motorObject.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            motorObject.setPower(speed);
-
-            while (resources.linearOpMode.opModeIsActive() && motorObject.isBusy()){
-                resources.feedBack.sayFeedBack(motorName + " encoder", motorObject.getCurrentPosition());
-            }
-
-            motorObject.setPower(0);
-
-            motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-    }
+//    private void encoderDriveCounts(double speed, int counts){
+//        int target;
+//
+//        if(resources.opMode.opModeIsActive()){
+//            if (PineappleStaticFunction.isPositive(speed) != PineappleStaticFunction.isPositive(counts)){counts=-counts;}
+//
+//            target = motorObject.getCurrentPosition() + counts;
+//
+//            motorObject.setTargetPosition(target);
+//            motorObject.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//            motorObject.setPower(speed);
+//
+//            while (resources.opMode.opModeIsActive() && motorObject.isBusy()){
+//                resources.feedBack.sayFeedBack(motorName + " encoder", motorObject.getCurrentPosition());
+//            }
+//
+//            motorObject.setPower(0);
+//
+//            motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        }
+//    }
 
     //Drive dist
     //
     //input distance for wheel to move
 
-    private void encoderDriveDist(double speed, double inches, double wheelSize, PineappleEnum.MotorValueType motorValueType ){
-        int counts = PineappleStaticFunction.distToCounts(inches, motorValueType,wheelSize, cpr);
-        encoderDriveCounts(speed, counts);
-    }
+//    private void encoderDriveDist(double speed, double inches, double wheelSize, PineappleEnum.MotorValueType motorValueType ){
+//        int counts = PineappleStaticFunction.distToCounts(inches, motorValueType,wheelSize, cpr);
+//        encoderDriveCounts(speed, counts);
+//    }
 
     //Encoder control functions
     //
     //start and stop function for motor
 
-    public void encoderStart(double speed, int counts){
-        int target;
-        if(resources.linearOpMode.opModeIsActive()){
-            if (PineappleStaticFunction.isPositive(speed) != PineappleStaticFunction.isPositive(counts)){counts=-counts;}
-            target = motorObject.getCurrentPosition() + counts;
-
-            motorObject.setTargetPosition(target);
-            motorObject.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            motorObject.setPower(speed);
-        }
-    }
+//    public void encoderStart(double speed, int counts){
+//        int target;
+//        if(resources.opMode.opModeIsActive()){
+//            if (PineappleStaticFunction.isPositive(speed) != PineappleStaticFunction.isPositive(counts)){counts=-counts;}
+//            target = motorObject.getCurrentPosition() + counts;
+//
+//            motorObject.setTargetPosition(target);
+//            motorObject.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//            motorObject.setPower(speed);
+//        }
+//    }
 
     public void encoderStop(){
         motorObject.setPower(0);
@@ -204,7 +203,7 @@ public class PineappleMotor {
 
     //Private Function
     //
-    //these are used to calculate the output to the motor for Tele such as scaling and range
+    //these are used to calculate the output to the motor for WorldTele such as scaling and range
 
     private double fixValue(double input) {
         input = scale(input);

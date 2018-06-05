@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensor;
  * Created by ftcpi on 8/7/2017.
  */
 
-public class PineappleGyroSensor extends org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensor {
+public class PineappleGyroSensor extends PineappleSensor {
     public GyroSensor gyroSensor;
     private PineappleResources resources;
     public PineappleGyroSensor (String name, PineappleResources pineappleResources){

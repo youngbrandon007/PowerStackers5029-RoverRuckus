@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 
-import java.io.Console;
 import java.text.DecimalFormat;
 
 /**
  * Created by Brandon on 1/8/2018.
  */
 @Autonomous(name = "PIDTUNE")
+@Disabled
 public class PIDTuning extends Config {
 
     @Override
@@ -41,7 +41,7 @@ public class PIDTuning extends Config {
         telemetry.addData("PID", "Tuning Finished Press play");
         telemetry.update();
         waitForStart();
-        robotHandler.auto.gyroTurnPID(90, P, I, D, navx_device);
+        //robotHandler.auto.gyroTurnPID(90, P, I, D, navx_device);
 
     }
 

@@ -1,40 +1,17 @@
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia;
 
-import android.graphics.Bitmap;
-import android.support.annotation.Nullable;
-import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.vuforia.CameraCalibration;
-import com.vuforia.Image;
-import com.vuforia.Matrix34F;
 import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.Tool;
-import com.vuforia.Vec3F;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.R;
-import org.opencv.android.Utils;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.imgproc.Moments;
-
-import java.util.Arrays;
-
-import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.BLUE_RED;
-import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum.JewelState.RED_BLUE;
 
 
 /**
@@ -70,11 +47,11 @@ public class VuforiaTest extends LinearOpMode {
         while (opModeIsActive()&& !hasJewelConfig){
             state = PineappleRelicRecoveryVuforia.getJewelConfig(PineappleRelicRecoveryVuforia.getImageFromFrame(locale.getFrameQueue().take(), PIXEL_FORMAT.RGB565),track, locale.getCameraCalibration(), telemetry);
             if (state == PineappleEnum.JewelState.NON_NON) {
-                telemetry.addData("Config ", "NON");
+                telemetry.addData("WorldConfig ", "NON");
             } else if (state == PineappleEnum.JewelState.BLUE_RED) {
-                telemetry.addData("Config ", "BLUE RED");
+                telemetry.addData("WorldConfig ", "BLUE RED");
             } else if (state == PineappleEnum.JewelState.RED_BLUE) {
-                telemetry.addData("Config ", "RED BLUE");
+                telemetry.addData("WorldConfig ", "RED BLUE");
             }
             telemetry.update();
         }

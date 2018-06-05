@@ -1,0 +1,451 @@
+package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
+
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.PineappleSettings;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResources;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobotConstants;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensors.PineappleGyroSensor;
+
+import java.util.ArrayList;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.cos;
+import static java.lang.Math.round;
+import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
+
+/**
+ * Created by ftcpi on 6/29/2017.
+ */
+
+public class PineappleDrive {
+
+    private PineappleResources resources;
+
+    public PineappleEnum.DriveType driveType = PineappleEnum.DriveType.TANK;
+    public PineappleDrive(PineappleResources res) {
+        resources = res;
+    }
+    public void setDriveType(PineappleEnum.DriveType type){
+        driveType = type;
+    }
+    //tank and mecanum
+    public void update(double leftPower, double rightPower) {
+        switch (driveType) {
+            case TANK:
+                setMotor(PineappleEnum.MotorLoc.LEFT, leftPower, false);
+                setMotor(PineappleEnum.MotorLoc.RIGHT, rightPower, false);
+                break;
+            case MECANUM:
+                setMotor(PineappleEnum.MotorLoc.LEFTFRONT, leftPower, false);
+                setMotor(PineappleEnum.MotorLoc.LEFTBACK, leftPower, false);
+                setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, rightPower, false);
+                setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightPower, false);
+                break;
+        }
+    }
+    //tank and mecanum
+    public  void setPower(double leftPower, double rightPower) {
+        switch (driveType) {
+            case TANK:
+                setMotor(PineappleEnum.MotorLoc.LEFT, leftPower, true);
+                setMotor(PineappleEnum.MotorLoc.RIGHT, rightPower, true);
+                break;
+            case MECANUM:
+                setMotor(PineappleEnum.MotorLoc.LEFTFRONT, leftPower, true);
+                setMotor(PineappleEnum.MotorLoc.LEFTBACK, leftPower, true);
+                setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, rightPower, true);
+                setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightPower, true);
+                break;
+        }
+    }
+
+    //Mecanum Drive stuff
+    //macanum
+    private static double mecDirectionFromJoystick(Gamepad pad) {
+        return Math.atan2(-pad.left_stick_y, pad.left_stick_x);
+    }
+    //mecanum
+    private static double mecSpeedFromJoystick(Gamepad pad) {
+        // If the joystick is close enough to the middle, return a 0 (no movement)
+        if (abs(pad.left_stick_x) < 0.15f
+                && abs(pad.left_stick_y) < 0.15f) {
+            return 0.0;
+        } else {
+            return sqrt((pad.left_stick_y * pad.left_stick_y)
+                    + (pad.left_stick_x * pad.left_stick_x));
+        }
+    }
+
+    //Mecanum
+    public void encoderMecanum(double angle, double speed, String dis, double wheelSize, PineappleEnum.MotorType motorType  , PineappleGyroSensor gyroSensor) throws InterruptedException {
+        double defaultDirection = gyroSensor.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING);
+
+        angle = angle*Math.PI/180;
+
+        PineappleEnum.MotorValueType type = getUnit(dis);
+        double distance = getVal(dis);
+
+        int counts = distToCounts(distance, type, wheelSize, motorType);
+
+        double rotation = 0.0;
+
+        double sinDir = sin(angle);
+        double cosDir = cos(angle);
+        int LFTarget = (int)(counts * sinDir) ;
+        int RFTarget = (int)(counts * cosDir) ;
+        int LBTarget = (int)(counts * -cosDir);
+        int RBTarget = (int)(counts * -sinDir);
+
+
+        resources.feedBack.sayFeedBack("LeftFront Target", LFTarget);
+        resources.feedBack.sayFeedBack("RightFront Target", RFTarget);
+        resources.feedBack.sayFeedBack("LeftBack Target", LBTarget);
+        resources.feedBack.sayFeedBack("RightBack Target", RBTarget);
+        resources.telemetry.update();
+
+        Thread.sleep(4000);
+
+        startEncoderDrive(PineappleEnum.MotorLoc.LEFTFRONT, 0 ,LFTarget);
+        startEncoderDrive(PineappleEnum.MotorLoc.RIGHTFRONT, 0 ,RFTarget);
+        startEncoderDrive(PineappleEnum.MotorLoc.LEFTBACK, 0 ,LBTarget);
+        startEncoderDrive(PineappleEnum.MotorLoc.RIGHTBACK, 0 ,RBTarget);
+
+        setMecanum(angle, speed, rotation, 1);
+
+        while(resources.linearOpMode.opModeIsActive() && isBusy()){
+            //rotation = (gyroSensor.getValue(PineappleEnum.PineappleSensorEnum.GSHEADING) - defaultDirection)/90;
+            setMecanum(angle, speed, rotation, 1);
+            resources.telemetry.update();
+        }
+        stop();
+
+    }
+
+    //Mecanum
+    public double[] getXY(double rad, double counts){
+
+        double[] xy = new double[2];
+        double x = 0;
+        double y = 0;
+
+        x = (Math.cos(rad)*counts);
+        y = (Math.sin(rad)*counts);
+        x = round(x, 4);
+        y = round(y, 4);
+        xy[0] = x;
+        xy[1] = y;
+        return xy;
+    }
+    //static
+    public static double round(double val, int place){
+        return Math.round(val*Math.pow(10, place))/Math.pow(10,place);
+    }
+    //Mecanum
+    public void setMecanum(double angle, double speed, double rotation, double scale){
+        angle += Math.PI/4;
+        speed *= Math.sqrt(2);
+
+        double sinDir = sin(angle);
+        double cosDir = cos(angle);
+        double multipliers[] = new double[4];
+        multipliers[0] = (speed * sinDir) + rotation;
+        multipliers[1] = (speed * cosDir) + rotation;
+        multipliers[2] = (speed * -cosDir) + rotation;
+        multipliers[3] = (speed * -sinDir) + rotation;
+
+        double largest = abs(multipliers[0]);
+        for (int i = 1; i < 4; i++) {
+            if (abs(multipliers[i]) > largest)
+                largest = abs(multipliers[i]);
+        }
+
+        // Only normalize multipliers if largest exceeds 1.0
+        if (largest > 1.0) {
+            for (int i = 0; i < 4; i++) {
+                multipliers[i] = multipliers[i] / largest;
+            }
+        }
+
+
+        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, multipliers[0] * scale, false);
+        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, multipliers[1] * scale, false);
+        setMotor(PineappleEnum.MotorLoc.LEFTBACK, multipliers[2] * scale, false);
+        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, multipliers[3] * scale, false);
+
+    }
+    //Mecanum
+    public void updateMecanum(Gamepad pad, double scale) {
+
+        double angle = mecDirectionFromJoystick(pad);
+        double speed = mecSpeedFromJoystick(pad);
+        double rotation = mecSpinFromJoystick(pad);
+
+        setMecanum(angle, speed, rotation, scale);
+
+    }
+    //Mecanum
+    private static double mecSpinFromJoystick(Gamepad pad) {
+        return (abs(pad.right_stick_x) > 0.15f)
+                ? pad.right_stick_x : 0.0;
+    }
+
+    //Code source https://www.reddit.com/r/FRC/comments/2ryyrw/programming_mecanum_wheels/
+    //NOT important old way of doing the math
+    public void updateMecanum(double forwardBack, double leftRight, double turn){
+        double leftFront = turn + forwardBack + leftRight;
+        double rightFront = -turn + forwardBack - leftRight;
+        double leftBack = turn + forwardBack - leftRight;
+        double rightBack = -turn + forwardBack + leftRight;
+
+        double f = 1;
+
+        if(abs(leftFront) > f) f = leftFront;
+        if(abs(rightFront) > f) f = rightFront;
+        if(abs(leftBack) > f) f = leftBack;
+        if(abs(rightBack) > f) f = rightBack;
+
+        setPowerMecanum(leftFront/f, rightFront/f, leftBack/f, rightBack/f);
+    }
+    //not important repeat function only used once on non-important function that is no longer being used
+    public void setPowerMecanum(double leftFront, double rightFront, double leftBack, double rightBack){
+        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, leftFront, true);
+        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, rightFront, true);
+        setMotor(PineappleEnum.MotorLoc.LEFTBACK, leftBack, true);
+        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightBack, true);
+    }
+    //tank
+    public void setDirectPower(double leftPower, double rightPower) {
+        setMotor(PineappleEnum.MotorLoc.LEFT, leftPower, true);
+        setMotor(PineappleEnum.MotorLoc.RIGHT, rightPower, true);
+    }
+    //abstract
+    public void stop() {
+        setMotor(PineappleEnum.MotorLoc.LEFT, 0, true);
+        setMotor(PineappleEnum.MotorLoc.RIGHT, 0, true);
+        setMotor(PineappleEnum.MotorLoc.LEFTBACK, 0, true);
+        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, 0, true);
+        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, 0, true);
+        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, 0, true);
+    }
+    //abstract
+    public void setMotor(PineappleEnum.MotorLoc location, double power, boolean direct) {
+        ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors(location);
+        for (PineappleMotor motor : motors) {
+            if (direct) {
+                motor.setDirectPower(power);
+            } else {
+                motor.setDirectPower(scalePower(power));
+            }
+        }
+    }
+    //abstract
+    void startEncoderDrive(PineappleEnum.MotorLoc location, double power, int counts) {
+        ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors(location);
+        for (PineappleMotor motor : motors) {
+            int target = motor.motorObject.getCurrentPosition() + counts;
+            motor.motorObject.setTargetPosition(target);
+            motor.motorObject.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setDirectPower(power);
+
+        }
+    }
+    //abstract
+    boolean isBusy() {
+        boolean output = false;
+        ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors();
+        for (PineappleMotor motor : motors) {
+            resources.feedBack.sayFeedBackWithOutUpdate(motor.motorName + " encoder", motor.motorObject.getCurrentPosition());
+            if (motor.motorObject.isBusy()) {
+                output = true;
+            }
+
+        }
+
+        return output;
+    }
+    //abstract
+    void stopEncoderDrive(PineappleEnum.MotorLoc location) {
+        ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors(location);
+        for (PineappleMotor motor : motors) {
+            motor.motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+    }
+    //abstract
+    double getDriveCPR()  {
+        ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors();
+        double lastCPR = 0;
+        boolean firsttime = true;
+        for (PineappleMotor motor : motors) {
+            if (firsttime) {
+                lastCPR = motor.cpr;
+                firsttime = false;
+            } else {
+                if (lastCPR != motor.cpr) {
+                    /////////////////////////
+                    //Change to error later//
+                    /////////////////////////
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    resources.feedBack.sayFeedBackWithOutUpdate("ERROR", "Drive motor incompatiable");
+                    resources.feedBack.update();
+                }
+                lastCPR = motor.cpr;
+            }
+        }
+        return lastCPR;
+    }
+    //abstract
+    PineappleEnum.MotorType getDriveType() {
+        ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors();
+        PineappleEnum.MotorType motorType = PineappleEnum.MotorType.UNDI;
+        boolean firsttime = true;
+        for (PineappleMotor motor : motors) {
+            if (firsttime) {
+                motorType = motor.motorType;
+                firsttime = false;
+            } else {
+                if (motorType != motor.motorType) {
+                    resources.feedBack.sayFeedBackWithOutUpdate("ERROR", "Drive motors incompatiable");
+                    resources.feedBack.update();
+//                    wait(2000);
+                }
+                motorType = motor.motorType;
+            }
+        }
+        return motorType;
+    }
+
+
+
+    ///////////////////////////
+    //Drive Encoder Functions//
+    ///////////////////////////
+
+    //tank
+    public void encoderDrive(double speed, String distance, double wheelSize) {
+        PineappleEnum.MotorValueType motorValueType = getUnit(distance);
+         double value = getVal(distance);
+        if (motorValueType == PineappleEnum.MotorValueType.COUNTS) {
+            encoderDriveCounts(speed, (int) value);
+        } else {
+            encoderDriveDist(speed, distance, wheelSize);
+
+        }
+    }
+    //abstract
+    private PineappleEnum.MotorValueType getUnit(String val) {
+        val = val.substring(val.length() - 2);
+        switch (val) {
+            case "in":
+                return PineappleEnum.MotorValueType.INCH;
+            case "ct":
+                return PineappleEnum.MotorValueType.COUNTS;
+            case "dg":
+                return PineappleEnum.MotorValueType.DEGREES;
+            case "cm":
+                return PineappleEnum.MotorValueType.CM;
+            case "rd":
+                return PineappleEnum.MotorValueType.RADIANS;
+            case "mt":
+                return PineappleEnum.MotorValueType.METER;
+            case "ft":
+                return PineappleEnum.MotorValueType.FEET;
+            default:
+                return PineappleEnum.MotorValueType.INCH;
+        }
+    }
+    //abstract
+    private double getVal(String val){
+        return Double.parseDouble(val.substring(0, val.length() - 2));
+    }
+    //tank
+    private void encoderDriveCounts(double speed, int counts) {
+        if (resources.linearOpMode.opModeIsActive()) {
+            if (isPositive(speed) != isPositive(counts)) {
+                counts = -counts;
+            }
+
+            startEncoderDrive(PineappleEnum.MotorLoc.LEFT, speed, counts);
+            startEncoderDrive(PineappleEnum.MotorLoc.RIGHT, speed, counts);
+
+            while (resources.linearOpMode.opModeIsActive() && isBusy()){
+                resources.feedBack.update();
+            }
+
+            stop();
+            isBusy();
+            resources.feedBack.update();
+            stopEncoderDrive(PineappleEnum.MotorLoc.LEFT);
+            stopEncoderDrive(PineappleEnum.MotorLoc.RIGHT);
+
+        }
+    }
+    //abstract
+    private int distToCounts(double value, PineappleEnum.MotorValueType motorValueType, double wheelSize, PineappleEnum.MotorType motorType) {
+        double cpr = getDriveCPR();
+        switch (motorValueType) {
+            case INCH:
+                return (int) (cpr * (value / (PineappleRobotConstants.PI * wheelSize)));
+            case DEGREES:
+                return (int) (cpr * (value / 360));
+            case CM:
+                return (int) (cpr * ((value * PineappleRobotConstants.CMTOINCH) / (PineappleRobotConstants.PI * wheelSize)));
+            case RADIANS:
+                return (int) (cpr * (value / (2 * PineappleRobotConstants.PI)));
+            case METER:
+                return (int) (cpr * (((value*100) * PineappleRobotConstants.CMTOINCH) / (PineappleRobotConstants.PI * wheelSize)));
+            case FEET:
+                return (int) (cpr * ((value*12) / (PineappleRobotConstants.PI * wheelSize)));
+            case YARDS:
+                return (int) (cpr * ((value*36) / (PineappleRobotConstants.PI * wheelSize)));
+            default:
+                return 0;
+        }
+    }
+    //static
+    private boolean isPositive(double value) {
+        if (value >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //tank
+    private void encoderDriveDist(double speed, String distance, double wheelSize) {
+        PineappleEnum.MotorValueType motorValueType = getUnit(distance);
+        double value = getVal(distance);
+        int counts = distToCounts(value, motorValueType, wheelSize, getDriveType());
+        String countsSring = counts+"ct";
+        encoderDrive(speed, countsSring, wheelSize);
+    }
+    //abstract
+    public double scalePower(double in){
+
+        boolean pos = true;
+
+        if(in < 0){
+            pos = false;
+        }
+
+        if(PineappleSettings.driveExponential){
+            in = in*in;
+            if(!pos){
+
+                in = -in;
+            }
+        }
+
+        double out = in * PineappleSettings.driveScaleSpeed;
+
+        return out;
+    }
+}

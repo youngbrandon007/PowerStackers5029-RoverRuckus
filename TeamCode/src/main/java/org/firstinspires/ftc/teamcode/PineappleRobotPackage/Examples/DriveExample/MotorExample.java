@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
 @TeleOp(name = "PineEx-Motor", group = "Linear Opmode")
 @Disabled
 
-public class MotorExample extends LinearOpMode{
+public class MotorExample extends LinearOpMode {
     PineappleRobot robot;
 
     PineappleMotor testMotor;

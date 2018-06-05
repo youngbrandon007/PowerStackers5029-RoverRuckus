@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryFinalRobot;
 
 import com.kauailabs.navx.ftc.navXPIDController;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by Brandon on 1/8/2018.
  */
 @TeleOp(name = "TeleOp")
-
+@Disabled
 public class Tele extends Config {
     @Override
     public void runOpMode() throws InterruptedException {

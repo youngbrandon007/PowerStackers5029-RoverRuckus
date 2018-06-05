@@ -17,19 +17,19 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
 @Disabled
 
 public class OneMotorEncoderExample extends LinearOpMode {
-    org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot robot;
+    PineappleRobot robot;
 
     PineappleMotor motor;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        robot = new org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot(this);
+        robot = new PineappleRobot(this);
 
         motor = robot.motorHandler.newMotor("motor", 1, true , true, PineappleEnum.MotorType.NEV40);
 
         waitForStart();
-        motor.encoderDrive(1, 90, PineappleEnum.MotorValueType.DEGREES, 4);
+        //motor.encoderDrive(1, 90, PineappleEnum.MotorValueType.DEGREES, 4);
 
         sleep(1000);
         telemetry.addData("Encoder", motor.motorObject.getCurrentPosition());
