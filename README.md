@@ -3,3 +3,11 @@
 The repository will have all code of Powerstackers for the 2018-2019 season. 
 
 **************************************************************************************
+
+### Competition Robot
+
+Main robot code will be in [teamcode/RoverRukus](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/) folder.
+
+### MiniBot Robots
+
+Minibot code including OpenCV projects will be in the [teamcode/MiniBots](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/) folder.
