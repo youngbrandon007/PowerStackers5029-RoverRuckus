@@ -10,7 +10,9 @@ Main robot code will be in [teamcode/RoverRukus](TeamCode/src/main/java/org/firs
 
 ## MiniBot Robots
 
-Minibot code projects will be in the [teamcode/MiniBots](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/MiniBots) folder. This will include all summer projects and work with OpenCV
+Minibot code projects will be in the [teamcode/MiniBots](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/MiniBots) folder.
+
+---
 
 Current MiniBot projects:
 
