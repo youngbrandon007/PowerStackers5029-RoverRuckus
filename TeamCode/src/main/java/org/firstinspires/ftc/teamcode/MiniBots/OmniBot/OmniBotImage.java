@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.MiniBots.OmniBot;
 
 import android.graphics.Bitmap;
 
@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia;
+import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -35,6 +36,14 @@ public class OmniBotImage extends  OmniBotConfig{
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
     VuforiaTrackableDefaultListener listener;
+
+    static{
+        if(!OpenCVLoader.initDebug()){
+
+        }else{
+
+        }
+    }
 
     @Override
     public void init() {
