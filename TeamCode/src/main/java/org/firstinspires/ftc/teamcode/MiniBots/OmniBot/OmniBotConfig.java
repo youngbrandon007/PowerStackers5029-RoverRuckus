@@ -18,10 +18,10 @@ abstract public class OmniBotConfig extends PineappleConfigOpMode{
     public void config(OpMode opMode) {
         robotHandler = new PineappleRobot(opMode);
 
-        leftFront = robotHandler.motorHandler.newDriveMotor("LF", PineappleEnum.MotorLoc.LEFTFRONT);
-        rightFront = robotHandler.motorHandler.newDriveMotor("RF", PineappleEnum.MotorLoc.RIGHTFRONT);
-        leftBack = robotHandler.motorHandler.newDriveMotor("LB", PineappleEnum.MotorLoc.LEFTBACK);
-        rightBack = robotHandler.motorHandler.newDriveMotor("RB", PineappleEnum.MotorLoc.RIGHTBACK);
+//        leftFront = robotHandler.motorHandler.newDriveMotor("LF", PineappleEnum.MotorLoc.LEFTFRONT);
+//        rightFront = robotHandler.motorHandler.newDriveMotor("RF", PineappleEnum.MotorLoc.RIGHTFRONT);
+//        leftBack = robotHandler.motorHandler.newDriveMotor("LB", PineappleEnum.MotorLoc.LEFTBACK);
+//        rightBack = robotHandler.motorHandler.newDriveMotor("RB", PineappleEnum.MotorLoc.RIGHTBACK);
 
     }
 }
