@@ -77,45 +77,21 @@ public class OmniBotImage extends  OmniBotConfig{
     @Override
     public void loop() {
         try {
-            getloc(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565), listener, vuforia.getCameraCalibration(), telemetry);
+            getloc(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),  telemetry);
         }catch(Exception e){
             telemetry.addData("Error", e.getMessage());
         }
     }
 
-    public static double getloc(Image img, VuforiaTrackableDefaultListener track, CameraCalibration camCal, Telemetry telemetry) {
+    public static double getloc(Image img,  Telemetry telemetry) {
         try {
-            //OpenGLMatrix pose = track.getRawPose();
-            //if (pose != null && img != null && img.getPixels() != null) {
-            //Matrix34F rawPose = new Matrix34F();
-            //float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
-            //rawPose.setData(poseData);
-            //float[][] corners = new float[4][2];
-            //corners[0] = Tool.projectPoint(camCal, rawPose, new Vec3F(120, -55, 100)).getData();//UL TODO FIND NEW LOCATIONS
-            //corners[1] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -55, 100)).getData();//UR TODO FIND NEW LOCATIONS
-            //corners[2] = Tool.projectPoint(camCal, rawPose, new Vec3F(340, -300, 100)).getData();//LR TODO FIND NEW LOCATIONS
-            //corners[3] = Tool.projectPoint(camCal, rawPose, new Vec3F(120, -300, 100)).getData();//LL TODO FIND NEW LOCATIONS
             Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
             ByteBuffer pix = img.getPixels();
             bm.copyPixelsFromBuffer(pix);
             telemetry.addData("size" , "" + img.getWidth() +"," + img.getHeight());
-            telemetry.update();
             SaveImage(bm, "original");
             Mat crop = new Mat(bm.getHeight(), bm.getWidth(), CvType.CV_8UC3); //C3
             Utils.bitmapToMat(bm, crop);
-//                float x = Math.min(Math.min(corners[1][0], corners[3][0]), Math.min(corners[0][0], corners[2][0]));
-//                float y = Math.min(Math.min(corners[1][1], corners[3][1]), Math.min(corners[0][1], corners[2][1]));
-//                float width = Math.max(Math.abs(corners[0][0] - corners[2][0]), Math.abs(corners[1][0] - corners[3][0]));
-//                float height = Math.max(Math.abs(corners[0][1] - corners[2][1]), Math.abs(corners[1][1] - corners[3][1]));
-//                x = Math.max(x, 0);
-//                y = Math.max(y, 0);
-//                if (width < 20 || height < 20) {
-//                    return NON_NON;
-//                }
-            //width = (x + width > crop.cols()) ? crop.cols() - x : width;
-            //height = (x + height > crop.rows()) ? crop.rows() - x : height;
-            //Mat cropped = new Mat(crop, new Rect((int) x, (int) y, (int) width, (int) height));
-            //SaveImage(matToBitmap(cropped), "crop");
             Scalar min = new Scalar(0,0,0);
             Scalar max = new Scalar(100,100,255);
             Imgproc.cvtColor(crop, crop, Imgproc.COLOR_RGB2HSV_FULL);
@@ -125,6 +101,21 @@ public class OmniBotImage extends  OmniBotConfig{
             SaveImage(matToBitmap(mask), "mask");
             Moments mmnts = Imgproc.moments(mask, true);
             telemetry.addData("Data", mmnts.get_m10() / mmnts.get_m00());
+            int[] color = getARGB(bm.getPixel(0,0));
+            telemetry.addData("r",color[0]);
+            telemetry.addData("g",color[1]);
+            telemetry.addData("b",color[2]);
+            telemetry.addData("Position",
+                    mmnts.get_m00() + "," +
+                    mmnts.get_m01() + "," +
+                    mmnts.get_m02() + "," +
+                    mmnts.get_m03() + "," +
+                    mmnts.get_m10() + "," +
+                    mmnts.get_m11() + "," +
+                    mmnts.get_m12() + "," +
+                    mmnts.get_m20() + "," +
+                    mmnts.get_m21() + "," +
+                    mmnts.get_m30() + ",");
             return mmnts.get_m10() / mmnts.get_m00();
 
             //}
@@ -135,4 +126,11 @@ public class OmniBotImage extends  OmniBotConfig{
         }
     }
 
+
+    public static int[] getARGB(int p){
+        int R = (p & 0xff0000) >> 16;
+        int G = (p & 0xff00) >> 8;
+        int B = p & 0xff;
+        return new int[]{R,G,B};
+    }
 }
