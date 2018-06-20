@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.MiniBots.OmniBot;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.vuforia.CameraCalibration;
@@ -92,8 +93,8 @@ public class OmniBotImage extends  OmniBotConfig{
             SaveImage(bm, "original");
             Mat crop = new Mat(bm.getHeight(), bm.getWidth(), CvType.CV_8UC3); //C3
             Utils.bitmapToMat(bm, crop);
-            Scalar min = new Scalar(0,0,0);
-            Scalar max = new Scalar(100,100,255);
+            Scalar min = rgbToScalar(200,50,0);
+            Scalar max = rgbToScalar(255,150,100);
             Imgproc.cvtColor(crop, crop, Imgproc.COLOR_RGB2HSV_FULL);
             Mat mask = new Mat();
             //new Scalar(50, 20, 70), new Scalar(255, 255, 120)
@@ -105,17 +106,6 @@ public class OmniBotImage extends  OmniBotConfig{
             telemetry.addData("r",color[0]);
             telemetry.addData("g",color[1]);
             telemetry.addData("b",color[2]);
-            telemetry.addData("Position",
-                    mmnts.get_m00() + "," +
-                    mmnts.get_m01() + "," +
-                    mmnts.get_m02() + "," +
-                    mmnts.get_m03() + "," +
-                    mmnts.get_m10() + "," +
-                    mmnts.get_m11() + "," +
-                    mmnts.get_m12() + "," +
-                    mmnts.get_m20() + "," +
-                    mmnts.get_m21() + "," +
-                    mmnts.get_m30() + ",");
             return mmnts.get_m10() / mmnts.get_m00();
 
             //}
@@ -132,5 +122,11 @@ public class OmniBotImage extends  OmniBotConfig{
         int G = (p & 0xff00) >> 8;
         int B = p & 0xff;
         return new int[]{R,G,B};
+    }
+
+    public static Scalar rgbToScalar(int r, int g, int b){
+        float[] hsv = new float[3];
+        Color.RGBToHSV(r, g, b, hsv);
+        return new Scalar(hsv[0], hsv[1], hsv[2]);
     }
 }
