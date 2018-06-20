@@ -39,13 +39,13 @@ public class OmniBotImage extends  OmniBotConfig{
     VuforiaTrackableDefaultListener listener;
 
 
-
+    static String load = "Not loaded!";
 
     static{
         if(!OpenCVLoader.initDebug()){
-
+            load = "Error Loading!";
         }else{
-
+            load = "Loaded Successfully!";
         }
     }
 
@@ -67,6 +67,11 @@ public class OmniBotImage extends  OmniBotConfig{
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         listener = (VuforiaTrackableDefaultListener) relicTemplate.getListener();
         relicTrackables.activate();
+    }
+
+    @Override
+    public void init_loop(){
+        telemetry.addData("OpenCV", load);
     }
 
     @Override
@@ -93,7 +98,7 @@ public class OmniBotImage extends  OmniBotConfig{
             Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
             ByteBuffer pix = img.getPixels();
             bm.copyPixelsFromBuffer(pix);
-            telemetry.addData("size" , "" + img.getWidth() + img.getHeight());
+            telemetry.addData("size" , "" + img.getWidth() +"," + img.getHeight());
             telemetry.update();
             SaveImage(bm, "original");
             Mat crop = new Mat(bm.getHeight(), bm.getWidth(), CvType.CV_8UC3); //C3
