@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.FontFormating;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigOpMode;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSConfigOpMode;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
@@ -22,7 +22,7 @@ import static org.firstinspires.ftc.teamcode.RelicRecoveryWorlds.WorldConstants.
  * Created by Brandon on 1/8/2018.
  */
 
-public abstract class WorldConfig extends PineappleConfigOpMode {
+public abstract class WorldConfig extends PSConfigOpMode {
 
     //DRIVE MOTORS
     public PineappleMotor driveFrontRight;

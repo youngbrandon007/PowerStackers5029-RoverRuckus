@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.Examples.ConfigExam
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigLinearOpMode;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSConfigLinearOpMode;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
  * Created by Brandon on 6/26/2017.
  */
 
-abstract public class Config extends PineappleConfigLinearOpMode {
+abstract public class Config extends PSConfigLinearOpMode {
 
     public PineappleMotor testMotor;
 

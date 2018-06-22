@@ -2,12 +2,11 @@ package org.firstinspires.ftc.teamcode.MiniBots.OmniBot;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigOpMode;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSConfigOpMode;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
 
-abstract public class OmniBotConfig extends PineappleConfigOpMode{
+abstract public class OmniBotConfig extends PSConfigOpMode {
 
     PineappleMotor leftFront;
     PineappleMotor rightFront;
