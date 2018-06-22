@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
  * Created by ftcpi on 6/29/2017.
  */
 
-public class PineappleEnum {
+public class PSEnum {
 
     //Year specific Enums
     public enum AllianceColor {

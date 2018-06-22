@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  */
 
 abstract public class PSConfigOpMode extends OpMode {
-    public PineappleRobot robotHandler;
+    public PSRobot robotHandler;
 
     abstract public void config(OpMode opMode);
 }

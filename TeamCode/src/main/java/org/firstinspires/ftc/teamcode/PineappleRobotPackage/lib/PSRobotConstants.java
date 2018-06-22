@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
  * Created by ftcpi on 8/7/2017.
  */
 
-public class PineappleRobotConstants {
+public class PSRobotConstants {
     public static final double PI = Math.PI;
     public static final double NEV60CPR = 420;
     public static final double NEV40CPR = 1120;

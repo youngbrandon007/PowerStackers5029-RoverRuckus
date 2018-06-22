@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleServo;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSRobot;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSServo;
 
 /**
  * Created by young on 8/7/2017.
@@ -14,14 +14,14 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleServo;
 @Disabled
 
 public class ServoExample extends LinearOpMode {
-    PineappleRobot robot;
+    PSRobot robot;
 
-    PineappleServo servo;
+    PSServo servo;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        robot = new PineappleRobot(this);
+        robot = new PSRobot(this);
         servo = robot.servoHandler.newContinuousServo("D", 0.5);
 
         waitForStart();

@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSEnum;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSMotor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSRobot;
 
 /**
  * Created by young on 8/2/2017.
@@ -17,19 +17,19 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
 @Disabled
 
 public class OneMotorEncoderExample extends LinearOpMode {
-    PineappleRobot robot;
+    PSRobot robot;
 
-    PineappleMotor motor;
+    PSMotor motor;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        robot = new PineappleRobot(this);
+        robot = new PSRobot(this);
 
-        motor = robot.motorHandler.newMotor("motor", 1, true , true, PineappleEnum.MotorType.NEV40);
+        motor = robot.motorHandler.newMotor("motor", 1, true , true, PSEnum.MotorType.NEV40);
 
         waitForStart();
-        //motor.encoderDrive(1, 90, PineappleEnum.MotorValueType.DEGREES, 4);
+        //motor.encoderDrive(1, 90, PSEnum.MotorValueType.DEGREES, 4);
 
         sleep(1000);
         telemetry.addData("Encoder", motor.motorObject.getCurrentPosition());

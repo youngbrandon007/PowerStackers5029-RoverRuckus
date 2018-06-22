@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  */
 
 abstract public class PSConfigLinearOpMode extends LinearOpMode {
-    public PineappleRobot robotHandler;
+    public PSRobot robotHandler;
 
     abstract public void config(LinearOpMode linearOpMode);
 }
