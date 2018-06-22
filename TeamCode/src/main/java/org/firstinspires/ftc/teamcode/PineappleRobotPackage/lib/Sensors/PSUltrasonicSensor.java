@@ -10,22 +10,6 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSSensor;
  * Created by ftcpi on 8/7/2017.
  */
 
-public class PSUltrasonicSensor extends PSSensor {
+public class PSUltrasonicSensor{
     public UltrasonicSensor ultrasonicSensor;
-    private PSResources resources;
-    public PSUltrasonicSensor(String name, PSResources pineappleResources){
-        resources = pineappleResources;
-        makeSensor(name, pineappleResources);
-    }
-
-    @Override
-    public void makeSensor(String name, PSResources pineappleResources) {
-        sensorName = name;
-        ultrasonicSensor = resources.hardwareMap.ultrasonicSensor.get(sensorName);
-    }
-
-    public double getValue( PSEnum.PineappleSensorEnum sensorEnum) {
-        return ultrasonicSensor.getUltrasonicLevel();
-
-    }
 }

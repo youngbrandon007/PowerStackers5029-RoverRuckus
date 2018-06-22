@@ -6,6 +6,6 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 
 public abstract class PSSensor {
 
-    public PineappleEnum.SensorType sensorType;
+    public PSEnum.SensorType sensorType;
 
 }

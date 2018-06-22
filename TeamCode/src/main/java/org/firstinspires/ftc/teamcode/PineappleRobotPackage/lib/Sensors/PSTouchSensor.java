@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSSensor;
  * Created by ftcpi on 8/7/2017.
  */
 
-public class PSTouchSensor extends PSSensor {
+public class PSTouchSensor{
     public TouchSensor touchSensor;
 
 }
