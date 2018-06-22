@@ -12,24 +12,5 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensor;
 
 public class PineappleTouchSensor extends PineappleSensor {
     public TouchSensor touchSensor;
-    private PineappleResources resources;
-    public PineappleTouchSensor (String name, PineappleResources pineappleResources){
-        resources = pineappleResources;
-        makeSensor(name, pineappleResources);
-    }
-    @Override
-    public void makeSensor(String name, PineappleResources pineappleResources) {
-        sensorName = name;
-        touchSensor = resources.hardwareMap.touchSensor.get(sensorName);
-    }
 
-    @Override
-    public double getValue(PineappleEnum.PineappleSensorEnum sensor) {
-        if (touchSensor.isPressed()) {
-            return 1;
-        } else{
-            return 0;
-        }
-
-    }
 }

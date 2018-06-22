@@ -6,10 +6,6 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 
 public abstract class PineappleSensor {
 
-    public
-
-    public 
-
-
+    public PineappleEnum.SensorType sensorType;
 
 }
