@@ -42,27 +42,23 @@ public class PSMotor {
 
     //Constructor
 
-    public PSMotor(PSResources res, String name, double powerMin, double powerMax, double powerDefault, double scale, boolean exp, boolean deadArea, PSEnum.MotorLoc loc, PSEnum.MotorType type) {
-        resources = res;
-        motorLoc = loc;
-        maxPower = powerMax;
-        minPower = powerMin;
-        defaultPower = powerDefault;
-        scaleBy = scale;
-        exponetional = exp;
-        doDeadArea = deadArea;
-        motorName = name;
-        motorType = type;
-        cpr = motorTypeToCPR(type);
-        mapMotor();
-    }
-
-    private void mapMotor() {
-        motorObject = resources.hardwareMap.dcMotor.get(motorName);
+    public PSMotor(PSResources resources, String motorName, double minPower, double maxPower, double defaultPower, double scaleBy, boolean exponetional, boolean doDeadArea, PSEnum.MotorLoc motorLoc, PSEnum.MotorType motorType) {
+        this.resources = resources;
+        this.motorLoc = motorLoc;
+        this.maxPower = maxPower;
+        this.minPower = minPower;
+        this.defaultPower = defaultPower;
+        this.scaleBy = scaleBy;
+        this.exponetional = exponetional;
+        this.doDeadArea = doDeadArea;
+        this.motorType = motorType;
+        this.motorName = motorName;
+        cpr = motorTypeToCPR(motorType);
+        motorObject = this.resources.hardwareMap.dcMotor.get(motorName);
         setupEncoder();
     }
 
-    private void setupEncoder(){
+    private void setupEncoder() {
         motorObject.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -72,7 +68,7 @@ public class PSMotor {
     //Drive Encoder Functions//
     ///////////////////////////
 
-    private double motorTypeToCPR(PSEnum.MotorType type){
+    private double motorTypeToCPR(PSEnum.MotorType type) {
         switch (type) {
             case NEV60:
                 return PSRobotConstants.NEV60CPR;
@@ -89,12 +85,12 @@ public class PSMotor {
         }
     }
 
-    public double getEncoderDistance(double wheelSize){
-        double rotations = getEncoderPosition()/motorTypeToCPR(motorType);
-        return wheelSize*Math.PI*rotations;
+    public double getEncoderDistance(double wheelSize) {
+        double rotations = getEncoderPosition() / motorTypeToCPR(motorType);
+        return wheelSize * Math.PI * rotations;
     }
 
-    public double getEncoderPosition(){
+    public double getEncoderPosition() {
         return motorObject.getCurrentPosition();
     }
 
@@ -160,12 +156,12 @@ public class PSMotor {
 //        }
 //    }
 
-    public void encoderStop(){
+    public void encoderStop() {
         motorObject.setPower(0);
         motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public boolean encodersBusy(){
+    public boolean encodersBusy() {
         return motorObject.isBusy();
     }
 
@@ -175,7 +171,7 @@ public class PSMotor {
     //set Power function for setting the power manually
 
 
-    public void setPower(double power){
+    public void setPower(double power) {
         motorObject.setPower(clip(power));
     }
 

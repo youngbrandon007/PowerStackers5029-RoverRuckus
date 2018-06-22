@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PSColorSensor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PSGyroSensor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PSOpticalDistanceSensor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PSDistanceSensor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PSLightSensor;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PSTouchSensor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Sensors.PSUltrasonicSensor;
 
 /**
  * Created by young on 8/7/2017.
@@ -22,12 +21,8 @@ public class PSSensorHandler {
         PSTouchSensor sensor = new PSTouchSensor(name, resources);
         return sensor;
     }
-    public PSUltrasonicSensor newUltrasonicSensor(String name){
-        PSUltrasonicSensor sensor = new PSUltrasonicSensor(name, resources);
-        return sensor;
-    }
-    public PSOpticalDistanceSensor newOpticalDistanceSensor(String name){
-        PSOpticalDistanceSensor sensor = new PSOpticalDistanceSensor(name, resources);
+    public PSLightSensor newLightSensor(String name){
+        PSLightSensor sensor = new PSLightSensor(name, resources);
         return sensor;
     }
 
@@ -36,8 +31,8 @@ public class PSSensorHandler {
         return sensor;
     }
 
-    public PSGyroSensor newGyroSensor(String name){
-        PSGyroSensor sensor = new PSGyroSensor(name, resources);
+    public PSDistanceSensor newDistanceSensor(String name){
+        PSDistanceSensor sensor = new PSDistanceSensor(name, resources);
         return sensor;
     }
 }
