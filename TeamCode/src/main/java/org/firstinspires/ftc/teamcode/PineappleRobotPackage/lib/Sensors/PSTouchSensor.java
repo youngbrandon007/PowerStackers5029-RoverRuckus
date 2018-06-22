@@ -12,28 +12,5 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSSensor;
 
 public class PSTouchSensor extends PSSensor {
     public TouchSensor touchSensor;
-<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/PineappleRobotPackage/lib/Sensors/PineappleTouchSensor.java
 
-=======
-    private PSResources resources;
-    public PSTouchSensor(String name, PSResources pineappleResources){
-        resources = pineappleResources;
-        makeSensor(name, pineappleResources);
-    }
-    @Override
-    public void makeSensor(String name, PSResources pineappleResources) {
-        sensorName = name;
-        touchSensor = resources.hardwareMap.touchSensor.get(sensorName);
-    }
-
-    @Override
-    public double getValue(PSEnum.PineappleSensorEnum sensor) {
-        if (touchSensor.isPressed()) {
-            return 1;
-        } else{
-            return 0;
-        }
-
-    }
->>>>>>> origin/master:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/PineappleRobotPackage/lib/Sensors/PSTouchSensor.java
 }
