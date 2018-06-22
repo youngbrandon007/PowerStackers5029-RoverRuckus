@@ -6,10 +6,10 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 
 public abstract class PineappleSensor {
 
-    public String sensorName;
-    
-    public abstract void makeSensor(String name, PineappleResources pineappleResources);
+    public
 
-    public abstract double getValue(PineappleEnum.PineappleSensorEnum pineappleSensorEnum);
+    public 
+
+
 
 }
