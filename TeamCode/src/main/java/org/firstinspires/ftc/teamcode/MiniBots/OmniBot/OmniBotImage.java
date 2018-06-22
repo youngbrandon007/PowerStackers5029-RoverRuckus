@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.vuforia.CameraCalibration;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
@@ -15,8 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia;
-import org.opencv.android.BaseLoaderCallback;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vision.PineappleVision;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -28,8 +27,9 @@ import org.opencv.imgproc.Moments;
 
 import java.nio.ByteBuffer;
 
-import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia.SaveImage;
-import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleRelicRecoveryVuforia.matToBitmap;
+import static java.lang.Math.round;
+import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vision.PineappleVision.SaveImage;
+import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vision.PineappleVision.matToBitmap;
 
 @TeleOp(name = "OmniBotImage")
 public class OmniBotImage extends  OmniBotConfig{
@@ -41,6 +41,10 @@ public class OmniBotImage extends  OmniBotConfig{
 
 
     static String load = "Not loaded!";
+
+    ElapsedTime fpsTimer;
+    long elapse;
+
 
     static{
         if(!OpenCVLoader.initDebug()){
@@ -64,10 +68,12 @@ public class OmniBotImage extends  OmniBotConfig{
         vuforia.setFrameQueueCapacity(1);
         Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true);
         relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
-        relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-        listener = (VuforiaTrackableDefaultListener) relicTemplate.getListener();
-        relicTrackables.activate();
+        //relicTemplate = relicTrackables.get(0);
+        //relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        //listener = (VuforiaTrackableDefaultListener) relicTemplate.getListener();
+        //relicTrackables.activate();
+
+        fpsTimer = new ElapsedTime();
     }
 
     @Override
@@ -77,8 +83,17 @@ public class OmniBotImage extends  OmniBotConfig{
 
     @Override
     public void loop() {
+
+        long nanochange = fpsTimer.nanoseconds() -elapse;
+        long millChange = nanochange/1000000;
+
+        elapse = fpsTimer.nanoseconds();
+
+        telemetry.addData("Nano FPS",nanochange);
+        telemetry.addData("Mill FPS",millChange);
+
         try {
-            getloc(PineappleRelicRecoveryVuforia.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),  telemetry);
+            getloc(PineappleVision.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),  telemetry);
         }catch(Exception e){
             telemetry.addData("Error", e.getMessage());
         }
@@ -93,10 +108,11 @@ public class OmniBotImage extends  OmniBotConfig{
             SaveImage(bm, "original");
             Mat crop = new Mat(bm.getHeight(), bm.getWidth(), CvType.CV_8UC3); //C3
             Utils.bitmapToMat(bm, crop);
-            Scalar min = rgbToScalar(200,50,0);
-            Scalar max = rgbToScalar(255,150,100);
-            Imgproc.cvtColor(crop, crop, Imgproc.COLOR_RGB2HSV_FULL);
+            Scalar min = new Scalar(90, 100, 100);
+            Scalar max = new Scalar(120, 255,255);
+            Imgproc.cvtColor(crop, crop, Imgproc.COLOR_BGR2HSV);
             Mat mask = new Mat();
+            SaveImage(matToBitmap(crop), "Convert");
             //new Scalar(50, 20, 70), new Scalar(255, 255, 120)
             Core.inRange(crop, min, max, mask);
             SaveImage(matToBitmap(mask), "mask");
@@ -127,6 +143,6 @@ public class OmniBotImage extends  OmniBotConfig{
     public static Scalar rgbToScalar(int r, int g, int b){
         float[] hsv = new float[3];
         Color.RGBToHSV(r, g, b, hsv);
-        return new Scalar(hsv[0], hsv[1], hsv[2]);
+        return new Scalar(hsv[2], hsv[1], hsv[0]);
     }
 }

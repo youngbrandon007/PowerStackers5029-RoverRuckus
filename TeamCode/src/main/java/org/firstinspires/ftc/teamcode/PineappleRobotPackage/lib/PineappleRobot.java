@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Auto.PineappleAutoDrive;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Auto.PineappleSwitchBoard;
 import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive.PineappleDrive;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vuforia.PineappleVuforia;
 
 /**
  * Created by Brandon on 6/26/2017.
@@ -25,8 +23,6 @@ public class PineappleRobot{
 
     private PineappleResources resources;
 
-    public PineappleVuforia vuforia;
-
     public PineappleSwitchBoard switchBoard;
 
     public PineappleServoHandler servoHandler;
@@ -39,17 +35,6 @@ public class PineappleRobot{
         sensorHandler = new PineappleSensorHandler(resources);
         servoHandler = new PineappleServoHandler(resources);
         switchBoard = new PineappleSwitchBoard(resources);
-    }
-
-    public void addVuforia(int maxTargets, VuforiaLocalizer.CameraDirection direction, VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, String vuforiaLicenseKey) {
-        vuforia = new PineappleVuforia(maxTargets, direction, feedback, vuforiaLicenseKey);
-        vuforia.addResources(resources);
-    }
-
-    public PineappleVuforia addCustomVuforia(PineappleVuforia vuforiaObject){
-        vuforiaObject.addResources(resources);
-        vuforia = vuforiaObject;
-        return vuforiaObject;
     }
 
     public void sayFeedBack(String objectName, double value){
