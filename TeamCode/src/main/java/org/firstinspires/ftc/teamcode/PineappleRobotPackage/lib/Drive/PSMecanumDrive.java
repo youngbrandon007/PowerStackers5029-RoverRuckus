@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResources;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleStaticFunction;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSEnum;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSResources;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSStaticFunction;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;
@@ -15,24 +15,24 @@ import static java.lang.Math.sqrt;
  * Created by Brandon on 10/21/2017.
  */
 
-public class PineappleMecanumDrive extends PineappleDriveAbstract {
+public class PSMecanumDrive extends PSDriveAbstract {
 
-    PineappleMecanumDrive(PineappleResources r) {
+    PSMecanumDrive(PSResources r) {
         super(r);
     }
 
     public void update(double leftPower, double rightPower) {
-        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, leftPower, false);
-        setMotor(PineappleEnum.MotorLoc.LEFTBACK, leftPower, false);
-        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, rightPower, false);
-        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightPower, false);
+        setMotor(PSEnum.MotorLoc.LEFTFRONT, leftPower, false);
+        setMotor(PSEnum.MotorLoc.LEFTBACK, leftPower, false);
+        setMotor(PSEnum.MotorLoc.RIGHTFRONT, rightPower, false);
+        setMotor(PSEnum.MotorLoc.RIGHTBACK, rightPower, false);
     }
 
     public void setPower(double leftPower, double rightPower) {
-        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, leftPower, true);
-        setMotor(PineappleEnum.MotorLoc.LEFTBACK, leftPower, true);
-        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, rightPower, true);
-        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, rightPower, true);
+        setMotor(PSEnum.MotorLoc.LEFTFRONT, leftPower, true);
+        setMotor(PSEnum.MotorLoc.LEFTBACK, leftPower, true);
+        setMotor(PSEnum.MotorLoc.RIGHTFRONT, rightPower, true);
+        setMotor(PSEnum.MotorLoc.RIGHTBACK, rightPower, true);
     }
 
     public void updateMecanumMultiGamepad(Gamepad pad1, double offset1, Gamepad pad2, double offset2, double scale1, double scale2) {
@@ -111,10 +111,10 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract {
         }
 
 
-        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, multipliers[0] * scale, true);
-        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, multipliers[1] * scale, true);
-        setMotor(PineappleEnum.MotorLoc.LEFTBACK, multipliers[2] * scale, true);
-        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, multipliers[3] * scale, true);
+        setMotor(PSEnum.MotorLoc.LEFTFRONT, multipliers[0] * scale, true);
+        setMotor(PSEnum.MotorLoc.RIGHTFRONT, multipliers[1] * scale, true);
+        setMotor(PSEnum.MotorLoc.LEFTBACK, multipliers[2] * scale, true);
+        setMotor(PSEnum.MotorLoc.RIGHTBACK, multipliers[3] * scale, true);
 
     }
 
@@ -126,8 +126,8 @@ public class PineappleMecanumDrive extends PineappleDriveAbstract {
 
         x = (Math.cos(rad) * counts);
         y = (Math.sin(rad) * counts);
-        x = PineappleStaticFunction.round(x, 4);
-        y = PineappleStaticFunction.round(y, 4);
+        x = PSStaticFunction.round(x, 4);
+        y = PSStaticFunction.round(y, 4);
         xy[0] = x;
         xy[1] = y;
         return xy;

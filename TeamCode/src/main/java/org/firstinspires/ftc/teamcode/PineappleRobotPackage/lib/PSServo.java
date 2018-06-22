@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.util.Range;
  * Created by Brandon on 9/13/2017.
  */
 
-public class PineappleServo {
+public class PSServo {
 
-    private PineappleResources resources;
+    private PSResources resources;
 
     public String servoName;
 
@@ -19,9 +19,9 @@ public class PineappleServo {
 
     public Servo servoObject;
 
-    public PineappleEnum.ServoType servoType;
+    public PSEnum.ServoType servoType;
 
-    public PineappleServo(PineappleResources r, String name, PineappleEnum.ServoType type, double rotation, double init){
+    public PSServo(PSResources r, String name, PSEnum.ServoType type, double rotation, double init){
         resources = r;
         servoName = name;
         servoType = type;

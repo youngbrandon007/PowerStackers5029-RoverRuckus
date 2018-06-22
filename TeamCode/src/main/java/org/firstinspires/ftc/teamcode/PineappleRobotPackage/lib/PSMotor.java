@@ -7,11 +7,11 @@ import com.qualcomm.robotcore.util.Range;
  * Created by Brandon on 6/19/2017.
  */
 
-public class PineappleMotor {
+public class PSMotor {
 
     //Motor Properties
 
-    public PineappleEnum.MotorLoc motorLoc = PineappleEnum.MotorLoc.NONE;
+    public PSEnum.MotorLoc motorLoc = PSEnum.MotorLoc.NONE;
 
     public double maxPower = 1;
     public double minPower = -1;
@@ -19,7 +19,7 @@ public class PineappleMotor {
     public double defaultPower = 0;
     public double cpr;
     public double scaleBy = 1;
-    public PineappleEnum.MotorType motorType = PineappleEnum.MotorType.UNDI;
+    public PSEnum.MotorType motorType = PSEnum.MotorType.UNDI;
 
     public boolean exponetional = false;
 
@@ -37,12 +37,12 @@ public class PineappleMotor {
 
     //Resources
 
-    private PineappleResources resources;
+    private PSResources resources;
 
 
     //Constructor
 
-    public PineappleMotor(PineappleResources res, String name, double powerMin, double powerMax, double powerDefault, double scale, boolean exp, boolean deadArea, PineappleEnum.MotorLoc loc, PineappleEnum.MotorType type) {
+    public PSMotor(PSResources res, String name, double powerMin, double powerMax, double powerDefault, double scale, boolean exp, boolean deadArea, PSEnum.MotorLoc loc, PSEnum.MotorType type) {
         resources = res;
         motorLoc = loc;
         maxPower = powerMax;
@@ -72,18 +72,18 @@ public class PineappleMotor {
     //Drive Encoder Functions//
     ///////////////////////////
 
-    private double motorTypeToCPR(PineappleEnum.MotorType type){
+    private double motorTypeToCPR(PSEnum.MotorType type){
         switch (type) {
             case NEV60:
-                return PineappleRobotConstants.NEV60CPR;
+                return PSRobotConstants.NEV60CPR;
             case NEV40:
-                return PineappleRobotConstants.NEV40CPR;
+                return PSRobotConstants.NEV40CPR;
             case NEV20:
-                return PineappleRobotConstants.NEV20CPR;
+                return PSRobotConstants.NEV20CPR;
             case NEV3_7:
-                return PineappleRobotConstants.NEV3_7CPR;
+                return PSRobotConstants.NEV3_7CPR;
             case UNDI:
-                return PineappleRobotConstants.TETRIXCPR;
+                return PSRobotConstants.TETRIXCPR;
             default:
                 return 0;
         }
@@ -100,8 +100,8 @@ public class PineappleMotor {
 
     //Function called by user
 
-//    public void encoderDrive(double speed, double value, PineappleEnum.MotorValueType motorValueType, double wheelSize) {
-//        if (motorValueType == PineappleEnum.MotorValueType.COUNTS) {
+//    public void encoderDrive(double speed, double value, PSEnum.MotorValueType motorValueType, double wheelSize) {
+//        if (motorValueType == PSEnum.MotorValueType.COUNTS) {
 //            encoderDriveCounts(speed, (int) value);
 //        } else {
 //            encoderDriveDist(speed, value, wheelSize, motorValueType);
@@ -115,7 +115,7 @@ public class PineappleMotor {
 //        int target;
 //
 //        if(resources.opMode.opModeIsActive()){
-//            if (PineappleStaticFunction.isPositive(speed) != PineappleStaticFunction.isPositive(counts)){counts=-counts;}
+//            if (PSStaticFunction.isPositive(speed) != PSStaticFunction.isPositive(counts)){counts=-counts;}
 //
 //            target = motorObject.getCurrentPosition() + counts;
 //
@@ -138,8 +138,8 @@ public class PineappleMotor {
     //
     //input distance for wheel to move
 
-//    private void encoderDriveDist(double speed, double inches, double wheelSize, PineappleEnum.MotorValueType motorValueType ){
-//        int counts = PineappleStaticFunction.distToCounts(inches, motorValueType,wheelSize, cpr);
+//    private void encoderDriveDist(double speed, double inches, double wheelSize, PSEnum.MotorValueType motorValueType ){
+//        int counts = PSStaticFunction.distToCounts(inches, motorValueType,wheelSize, cpr);
 //        encoderDriveCounts(speed, counts);
 //    }
 
@@ -150,7 +150,7 @@ public class PineappleMotor {
 //    public void encoderStart(double speed, int counts){
 //        int target;
 //        if(resources.opMode.opModeIsActive()){
-//            if (PineappleStaticFunction.isPositive(speed) != PineappleStaticFunction.isPositive(counts)){counts=-counts;}
+//            if (PSStaticFunction.isPositive(speed) != PSStaticFunction.isPositive(counts)){counts=-counts;}
 //            target = motorObject.getCurrentPosition() + counts;
 //
 //            motorObject.setTargetPosition(target);

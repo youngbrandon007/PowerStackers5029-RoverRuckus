@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.RelicRecoveryWorlds;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobotConstants;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSRobotConstants;
 
 import static org.firstinspires.ftc.teamcode.RelicRecoveryWorlds.WorldConstants.auto.autoGlyph.ciphers.BIRDBROWN;
 import static org.firstinspires.ftc.teamcode.RelicRecoveryWorlds.WorldConstants.auto.autoGlyph.ciphers.BIRDGREY;
@@ -33,7 +33,7 @@ public class WorldConstants {
         public static final double wheelSize = 4.0;
         public static final double gearRatio = 2.0 / 3.0;
         public static final double wheelCir = wheelSize * Math.PI;
-        public static final double encoderCountPerInch = 1.0 / wheelCir * PineappleRobotConstants.NEV40CPR;
+        public static final double encoderCountPerInch = 1.0 / wheelCir * PSRobotConstants.NEV40CPR;
 
         public static int countsPerInches(double inches) {
             double counts = inches * encoderCountPerInch * gearRatio;

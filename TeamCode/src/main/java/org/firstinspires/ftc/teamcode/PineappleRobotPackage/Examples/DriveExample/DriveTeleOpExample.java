@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSEnum;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSMotor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSRobot;
 
 /**
  * Created by Brandon on 7/14/2017.
@@ -16,18 +16,18 @@ import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
 @Disabled
 
 public class DriveTeleOpExample extends LinearOpMode {
-    PineappleRobot robot;
+    PSRobot robot;
 
-    PineappleMotor left;
-    PineappleMotor right;
+    PSMotor left;
+    PSMotor right;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        robot = new PineappleRobot(this);
+        robot = new PSRobot(this);
 
-        left = robot.motorHandler.newDriveMotor("r", 1, true , true, PineappleEnum.MotorLoc.LEFT, PineappleEnum.MotorType.NEV40);
-        right = robot.motorHandler.newDriveMotor("l", 1, true , true, PineappleEnum.MotorLoc.RIGHT, PineappleEnum.MotorType.NEV40);
+        left = robot.motorHandler.newDriveMotor("r", 1, true , true, PSEnum.MotorLoc.LEFT, PSEnum.MotorType.NEV40);
+        right = robot.motorHandler.newDriveMotor("l", 1, true , true, PSEnum.MotorLoc.RIGHT, PSEnum.MotorType.NEV40);
 
 
         waitForStart();

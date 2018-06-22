@@ -5,7 +5,7 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage;
  */
 
 
-public class PineappleSettings{
+public class PSSettings {
 
     public static final boolean feedBack = true;
     public static final double driveScaleSpeed = 1;

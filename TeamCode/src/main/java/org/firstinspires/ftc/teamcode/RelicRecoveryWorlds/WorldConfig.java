@@ -9,12 +9,12 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.FontFormating;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleConfigOpMode;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleRobot;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleSensor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleServo;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSConfigOpMode;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSEnum;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSMotor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSRobot;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSSensor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSServo;
 
 import static org.firstinspires.ftc.teamcode.RelicRecoveryWorlds.WorldConstants.auto.autoGlyph.glyph.NONE;
 
@@ -22,30 +22,30 @@ import static org.firstinspires.ftc.teamcode.RelicRecoveryWorlds.WorldConstants.
  * Created by Brandon on 1/8/2018.
  */
 
-public abstract class WorldConfig extends PineappleConfigOpMode {
+public abstract class WorldConfig extends PSConfigOpMode {
 
     //DRIVE MOTORS
-    public PineappleMotor driveFrontRight;
-    public PineappleMotor driveFrontLeft;
-    public PineappleMotor driveBackRight;
-    public PineappleMotor driveBackLeft;
+    public PSMotor driveFrontRight;
+    public PSMotor driveFrontLeft;
+    public PSMotor driveBackRight;
+    public PSMotor driveBackLeft;
 
     //MOTORS
-    public PineappleMotor motorLift;
-    public PineappleMotor motorCollectRight;
-    public PineappleMotor motorCollectLeft;
-    public PineappleMotor motorRelic;
+    public PSMotor motorLift;
+    public PSMotor motorCollectRight;
+    public PSMotor motorCollectLeft;
+    public PSMotor motorRelic;
 
     //SERVOS
-    public PineappleServo servoFlipR;
-    public PineappleServo servoFlipL;
-    public PineappleServo servoAlignLeft;
-    public PineappleServo servoAlignRight;
-    public PineappleServo servoJewelHit;
-    public PineappleServo servoJewel;
-    public PineappleServo servoRelicGrab;
-    public PineappleServo servoRelicTurn;
-    public PineappleServo servoGlyphStop;
+    public PSServo servoFlipR;
+    public PSServo servoFlipL;
+    public PSServo servoAlignLeft;
+    public PSServo servoAlignRight;
+    public PSServo servoJewelHit;
+    public PSServo servoJewel;
+    public PSServo servoRelicGrab;
+    public PSServo servoRelicTurn;
+    public PSServo servoGlyphStop;
     //JEWEL
     public WorldConstants.auto.jewel.jewelState jewelState = WorldConstants.auto.jewel.jewelState.NON_NON;
     //GLYPH
@@ -60,8 +60,8 @@ public abstract class WorldConfig extends PineappleConfigOpMode {
     public DigitalChannel limitLeftSide;
     public DigitalChannel limitRightBack;
     public DigitalChannel limitRightSide;
-    public PineappleSensor csJewelLeft;
-    public PineappleSensor csJewelRight;
+    public PSSensor csJewelLeft;
+    public PSSensor csJewelRight;
     public OpticalDistanceSensor opticalGlyph;
     public OpticalDistanceSensor opticalRight;
     public OpticalDistanceSensor opticalLeft;
@@ -99,13 +99,13 @@ public abstract class WorldConfig extends PineappleConfigOpMode {
 
     @Override
     public void config(OpMode opmode) {
-        robotHandler = new PineappleRobot(opmode);
+        robotHandler = new PSRobot(opmode);
 
         //DRIVE MOTORS
-        driveFrontRight = robotHandler.motorHandler.newDriveMotor("FR", 1, false, false, PineappleEnum.MotorLoc.RIGHTFRONT, PineappleEnum.MotorType.NEV40);
-        driveFrontLeft = robotHandler.motorHandler.newDriveMotor("FL", 1, false, false, PineappleEnum.MotorLoc.LEFTFRONT, PineappleEnum.MotorType.NEV40);
-        driveBackRight = robotHandler.motorHandler.newDriveMotor("BR", 1, false, false, PineappleEnum.MotorLoc.RIGHTBACK, PineappleEnum.MotorType.NEV40);
-        driveBackLeft = robotHandler.motorHandler.newDriveMotor("BL", 1, false, false, PineappleEnum.MotorLoc.LEFTBACK, PineappleEnum.MotorType.NEV40);
+        driveFrontRight = robotHandler.motorHandler.newDriveMotor("FR", 1, false, false, PSEnum.MotorLoc.RIGHTFRONT, PSEnum.MotorType.NEV40);
+        driveFrontLeft = robotHandler.motorHandler.newDriveMotor("FL", 1, false, false, PSEnum.MotorLoc.LEFTFRONT, PSEnum.MotorType.NEV40);
+        driveBackRight = robotHandler.motorHandler.newDriveMotor("BR", 1, false, false, PSEnum.MotorLoc.RIGHTBACK, PSEnum.MotorType.NEV40);
+        driveBackLeft = robotHandler.motorHandler.newDriveMotor("BL", 1, false, false, PSEnum.MotorLoc.LEFTBACK, PSEnum.MotorType.NEV40);
 
         //MOTORS
         motorLift = robotHandler.motorHandler.newMotor("ML");

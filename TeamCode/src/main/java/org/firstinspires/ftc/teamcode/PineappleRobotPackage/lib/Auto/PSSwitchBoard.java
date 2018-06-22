@@ -3,17 +3,17 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Auto;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResources;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSResources;
 
 /**
  * Created by Brandon on 10/17/2017.
  */
 
-public class PineappleSwitchBoard {
+public class PSSwitchBoard {
 
-    private PineappleResources resources;
+    private PSResources resources;
 
-    public PineappleSwitchBoard(PineappleResources r) {
+    public PSSwitchBoard(PSResources r) {
         resources = r;
     }
 

@@ -26,7 +26,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.FontFormating;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSEnum;
 import org.firstinspires.ftc.teamcode.RelicRecoveryWorlds.WorldConstants.auto.autoGlyph.glyph;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -1895,9 +1895,9 @@ public class WorldAuto extends WorldConfig {
 
     public void jewelCSLEDON() {
 
-        csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSLEDON);
+        csJewelRight.getValue(PSEnum.PineappleSensorEnum.CSLEDON);
 
-        csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSLEDON);
+        csJewelLeft.getValue(PSEnum.PineappleSensorEnum.CSLEDON);
 
 
     }
@@ -1905,9 +1905,9 @@ public class WorldAuto extends WorldConfig {
 
     public void jewelCSLEDOFF() {
 
-        csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSLEDOFF);
+        csJewelRight.getValue(PSEnum.PineappleSensorEnum.CSLEDOFF);
 
-        csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSLEDOFF);
+        csJewelLeft.getValue(PSEnum.PineappleSensorEnum.CSLEDOFF);
 
 
     }
@@ -2062,11 +2062,11 @@ public class WorldAuto extends WorldConfig {
 
     private WorldConstants.auto.jewel.jewelState getLeftCSJewelState() {
 
-        if (csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSBLUE) > csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSRED)) {
+        if (csJewelLeft.getValue(PSEnum.PineappleSensorEnum.CSBLUE) > csJewelLeft.getValue(PSEnum.PineappleSensorEnum.CSRED)) {
 
             return BLUE_RED;
 
-        } else if (csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSBLUE) < csJewelLeft.getValue(PineappleEnum.PineappleSensorEnum.CSRED)) {
+        } else if (csJewelLeft.getValue(PSEnum.PineappleSensorEnum.CSBLUE) < csJewelLeft.getValue(PSEnum.PineappleSensorEnum.CSRED)) {
 
             return RED_BLUE;
 
@@ -2082,11 +2082,11 @@ public class WorldAuto extends WorldConfig {
     private WorldConstants.auto.jewel.jewelState getRightCSJewelState() {
 
 
-        if (csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSBLUE) < csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSRED)) {
+        if (csJewelRight.getValue(PSEnum.PineappleSensorEnum.CSBLUE) < csJewelRight.getValue(PSEnum.PineappleSensorEnum.CSRED)) {
 
             return BLUE_RED;
 
-        } else if (csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSBLUE) > csJewelRight.getValue(PineappleEnum.PineappleSensorEnum.CSRED)) {
+        } else if (csJewelRight.getValue(PSEnum.PineappleSensorEnum.CSBLUE) > csJewelRight.getValue(PSEnum.PineappleSensorEnum.CSRED)) {
 
             return RED_BLUE;
 

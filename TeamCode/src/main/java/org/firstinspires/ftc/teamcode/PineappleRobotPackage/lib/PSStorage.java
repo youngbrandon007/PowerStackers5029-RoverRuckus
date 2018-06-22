@@ -8,13 +8,13 @@ import java.util.Map;
  * Created by ftcpi on 6/29/2017.
  */
 
-public class PineappleStorage {
+public class PSStorage {
 
-    public HashMap<PineappleEnum.MotorLoc, PineappleMotor> driveMotors = new HashMap<PineappleEnum.MotorLoc, PineappleMotor>();
+    public HashMap<PSEnum.MotorLoc, PSMotor> driveMotors = new HashMap<PSEnum.MotorLoc, PSMotor>();
 
-    public HashMap<String, PineappleMotor> motors = new HashMap<String, PineappleMotor>();
+    public HashMap<String, PSMotor> motors = new HashMap<String, PSMotor>();
 
-    public void insert(PineappleMotor motor){
+    public void insert(PSMotor motor){
         switch (motor.motorLoc) {
             case RIGHT:
                 driveMotors.put(motor.motorLoc, motor);
@@ -38,11 +38,11 @@ public class PineappleStorage {
         motors.put(motor.motorName, motor);
     }
 
-    public ArrayList<PineappleMotor> getDrivemotors(PineappleEnum.MotorLoc motorLoc){
-        ArrayList<PineappleMotor> returnMotors = new ArrayList<PineappleMotor>();
-        for (Map.Entry<PineappleEnum.MotorLoc, PineappleMotor> entry : driveMotors.entrySet()) {
-            PineappleEnum.MotorLoc loc = entry.getKey();
-            PineappleMotor motor = entry.getValue();
+    public ArrayList<PSMotor> getDrivemotors(PSEnum.MotorLoc motorLoc){
+        ArrayList<PSMotor> returnMotors = new ArrayList<PSMotor>();
+        for (Map.Entry<PSEnum.MotorLoc, PSMotor> entry : driveMotors.entrySet()) {
+            PSEnum.MotorLoc loc = entry.getKey();
+            PSMotor motor = entry.getValue();
             if(loc == motorLoc){
                 returnMotors.add(motor);
             }
@@ -51,12 +51,12 @@ public class PineappleStorage {
         }
         return returnMotors;
     }
-    public ArrayList<PineappleMotor> getDrivemotors(){
-        ArrayList<PineappleMotor> returnMotors = new ArrayList<PineappleMotor>();
-        for (Map.Entry<PineappleEnum.MotorLoc, PineappleMotor> entry : driveMotors.entrySet()) {
-            PineappleEnum.MotorLoc loc = entry.getKey();
-            PineappleMotor motor = entry.getValue();
-            if(loc != PineappleEnum.MotorLoc.NONE){
+    public ArrayList<PSMotor> getDrivemotors(){
+        ArrayList<PSMotor> returnMotors = new ArrayList<PSMotor>();
+        for (Map.Entry<PSEnum.MotorLoc, PSMotor> entry : driveMotors.entrySet()) {
+            PSEnum.MotorLoc loc = entry.getKey();
+            PSMotor motor = entry.getValue();
+            if(loc != PSEnum.MotorLoc.NONE){
                 returnMotors.add(motor);
             }
 

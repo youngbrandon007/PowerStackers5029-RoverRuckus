@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Drive;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.PineappleSettings;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleEnum;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleMotor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PineappleResources;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.PSSettings;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSEnum;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSMotor;
+import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSResources;
 
 import java.util.ArrayList;
 
@@ -13,46 +13,46 @@ import java.util.ArrayList;
  * Created by Brandon on 10/21/2017.
  */
 
-public class PineappleDriveAbstract {
+public class PSDriveAbstract {
 
-    PineappleResources resources;
+    PSResources resources;
 
-    PineappleDriveAbstract(PineappleResources r){
+    PSDriveAbstract(PSResources r){
         resources = r;
     }
 
 
-    public void setMotor(PineappleEnum.MotorLoc location, double power, boolean direct) {
-        ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors(location);
-        for (PineappleMotor motor : motors) {
+    public void setMotor(PSEnum.MotorLoc location, double power, boolean direct) {
+        ArrayList<PSMotor> motors = resources.storage.getDrivemotors(location);
+        for (PSMotor motor : motors) {
             if (direct) {
                 motor.setPower(power);
             } else {
                 motor.setPower(scalePower(power));
             }
         }
-        if(location == PineappleEnum.MotorLoc.LEFT){
-            setMotor(PineappleEnum.MotorLoc.LEFTFRONT, power, direct);
-            setMotor(PineappleEnum.MotorLoc.LEFTBACK, power, direct);
+        if(location == PSEnum.MotorLoc.LEFT){
+            setMotor(PSEnum.MotorLoc.LEFTFRONT, power, direct);
+            setMotor(PSEnum.MotorLoc.LEFTBACK, power, direct);
         }
-        if(location == PineappleEnum.MotorLoc.RIGHT){
-            setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, power, direct);
-            setMotor(PineappleEnum.MotorLoc.RIGHTBACK, power, direct);
+        if(location == PSEnum.MotorLoc.RIGHT){
+            setMotor(PSEnum.MotorLoc.RIGHTFRONT, power, direct);
+            setMotor(PSEnum.MotorLoc.RIGHTBACK, power, direct);
         }
     }
 
     public void stop() {
-        setMotor(PineappleEnum.MotorLoc.LEFT, 0, true);
-        setMotor(PineappleEnum.MotorLoc.RIGHT, 0, true);
-        setMotor(PineappleEnum.MotorLoc.LEFTBACK, 0, true);
-        setMotor(PineappleEnum.MotorLoc.LEFTFRONT, 0, true);
-        setMotor(PineappleEnum.MotorLoc.RIGHTBACK, 0, true);
-        setMotor(PineappleEnum.MotorLoc.RIGHTFRONT, 0, true);
+        setMotor(PSEnum.MotorLoc.LEFT, 0, true);
+        setMotor(PSEnum.MotorLoc.RIGHT, 0, true);
+        setMotor(PSEnum.MotorLoc.LEFTBACK, 0, true);
+        setMotor(PSEnum.MotorLoc.LEFTFRONT, 0, true);
+        setMotor(PSEnum.MotorLoc.RIGHTBACK, 0, true);
+        setMotor(PSEnum.MotorLoc.RIGHTFRONT, 0, true);
     }
 
-    void startEncoderDrive(PineappleEnum.MotorLoc location, double power, int counts) {
-        ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors(location);
-        for (PineappleMotor motor : motors) {
+    void startEncoderDrive(PSEnum.MotorLoc location, double power, int counts) {
+        ArrayList<PSMotor> motors = resources.storage.getDrivemotors(location);
+        for (PSMotor motor : motors) {
             int target = motor.motorObject.getCurrentPosition() + counts;
             motor.motorObject.setTargetPosition(target);
             motor.motorObject.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -61,17 +61,17 @@ public class PineappleDriveAbstract {
         }
     }
 
-    void stopEncoderDrive(PineappleEnum.MotorLoc location) {
-        ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors(location);
-        for (PineappleMotor motor : motors) {
+    void stopEncoderDrive(PSEnum.MotorLoc location) {
+        ArrayList<PSMotor> motors = resources.storage.getDrivemotors(location);
+        for (PSMotor motor : motors) {
             motor.motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
 
     boolean isBusy() {
         boolean output = false;
-        ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors();
-        for (PineappleMotor motor : motors) {
+        ArrayList<PSMotor> motors = resources.storage.getDrivemotors();
+        for (PSMotor motor : motors) {
             resources.feedBack.sayFeedBackWithOutUpdate(motor.motorName + " encoder", motor.motorObject.getCurrentPosition());
             if (motor.motorObject.isBusy()) {
                 output = true;
@@ -82,11 +82,11 @@ public class PineappleDriveAbstract {
         return output;
     }
 
-    PineappleEnum.MotorType getDriveType() {
-        ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors();
-        PineappleEnum.MotorType motorType = PineappleEnum.MotorType.UNDI;
+    PSEnum.MotorType getDriveType() {
+        ArrayList<PSMotor> motors = resources.storage.getDrivemotors();
+        PSEnum.MotorType motorType = PSEnum.MotorType.UNDI;
         boolean firsttime = true;
-        for (PineappleMotor motor : motors) {
+        for (PSMotor motor : motors) {
             if (firsttime) {
                 motorType = motor.motorType;
                 firsttime = false;
@@ -103,10 +103,10 @@ public class PineappleDriveAbstract {
     }
 
     double getDriveCPR()  {
-        ArrayList<PineappleMotor> motors = resources.storage.getDrivemotors();
+        ArrayList<PSMotor> motors = resources.storage.getDrivemotors();
         double lastCPR = 0;
         boolean firsttime = true;
-        for (PineappleMotor motor : motors) {
+        for (PSMotor motor : motors) {
             if (firsttime) {
                 lastCPR = motor.cpr;
                 firsttime = false;
@@ -130,25 +130,25 @@ public class PineappleDriveAbstract {
         return lastCPR;
     }
 
-    PineappleEnum.MotorValueType getUnit(String val) {
+    PSEnum.MotorValueType getUnit(String val) {
         val = val.substring(val.length() - 2);
         switch (val) {
             case "in":
-                return PineappleEnum.MotorValueType.INCH;
+                return PSEnum.MotorValueType.INCH;
             case "ct":
-                return PineappleEnum.MotorValueType.COUNTS;
+                return PSEnum.MotorValueType.COUNTS;
             case "dg":
-                return PineappleEnum.MotorValueType.DEGREES;
+                return PSEnum.MotorValueType.DEGREES;
             case "cm":
-                return PineappleEnum.MotorValueType.CM;
+                return PSEnum.MotorValueType.CM;
             case "rd":
-                return PineappleEnum.MotorValueType.RADIANS;
+                return PSEnum.MotorValueType.RADIANS;
             case "mt":
-                return PineappleEnum.MotorValueType.METER;
+                return PSEnum.MotorValueType.METER;
             case "ft":
-                return PineappleEnum.MotorValueType.FEET;
+                return PSEnum.MotorValueType.FEET;
             default:
-                return PineappleEnum.MotorValueType.INCH;
+                return PSEnum.MotorValueType.INCH;
         }
     }
 
@@ -165,7 +165,7 @@ public class PineappleDriveAbstract {
             pos = false;
         }
 
-        if(PineappleSettings.driveExponential){
+        if(PSSettings.driveExponential){
             in = in*in;
             if(!pos){
 
@@ -173,7 +173,7 @@ public class PineappleDriveAbstract {
             }
         }
 
-        double out = in * PineappleSettings.driveScaleSpeed;
+        double out = in * PSSettings.driveScaleSpeed;
 
         return out;
     }
