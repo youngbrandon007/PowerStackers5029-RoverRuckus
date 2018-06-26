@@ -81,20 +81,26 @@ public class PSServo {
     public void setDegrees(double degrees){
 
 
-        double position = clipDegrees(degrees/totalRotation);
+        double position = Range.clip(degrees/totalRotation, 0, 1);
 
 
         setPosition(position);
     }
 
     /**
-     * 
+     * Uses a set names of positions in the constructor to set the position
      * @param posName The name of the specified positions in the list
      */
     public void setPosition(String posName){
         if (position.containsKey(posName))
         servoObject.setPosition(position.get(posName));
     }
+
+    /**
+     * The function sets the servo's position and moves at a specified speed to that position
+     * @param position the position that the servo is set to
+     * @param speed The speed that a servo should move at from 0-1, 1 is max
+     */
     public void setPosition(double position, double speed){
         if(speed==1){
             setPosition(position);
@@ -103,15 +109,19 @@ public class PSServo {
         }
     }
 
+    /**
+     * The function sets the servo's angle and moves at a specified speed to that angle
+     * @param degrees the angle that the servo is set to
+     * @param speed The speed that a servo should move at from 0-1, 1 is max
+     */
     public void setDegrees(double degrees, double speed){
 
 
-        double position = clipDegrees(degrees/totalRotation);
+        double position = Range.clip(degrees/totalRotation, 0, 1);
 
+        //TODO finish this
 
         setPosition(position);
     }
-    private double clipDegrees(double degrees){
-        return Range.clip(degrees, 0 , 1);
-    }
+
 }
