@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib;
 
+import java.util.HashMap;
+
 /**
  * Created by Brandon on 10/21/2017.
  */
@@ -16,7 +18,13 @@ public class PSStaticFunction {
             return false;
         }
     }
-
+    public static HashMap arraysToHashMap(String[] s, double[] d){
+        HashMap<String, Double> hash = new HashMap<>();
+        for (int x = 0; x< s.length; x++){
+            hash.put(s[x], d[x]);
+        }
+        return hash;
+    }
     public static int distToCounts(double value, PSEnum.MotorValueType motorValueType, double wheelSize, double cpr) {
         switch (motorValueType) {
             case INCH:
