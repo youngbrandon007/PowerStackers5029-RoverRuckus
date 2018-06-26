@@ -27,5 +27,8 @@ public class PSEnum {
     public enum ServoType{
         CONTINUOUS, LIMIT
     }
+    public enum ServoModels{
+        HS485, REVSMART, HS625MG, HS645MG, HS311, HS422, SA1230SG, HS7980TH, HS755MG
+    }
 }
 
