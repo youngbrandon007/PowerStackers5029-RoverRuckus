@@ -89,8 +89,8 @@ public class OmniBotImage extends  OmniBotConfig{
 
         elapse = fpsTimer.nanoseconds();
 
-        telemetry.addData("Nano FPS",nanochange);
-        telemetry.addData("Mill FPS",millChange);
+        telemetry.addData("Nano FT",nanochange);
+        telemetry.addData("Mill FT",millChange);
 
         try {
             getloc(PineappleVision.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),  telemetry);
@@ -108,8 +108,8 @@ public class OmniBotImage extends  OmniBotConfig{
             SaveImage(bm, "original");
             Mat crop = new Mat(bm.getHeight(), bm.getWidth(), CvType.CV_8UC3); //C3
             Utils.bitmapToMat(bm, crop);
-            Scalar min = new Scalar(90, 100, 100);
-            Scalar max = new Scalar(120, 255,255);
+            Scalar min = new Scalar(40, 150, 150);
+            Scalar max = new Scalar(80, 255,255);
             Imgproc.cvtColor(crop, crop, Imgproc.COLOR_BGR2HSV);
             Mat mask = new Mat();
             SaveImage(matToBitmap(crop), "Convert");
