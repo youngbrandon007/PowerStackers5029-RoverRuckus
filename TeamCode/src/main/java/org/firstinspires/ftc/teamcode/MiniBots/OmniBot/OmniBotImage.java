@@ -21,38 +21,45 @@ import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import static java.lang.Math.round;
+
 import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vision.PineappleVision.SaveImage;
 import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vision.PineappleVision.matToBitmap;
 
-@TeleOp(name = "OmniBotImage")
-public class OmniBotImage extends  OmniBotConfig{
+            @TeleOp(name = "OmniBotImage")
+            public class OmniBotImage extends  OmniBotConfig{
 
-    VuforiaLocalizer vuforia;
-    VuforiaTrackables relicTrackables;
-    VuforiaTrackable relicTemplate;
-    VuforiaTrackableDefaultListener listener;
-
-
-    static String load = "Not loaded!";
-
-    ElapsedTime fpsTimer;
-    long elapse;
+                VuforiaLocalizer vuforia;
+                VuforiaTrackables relicTrackables;
+                VuforiaTrackable relicTemplate;
+                VuforiaTrackableDefaultListener listener;
 
 
-    static{
-        if(!OpenCVLoader.initDebug()){
+                static String load = "Not loaded!";
+
+                ElapsedTime fpsTimer;
+                long elapse;
+
+
+                static{
+                    if(!OpenCVLoader.initDebug()){
             load = "Error Loading!";
         }else{
             load = "Loaded Successfully!";
         }
     }
+
+    static double location = 1;
+    static double size = 1;
 
     @Override
     public void init() {
@@ -88,9 +95,10 @@ public class OmniBotImage extends  OmniBotConfig{
         long millChange = nanochange/1000000;
 
         elapse = fpsTimer.nanoseconds();
-
-        telemetry.addData("Nano FT",nanochange);
         telemetry.addData("Mill FT",millChange);
+
+        telemetry.addData("Size", size);
+        telemetry.addData("Location", location);
 
         try {
             getloc(PineappleVision.getImageFromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565),  telemetry);
@@ -99,39 +107,61 @@ public class OmniBotImage extends  OmniBotConfig{
         }
     }
 
-    public static double getloc(Image img,  Telemetry telemetry) {
+    public static void getloc(Image img,  Telemetry telemetry) {
         try {
+            //converting image
             Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
             ByteBuffer pix = img.getPixels();
             bm.copyPixelsFromBuffer(pix);
-            telemetry.addData("size" , "" + img.getWidth() +"," + img.getHeight());
+            //size 1280x720 I think
             SaveImage(bm, "original");
+            //Geting Mat ready
             Mat crop = new Mat(bm.getHeight(), bm.getWidth(), CvType.CV_8UC3); //C3
             Utils.bitmapToMat(bm, crop);
-            Scalar min = new Scalar(80, 100, 100);
-            Scalar max = new Scalar(120, 255,255);
+            //Color Identification HSV
+            Scalar min = new Scalar(70, 150, 50);
+            Scalar max = new Scalar(100, 255,255);
+            //convert color format
             Imgproc.cvtColor(crop, crop, Imgproc.COLOR_BGR2HSV);
+            //Create Mask
             Mat mask = new Mat();
-            SaveImage(matToBitmap(crop), "Convert");
-            //new Scalar(50, 20, 70), new Scalar(255, 255, 120)
             Core.inRange(crop, min, max, mask);
             SaveImage(matToBitmap(mask), "mask");
-            Moments mmnts = Imgproc.moments(mask, true);
-            telemetry.addData("Data", mmnts.get_m10() / mmnts.get_m00());
-            int[] color = getARGB(bm.getPixel(0,0));
-            telemetry.addData("r",color[0]);
-            telemetry.addData("g",color[1]);
-            telemetry.addData("b",color[2]);
-            return mmnts.get_m10() / mmnts.get_m00();
 
+            //Find Contours
+            List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+            Imgproc.findContours(mask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+            Imgproc.drawContours(mask, contours, -1, new Scalar(255,255,0));
+            SaveImage(matToBitmap(mask),"Contour");
+            // Find max contour area
+            double maxArea = 0;
+            int index = -1;
+            Iterator<MatOfPoint> each = contours.iterator();
+            while (each.hasNext()) {
+                MatOfPoint wrapper = each.next();
+                double area = Imgproc.contourArea(wrapper);
+                if (area > maxArea) {
+                    maxArea = area;
+                }
+            }
+
+
+            //Centroid setup
+            Moments mmnts = Imgproc.moments(mask, true);
+
+
+            location = mmnts.get_m10() / mmnts.get_m00();
+            size = maxArea;
+
+
+            return;
             //}
         } catch (Exception e)
 
         {
-            return -1;
+            return;
         }
     }
-
 
     public static int[] getARGB(int p){
         int R = (p & 0xff0000) >> 16;
