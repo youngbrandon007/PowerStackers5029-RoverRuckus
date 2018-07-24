@@ -158,8 +158,11 @@ public class OmniBotImage extends PSConfigOpMode implements CameraBridgeViewBase
 
     }
 
-    public static void getloc(Mat crop, Telemetry telemetry) {
+    public static void getloc(Mat input, Telemetry telemetry) {
         try {
+            Mat crop = input.clone();
+            SaveImage(matToBitmap(crop), "originalRGB");
+            Imgproc.cvtColor(crop,crop,Imgproc.COLOR_RGB2BGR);
             SaveImage(matToBitmap(crop), "original");
             Scalar min = new Scalar(70, 150, 50);
             Scalar max = new Scalar(100, 255, 255);
@@ -201,7 +204,6 @@ public class OmniBotImage extends PSConfigOpMode implements CameraBridgeViewBase
             location = mmnts.get_m10() / mmnts.get_m00();
             pos = (crop.width()/2)-location;
             size = maxArea;
-            crop = mask;
 
             return;
             //}
@@ -238,15 +240,9 @@ public class OmniBotImage extends PSConfigOpMode implements CameraBridgeViewBase
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat frame = inputFrame.rgba();
-
-        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGBA2BGR);
-        SaveImage(matToBitmap(frame), "original");
+        Core.rotate(frame, frame, Core.ROTATE_90_CLOCKWISE);
 
         getloc(frame,telemetry);
-
-        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2RGBA);
-
-
         return frame;
     }
 
