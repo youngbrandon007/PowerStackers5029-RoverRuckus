@@ -158,26 +158,27 @@ public class OmniBotImage extends PSConfigOpMode implements CameraBridgeViewBase
 
     }
 
-    public static void getloc(Mat input, Telemetry telemetry) {
+    public static List<MatOfPoint> getloc(Mat input, Telemetry telemetry) {
         try {
             Mat crop = input.clone();
-            SaveImage(matToBitmap(crop), "originalRGB");
-            Imgproc.cvtColor(crop,crop,Imgproc.COLOR_RGB2BGR);
-            SaveImage(matToBitmap(crop), "original");
-            Scalar min = new Scalar(70, 150, 50);
-            Scalar max = new Scalar(100, 255, 255);
+//            SaveImage(matToBitmap(crop), "INPUT");
+            Imgproc.cvtColor(crop,crop,Imgproc.COLOR_RGB2HSV);
+//            SaveImage(matToBitmap(crop), "original");
+//            Scalar min = new Scalar(70, 150, 50);
+//            Scalar max = new Scalar(100, 255, 255);
+            Scalar min = new Scalar(40, 150, 50);
+            Scalar max = new Scalar(70, 255, 255);
             //convert color format
-            Imgproc.cvtColor(crop, crop, Imgproc.COLOR_BGR2HSV);
             //Create Mask
             Mat mask = new Mat();
             Core.inRange(crop, min, max, mask);
-            SaveImage(matToBitmap(mask), "mask");
+//            SaveImage(matToBitmap(mask), "mask");
 
             //Find Contours
             List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
             Imgproc.findContours(mask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
             Imgproc.drawContours(mask, contours, -1, new Scalar(0,255,255), 3);
-            SaveImage(matToBitmap(mask), "Contour");
+//            SaveImage(matToBitmap(mask), "Contour");
             // Find max contour area
             double maxArea = 0;
             List<MatOfPoint> biggest = new ArrayList<>();
@@ -195,8 +196,6 @@ public class OmniBotImage extends PSConfigOpMode implements CameraBridgeViewBase
             }
             Imgproc.cvtColor(crop, crop, Imgproc.COLOR_HSV2BGR);
 
-            Imgproc.drawContours(crop, biggest, -1, new Scalar(0, 255, 0), 5);
-            SaveImage(matToBitmap(crop),"after");
             //Centroid setup
             Moments mmnts = Imgproc.moments(mask, true);
 
@@ -205,12 +204,12 @@ public class OmniBotImage extends PSConfigOpMode implements CameraBridgeViewBase
             pos = (crop.width()/2)-location;
             size = maxArea;
 
-            return;
+            return biggest;
             //}
         } catch (Exception e)
 
         {
-            return;
+            return null;
         }
     }
 
@@ -240,9 +239,10 @@ public class OmniBotImage extends PSConfigOpMode implements CameraBridgeViewBase
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat frame = inputFrame.rgba();
-        Core.rotate(frame, frame, Core.ROTATE_90_CLOCKWISE);
 
-        getloc(frame,telemetry);
+
+        Imgproc.drawContours(frame,getloc(frame,telemetry), -1, new Scalar(255,0 , 0), 5);
+
         return frame;
     }
 
