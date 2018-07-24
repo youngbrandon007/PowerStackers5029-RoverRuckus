@@ -15,5 +15,11 @@
 apply from: '../build.common.gradle'
 
 dependencies {
-    compile project(path: ':openCVLibrary341')
+    implementation project(path: ':openCVLibrary341')
+}
+android {
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
