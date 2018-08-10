@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 @TeleOp(name="OmniIr", group="omnibot")
 public class OmniBotIr extends OmniBotConfig {
     IrSeekerSensor ir;
-    double irOn = 1;
+    double irOn = 0;
     @Override
     public void init() {
         config(this);
@@ -26,8 +26,9 @@ public class OmniBotIr extends OmniBotConfig {
         telemetry.addData("IR Angle", ir.getAngle());
         telemetry.addData("IR Power", ir.getStrength());
         telemetry.addData("IR Mode", irOn);
+        telemetry.addData("Gyro", gyroSensor.getHeading());
         if (irOn == 1) {
-            robotHandler.drive.mecanum.setMecanumThridPerson(Math.toRadians(ir.getAngle()), 0.03*(255-ir.getStrength()),0.05*(gyroSensor.getHeading()-ir.getAngle()),1,Math.toRadians(gyroSensor.getHeading()));
+            robotHandler.drive.mecanum.setMecanumThridPerson(Math.toRadians(ir.getAngle()+90), 0.03*(255-ir.getStrength()),0.05*(gyroSensor.getHeading()-ir.getAngle()),1,Math.toRadians(gyroSensor.getHeading()));
         } else if (irOn == 2){
             if (ir.getAngle()>-20&&ir.getAngle()<20){
                 if (ir.getAngle()>0){
