@@ -58,6 +58,10 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
         }
     }
 
+    public Camera getCamera() {
+        return mCamera;
+    }
+
     public JavaCameraView(Context context, int cameraId) {
         super(context, cameraId);
     }
