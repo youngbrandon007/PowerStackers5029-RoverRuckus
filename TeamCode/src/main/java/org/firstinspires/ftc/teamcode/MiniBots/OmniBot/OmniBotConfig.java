@@ -3,10 +3,10 @@ package org.firstinspires.ftc.teamcode.MiniBots.OmniBot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSConfigOpMode;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSEnum;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSMotor;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSRobot;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSConfigOpMode;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSEnum;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSMotor;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSRobot;
 
 abstract public class OmniBotConfig extends PSConfigOpMode {
 

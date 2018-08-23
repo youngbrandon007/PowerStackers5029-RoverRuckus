@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.MiniBots.OmniBot;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.support.annotation.IdRes;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
@@ -12,45 +10,26 @@ import android.widget.LinearLayout;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerNotifier;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.vuforia.Image;
-import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.Vuforia;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeManagerImpl;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Control.PID;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.PSConfigOpMode;
-import org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vision.PineappleVision;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Control.PID;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.android.Utils;
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
-import org.opencv.core.Range;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-
-import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vision.PineappleVision.SaveImage;
-import static org.firstinspires.ftc.teamcode.PineappleRobotPackage.lib.Vision.PineappleVision.matToBitmap;
 
 @TeleOp(name = "OmniBotImage", group = "omnibot")
 public class OmniBotImage extends OmniBotConfig implements CameraBridgeViewBase.CvCameraViewListener2, OpModeManagerNotifier.Notifications {
