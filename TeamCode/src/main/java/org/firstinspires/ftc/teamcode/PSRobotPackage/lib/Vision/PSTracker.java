@@ -6,7 +6,9 @@ import java.util.LinkedHashMap;
 
 public abstract class PSTracker {
     private boolean enabled = true;
+
     private LinkedHashMap<String, Mat> intermediates = new LinkedHashMap<>();
+
 
     void internalProcessFrame(Mat frame, double timestamp) {
         if (enabled) {

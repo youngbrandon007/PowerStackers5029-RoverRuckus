@@ -74,6 +74,13 @@ public abstract class PSCamera implements OpModeManagerNotifier.Notifications {
             }
 
             doInitialize();
+            synchronized (trackers) {
+                for (PSTracker tracker : trackers) {
+                    tracker.init(this);
+                }
+
+                initialized = true;
+            }
         }
     }
 
@@ -84,7 +91,19 @@ public abstract class PSCamera implements OpModeManagerNotifier.Notifications {
             }
         }
     }
+    public void addTracker(PSTracker tracker) {
+        synchronized (trackers) {
+            this.trackers.add(tracker);
+        }
 
+        if (initialized) {
+            tracker.init(this);
+        }
+    }
+
+    public List<PSTracker> getTrackers() {
+        return trackers;
+    }
     @Override
     public void onOpModePreInit(OpMode opMode) {
 

@@ -63,7 +63,7 @@ public class PSOpenCVCamera extends PSCamera implements CameraBridgeViewBase.CvC
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat frame = inputFrame.rgba();
-        onFrame(frame, System.nanoTime());
+        onFrame(frame, System.nanoTime()/ Math.pow(10, 9));
         return frame;
     }
 
