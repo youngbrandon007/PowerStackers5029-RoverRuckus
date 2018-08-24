@@ -48,17 +48,17 @@ public class PSServo {
      * @param r The resources accessible to the servo
      * @param name The name of the servo used to Hardware map
      * @param type The type of servo i.e. cont or limited
-     * @param totalRotation The //TODO add servo model
+     * @param servoModel The model of the servo, used to calculate the total rotation and degrees
      * @param init The init position for the servo to be initialized to
      * @param names The names of the position list
      * @param positions the positions for the position list
      * @param goToInit whether the servo should go to the init position in initialization
      */
-    public PSServo(PSResources r, String name, PSEnum.ServoType type, double totalRotation, double init, String[] names, double[] positions, boolean goToInit){
+    public PSServo(PSResources r, String name, PSEnum.ServoType type, PSEnum.ServoTotalRotation servoModel, double init, String[] names, double[] positions, boolean goToInit){
         resources = r;
         servoName = name;
         servoType = type;
-        this.totalRotation = totalRotation;
+        this.totalRotation = servoModel.getRotation();;
         initPos = init;
 
         servoObject  = resources.hardwareMap.servo.get(servoName);

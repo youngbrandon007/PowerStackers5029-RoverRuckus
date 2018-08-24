@@ -20,19 +20,44 @@ public class PSEnum {
         NEV60, NEV40, NEV20, NEV3_7, UNDI
     }
 
-    public enum SensorType{
+    public enum SensorType {
         Touch, Light, Color, Distance
     }
+
     //Servo
-    public enum ServoType{
+    public enum ServoType {
         CONTINUOUS, LIMIT
     }
-    public enum ServoModels{
-        HS485, REVSMART, HS625MG, HS645MG, HS311, HS422, SA1230SG, HS7980TH, HS755MG
+
+    public enum ServoTotalRotation {
+        //HiTec
+        HS_311(202.5),
+        HS_322HD(201),
+        HS_485HB(190.5),
+        HS_625MG(197),
+        HS_645MG(197),
+        HS_7980TH(198.5),
+        HS_755MG(200.5),
+        //Savox
+        SA_1230SG(90),
+        SC_1256TG(130),
+        SC_1258TG(130),
+        //Rev
+        REVSMARTNOPROG(180),
+        REVSMARTPROG(280);
+        private double rotation = 180;
+
+        ServoTotalRotation(double deg) {
+            this.rotation = deg;
+        }
+        public double getRotation(){
+            return rotation;
+        }
     }
+
     //Vision
-    public enum CameraDirection{
-        FRONT,BACK
+    public enum CameraDirection {
+        FRONT, BACK
     }
 }
 
