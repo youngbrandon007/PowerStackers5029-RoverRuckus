@@ -12,7 +12,6 @@ public class PSRobotConstants {
     public static final double NEV3_7CPR = 25.9;
     public static final double TETRIXCPR = 1440;
     public static final double CMTOINCH = 0.393701;
-    public static final double MINIMUM_JOYSTICK_THRESHOLD = 0.15f;
-    public static final double SERVOLIMIT = 202.5;
 
+    public static final String VUFORIAKEY = "";//TODO ADD THE KEY HERE
 }

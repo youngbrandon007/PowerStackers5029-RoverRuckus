@@ -31,18 +31,4 @@ public class PSAutoDrive {
         this.drive = drive;
     }
 
-
-    private void writeToFile(String name, String data) {
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(path + "/PID", name + ".csv");
-        try {
-            FileOutputStream stream = new FileOutputStream(file, true);
-            stream.write(data.getBytes());
-            stream.close();
-            Log.i("saveData", "Data Saved");
-        } catch (IOException e) {
-            Log.e("SAVE DATA", "Could not write file " + e.getMessage());
-        }
-    }
-
 }
