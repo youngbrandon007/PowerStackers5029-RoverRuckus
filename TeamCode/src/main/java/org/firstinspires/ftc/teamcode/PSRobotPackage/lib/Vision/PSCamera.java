@@ -16,6 +16,8 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public abstract class PSCamera implements OpModeManagerNotifier.Notifications {
@@ -23,6 +25,7 @@ public abstract class PSCamera implements OpModeManagerNotifier.Notifications {
     protected AppUtil appUtil = AppUtil.getInstance();
     protected Activity activity;
     protected OpModeManagerImpl opModeManager;
+    protected final ArrayList<PSTracker> trackers;
 
     Context context = AppUtil.getDefContext();
     @IdRes
@@ -34,6 +37,7 @@ public abstract class PSCamera implements OpModeManagerNotifier.Notifications {
         this.activity = appUtil.getActivity();
         this.cameraDirection = cameraDirection;
         cameraMonitorViewId = context.getResources().getIdentifier("cameraMonitorViewId", "id", context.getPackageName());
+        this.trackers = new ArrayList<>();
         opModeManager = OpModeManagerImpl.getOpModeManagerOfActivity(activity);
         if (opModeManager != null) {
             opModeManager.registerListener(this);
@@ -74,11 +78,11 @@ public abstract class PSCamera implements OpModeManagerNotifier.Notifications {
     }
 
     protected void onFrame(Mat frame, double timestamp) {
-//        synchronized (trackers) {
-//            for (Tracker tracker : trackers) {
-//                tracker.internalProcessFrame(frame, timestamp);
-//            }
-//        }
+        synchronized (trackers) {
+            for (PSTracker tracker : trackers) {
+                tracker.internalProcessFrame(frame, timestamp);
+            }
+        }
     }
 
     @Override

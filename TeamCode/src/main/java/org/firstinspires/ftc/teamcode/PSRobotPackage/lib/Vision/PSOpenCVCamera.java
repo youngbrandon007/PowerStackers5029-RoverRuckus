@@ -62,9 +62,28 @@ public class PSOpenCVCamera extends PSCamera implements CameraBridgeViewBase.CvC
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        return null;
+        Mat frame = inputFrame.rgba();
+        onFrame(frame, System.nanoTime());
+        return frame;
     }
-    public class OpenCVProperties implements Properties{
+
+    @Override
+    protected void onFrame(Mat frame, double timestamp) {
+        super.onFrame(frame, timestamp);
+        PSOverlay overlay = new PSOverlay(frame);
+        synchronized (trackers) {
+            for (PSTracker tracker : trackers) {
+                if (tracker.isEnabled()) {
+
+                    overlay.setScalingFactor(1);
+
+                    tracker.drawOverlay(overlay, frame.cols(), frame.rows(), true);
+                }
+            }
+        }
+    }
+
+    public class OpenCVProperties implements Properties {
         private JavaCameraView cameraView;
 
         public OpenCVProperties(JavaCameraView cameraView) {
