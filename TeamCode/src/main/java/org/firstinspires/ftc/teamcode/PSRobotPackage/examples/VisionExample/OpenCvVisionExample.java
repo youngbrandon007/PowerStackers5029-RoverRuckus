@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PSRobotPackage.Examples.VisionExample;
+package org.firstinspires.ftc.teamcode.PSRobotPackage.examples.VisionExample;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PSRobotPackage.Examples.VisionExample;
+package org.firstinspires.ftc.teamcode.PSRobotPackage.examples.VisionExample;
 
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Vision.PSCamera;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Vision.PSOverlay;

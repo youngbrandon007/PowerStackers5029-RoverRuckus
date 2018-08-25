@@ -13,5 +13,5 @@ public class PSRobotConstants {
     public static final double TETRIXCPR = 1440;
     public static final double CMTOINCH = 0.393701;
 
-    public static final String VUFORIAKEY = "";//TODO ADD THE KEY HERE
+    public static final String VUFORIA_KEY = "";//TODO ADD THE KEY HERE
 }

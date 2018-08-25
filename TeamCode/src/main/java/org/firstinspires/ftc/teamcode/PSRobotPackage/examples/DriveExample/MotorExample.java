@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PSRobotPackage.Examples.DriveExample;
+package org.firstinspires.ftc.teamcode.PSRobotPackage.examples.DriveExample;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -9,31 +9,29 @@ import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSMotor;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSRobot;
 
 /**
- * Created by Brandon on 7/14/2017.
+ * Created by Brandon on 6/26/2017.
  */
 
-@TeleOp(name = "PineEx-WorldTele", group = "Linear Opmode")
+@TeleOp(name = "PineEx-Motor", group = "Linear Opmode")
 @Disabled
 
-public class DriveTeleOpExample extends LinearOpMode {
+public class MotorExample extends LinearOpMode {
     PSRobot robot;
 
-    PSMotor left;
-    PSMotor right;
+    PSMotor testMotor;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         robot = new PSRobot(this);
 
-        left = robot.motorHandler.newDriveMotor("r", 1, true , true, PSEnum.MotorLoc.LEFT, PSEnum.MotorType.NEV40);
-        right = robot.motorHandler.newDriveMotor("l", 1, true , true, PSEnum.MotorLoc.RIGHT, PSEnum.MotorType.NEV40);
+        testMotor = robot.motorHandler.newMotor("test", 1, true , true, PSEnum.MotorType.NEV40);
 
 
         waitForStart();
         while (opModeIsActive()){
+            testMotor.update(gamepad1.left_stick_x);
 
-//            robot.drive.setPower(gamepad1.left_stick_y, gamepad1.right_stick_y);
 
         }
     }

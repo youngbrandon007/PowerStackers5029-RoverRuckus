@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode.PSRobotPackage.Examples.ConfigExample;
+package org.firstinspires.ftc.teamcode.PSRobotPackage.examples.ConfigExample;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;

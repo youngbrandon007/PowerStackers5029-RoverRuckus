@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PSRobotPackage.Examples.DriveExample;
+package org.firstinspires.ftc.teamcode.PSRobotPackage.examples.DriveExample;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
