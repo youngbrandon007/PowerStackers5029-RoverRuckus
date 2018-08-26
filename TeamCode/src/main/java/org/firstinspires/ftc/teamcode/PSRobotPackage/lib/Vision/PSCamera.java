@@ -22,20 +22,20 @@ import java.util.concurrent.CountDownLatch;
 
 public abstract class PSCamera implements OpModeManagerNotifier.Notifications {
 
-    protected AppUtil appUtil = AppUtil.getInstance();
-    protected Activity activity;
-    protected OpModeManagerImpl opModeManager;
-    protected final ArrayList<PSTracker> trackers;
+    AppUtil appUtil = AppUtil.getInstance();
+    Activity activity;
+    private OpModeManagerImpl opModeManager;
+    final ArrayList<PSTracker> trackers;
 
-    Context context = AppUtil.getDefContext();
     @IdRes
-    public int cameraMonitorViewId;
+    int cameraMonitorViewId;
     private boolean initialized;
-    protected PSEnum.CameraDirection cameraDirection  = PSEnum.CameraDirection.BACK;;
+    PSEnum.CameraDirection cameraDirection;
 
-    public PSCamera(PSEnum.CameraDirection cameraDirection) {
+    PSCamera(PSEnum.CameraDirection cameraDirection) {
         this.activity = appUtil.getActivity();
         this.cameraDirection = cameraDirection;
+        Context context = AppUtil.getDefContext();
         cameraMonitorViewId = context.getResources().getIdentifier("cameraMonitorViewId", "id", context.getPackageName());
         this.trackers = new ArrayList<>();
         opModeManager = OpModeManagerImpl.getOpModeManagerOfActivity(activity);

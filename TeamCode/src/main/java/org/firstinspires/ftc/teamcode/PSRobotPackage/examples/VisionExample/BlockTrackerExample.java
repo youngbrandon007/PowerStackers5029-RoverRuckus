@@ -3,14 +3,19 @@ package org.firstinspires.ftc.teamcode.PSRobotPackage.examples.VisionExample;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Vision.PSCamera;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Vision.PSOverlay;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Vision.PSTracker;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Utils.PSVisionUtils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BlockTrackerExample extends PSTracker {
-    private Mat hsv,mask,bgr, gray;
+    private Mat hsv, hsvMask, bgr;
     public static final int YELLOW_HSV_HUE_LOW = 20;
     public static final int YELLOW_HSV_SAT_LOW = 50;
     public static final int YELLOW_HSV_VAL_LOW = 20;
@@ -19,47 +24,63 @@ public class BlockTrackerExample extends PSTracker {
     public static final int YELLOW_HSV_SAT_HIGH = 100;
     public static final int YELLOW_HSV_VAL_HIGH = 100;
 
-    Scalar HSVLOW = new Scalar(YELLOW_HSV_HUE_LOW,YELLOW_HSV_SAT_LOW, YELLOW_HSV_VAL_LOW);
-    Scalar HSVHIGH = new Scalar(YELLOW_HSV_HUE_HIGH,YELLOW_HSV_SAT_HIGH,YELLOW_HSV_VAL_HIGH);
+    Scalar HSVLOW = new Scalar(YELLOW_HSV_HUE_LOW, YELLOW_HSV_SAT_LOW, YELLOW_HSV_VAL_LOW);
+    Scalar HSVHIGH = new Scalar(YELLOW_HSV_HUE_HIGH, YELLOW_HSV_SAT_HIGH, YELLOW_HSV_VAL_HIGH);
 
+    private Mat hsvMaskOpen, hsvMaskClose, hsvOpenKernel, hsvCloseKernel;
+    private int hsvOpenKernelWidth, hsvOpenKernelHeight, hsvCloseKernelWidth, hsvCloseKernelHeight;
+
+
+    public static int HSV_OPEN_KERNEL_WIDTH = 5;
+    public static int HSV_OPEN_KERNEL_HEIGHT = 5;
+    public static int HSV_CLOSE_KERNEL_WIDTH = 3;
+    public static int HSV_CLOSE_KERNEL_HEIGHT = 31;
 
     @Override
     public void init(PSCamera camera) {
         hsv = new Mat();
-        mask = new Mat();
+        hsvMask = new Mat();
         bgr = new Mat();
-        gray = new Mat();
-//        hsv = new Mat();
-
+        hsvMaskOpen = new Mat();
+        hsvMaskClose = new Mat();
+        hsvOpenKernel = new Mat();
+        hsvCloseKernel = new Mat();
     }
 
     @Override
     public void processFrame(Mat frame, double timestamp) {
-        //Formating
+        PSVisionUtils.refreshKernel(hsvOpenKernel,hsvOpenKernelHeight,hsvOpenKernelWidth,HSV_OPEN_KERNEL_HEIGHT,HSV_OPEN_KERNEL_WIDTH);
+        PSVisionUtils.refreshKernel(hsvCloseKernel,hsvCloseKernelHeight,hsvCloseKernelWidth,HSV_CLOSE_KERNEL_HEIGHT,HSV_CLOSE_KERNEL_WIDTH);
+        //Color Conversion
         Imgproc.cvtColor(frame, bgr, Imgproc.COLOR_RGB2BGR);
-        Imgproc.cvtColor(frame,gray,Imgproc.COLOR_RGB2GRAY);
-
         //Blurring
-        Imgproc.GaussianBlur(bgr,bgr,new Size(5,5),0);
-        Imgproc.GaussianBlur(gray,gray,new Size(5,5),0);
-
-        addIntermediate("bgrblur",bgr);
-        addIntermediate("grayblur",gray);
+        Imgproc.GaussianBlur(bgr, bgr, new Size(5, 5), 0);
+        addIntermediate("bgrblur", bgr);
 
         //Masking
-        Imgproc.cvtColor(bgr,hsv,Imgproc.COLOR_BGR2HSV);
-        Core.inRange(hsv,HSVLOW,HSVHIGH,mask);
+        Imgproc.cvtColor(bgr, hsv, Imgproc.COLOR_BGR2HSV);
+        Core.inRange(hsv, HSVLOW, HSVHIGH, hsvMask);
+        addIntermediate("hsvMask", hsvMask);
 
-        //Canny edge detection
-        Imgproc.Canny(gray,gray,1,3,3,false);
-
-        addIntermediate("edges",gray);
-        addIntermediate("mask",mask);
-
+        Imgproc.morphologyEx(hsvMask, hsvMaskOpen,Imgproc.MORPH_OPEN,hsvOpenKernel);
+        addIntermediate("hsvMaskOpen", hsvMaskOpen);
+        Imgproc.morphologyEx(hsvMaskOpen, hsvMaskClose,Imgproc.MORPH_CLOSE,hsvCloseKernel);
+        addIntermediate("hsvMaskClose", hsvMaskClose);
     }
 
     @Override
     public void drawOverlay(PSOverlay overlay, int imageWidth, int imageHeight, boolean debug) {
+        Scalar color = new Scalar(0,255,0);
+        List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+        Imgproc.findContours(hsvMaskClose, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+        for (MatOfPoint current : contours) {
+            double area = Imgproc.contourArea(current);
+            overlay.strokeContour(current, color,3);
+            overlay.putText(""+area, PSOverlay.TextAlign.CENTER,PSVisionUtils.maskCentroid(current),color,10);
+        }
+
 
     }
+
+
 }

@@ -34,7 +34,7 @@ public class PSVuforiaCamera extends PSCamera {
 
     @Override
     public Properties getProperties() {
-        return null;
+        return new VuforiaProperties();
     }
     private class VuforiaProperties implements Properties {
         @Override
