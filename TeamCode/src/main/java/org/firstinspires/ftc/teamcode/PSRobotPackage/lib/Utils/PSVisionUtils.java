@@ -25,18 +25,19 @@ import java.io.FileOutputStream;
 public class PSVisionUtils {
     /**
      * Saves an inputted bitmap to a directory
-     * @param bitmap input bitmap
-     * @param name name of the saved file
-     * @param fileDir the file directory for the image to be saved to
+     *
+     * @param bitmap    Input bitmap
+     * @param name      Name of the saved file
+     * @param fileDir   The name of the file directory for the image to be saved to
      */
-    public static void saveImageToFile(Bitmap bitmap, String name, File fileDir) {
+    public static void saveImageToFile(Bitmap bitmap, String name, String fileDir) {
 
         String root = Environment.getExternalStorageDirectory().getAbsolutePath();
-//        File myDir = new File(root + "/saved_images");
-        fileDir.mkdirs();
+        File myDir = new File(root + fileDir);
+        myDir.mkdirs();
 
         String fname = name + ".jpg";
-        File file = new File(fileDir, fname);
+        File file = new File(myDir, fname);
         if (file.exists()) file.delete();
         try {
             FileOutputStream out = new FileOutputStream(file);
@@ -51,9 +52,10 @@ public class PSVisionUtils {
 
     /**
      * Converts a bitmap and a type to a openCv mat
-     * @param bit the input bitmap
-     * @param cvType the mat type
-     * @return output mat
+     *
+     * @param bit       the input bitmap
+     * @param cvType    the mat type
+     * @return          output mat
      */
     public static Mat bitmapToMat(Bitmap bit, int cvType) {
         Mat newMat = new Mat(bit.getHeight(), bit.getWidth(), cvType);
@@ -63,8 +65,9 @@ public class PSVisionUtils {
 
     /**
      * Converts a openCv mat to a bitmap
-     * @param mat input mat
-     * @return output bitmap
+     *
+     * @param mat   input mat
+     * @return      output bitmap
      */
     public static Bitmap matToBitmap(Mat mat) {
         Bitmap newBit = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888);
@@ -100,8 +103,9 @@ public class PSVisionUtils {
 
     /**
      * Method to find the centroid of a binary Mask
-     * @param mask the input binary mask
-     * @return a openCv point with the x and y values of the centroid
+     *
+     * @param mask  the input binary mask
+     * @return      a openCv point with the x and y values of the centroid
      */
     public static Point maskCentroid(Mat mask){
         Moments mmnts = Imgproc.moments(mask, true);

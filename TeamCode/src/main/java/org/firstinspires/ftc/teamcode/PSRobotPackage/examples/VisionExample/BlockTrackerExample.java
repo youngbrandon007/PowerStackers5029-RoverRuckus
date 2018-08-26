@@ -72,7 +72,7 @@ public class BlockTrackerExample extends PSTracker {
     public void drawOverlay(PSOverlay overlay, int imageWidth, int imageHeight, boolean debug) {
         Scalar color = new Scalar(0,255,0);
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
-        Imgproc.findContours(hsvMaskClose, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(hsvMaskClose, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
         for (MatOfPoint current : contours) {
             double area = Imgproc.contourArea(current);
             overlay.strokeContour(current, color,3);
