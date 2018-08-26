@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSEnum;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSResources;
-import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSStaticFunction;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Utils.PSGeneralUtils;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;
@@ -126,8 +126,8 @@ public class PSMecanumDrive extends PSDriveAbstract {
 
         x = (Math.cos(rad) * counts);
         y = (Math.sin(rad) * counts);
-        x = PSStaticFunction.round(x, 4);
-        y = PSStaticFunction.round(y, 4);
+        x = PSGeneralUtils.round(x, 4);
+        y = PSGeneralUtils.round(y, 4);
         xy[0] = x;
         xy[1] = y;
         return xy;

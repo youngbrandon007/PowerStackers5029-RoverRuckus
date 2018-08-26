@@ -111,7 +111,7 @@ public class PSMotor {
 //        int target;
 //
 //        if(resources.opMode.opModeIsActive()){
-//            if (PSStaticFunction.isPositive(speed) != PSStaticFunction.isPositive(counts)){counts=-counts;}
+//            if (PSGeneralUtils.isPositive(speed) != PSGeneralUtils.isPositive(counts)){counts=-counts;}
 //
 //            target = motorObject.getCurrentPosition() + counts;
 //
@@ -135,7 +135,7 @@ public class PSMotor {
     //input distance for wheel to move
 
 //    private void encoderDriveDist(double speed, double inches, double wheelSize, PSEnum.MotorValueType motorValueType ){
-//        int counts = PSStaticFunction.distToCounts(inches, motorValueType,wheelSize, cpr);
+//        int counts = PSGeneralUtils.distToCounts(inches, motorValueType,wheelSize, cpr);
 //        encoderDriveCounts(speed, counts);
 //    }
 
@@ -146,7 +146,7 @@ public class PSMotor {
 //    public void encoderStart(double speed, int counts){
 //        int target;
 //        if(resources.opMode.opModeIsActive()){
-//            if (PSStaticFunction.isPositive(speed) != PSStaticFunction.isPositive(counts)){counts=-counts;}
+//            if (PSGeneralUtils.isPositive(speed) != PSGeneralUtils.isPositive(counts)){counts=-counts;}
 //            target = motorObject.getCurrentPosition() + counts;
 //
 //            motorObject.setTargetPosition(target);

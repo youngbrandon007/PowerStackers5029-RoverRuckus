@@ -3,40 +3,50 @@ package org.firstinspires.ftc.teamcode.PSRobotPackage.lib;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Utils.PSGeneralUtils;
+
 import java.util.HashMap;
 
 /**
- * Created by Brandon on 9/13/2017.
+ * Created on 9/13/2017.
  */
 
 public class PSServo {
 
     private PSResources resources;
 
-    public String servoName;
-
-    public double totalRotation;
-
-    public double initPos;
-
-    public Servo servoObject;
-
-    public PSEnum.ServoType servoType;
-
-    public HashMap<String, Double> position;
+    /**
+     * the name of the servo used for hardware mapping
+     */
+    private String servoName;
 
     /**
+     * the total rotation of
+     */
+    private double totalRotation;
+
+    /**
+     * the init position of the
+     */
+    private double initPos;
+
+    private Servo servoObject;
+
+    private PSEnum.ServoType servoType;
+
+    private HashMap<String, Double> position;
+
+    /**
+     * PowerStackers servo constructor
      * @param r The resources accessible to the servo
      * @param name The name of the servo used to Hardware map
-     * @param type The type of servo i.e. cont or limited
-     * @param totalRotation The //TODO add servo model
+     * @param totalRotation Th
      * @param init The init position for the servo to be initialized to
      * @param goToInit whether the servo should go to the init position in initialization
      */
-    public PSServo(PSResources r, String name, PSEnum.ServoType type, double totalRotation, double init, boolean goToInit){
+    public PSServo(PSResources r, String name, double totalRotation, double init, boolean goToInit){
         resources = r;
         servoName = name;
-        servoType = type;
         this.totalRotation = totalRotation;
         initPos = init;
 
@@ -45,25 +55,18 @@ public class PSServo {
     }
 
     /**
+     * PowerStackers servo constructor
      * @param r The resources accessible to the servo
      * @param name The name of the servo used to Hardware map
-     * @param type The type of servo i.e. cont or limited
      * @param servoModel The model of the servo, used to calculate the total rotation and degrees
      * @param init The init position for the servo to be initialized to
      * @param names The names of the position list
      * @param positions the positions for the position list
      * @param goToInit whether the servo should go to the init position in initialization
      */
-    public PSServo(PSResources r, String name, PSEnum.ServoType type, PSEnum.ServoTotalRotation servoModel, double init, String[] names, double[] positions, boolean goToInit){
-        resources = r;
-        servoName = name;
-        servoType = type;
-        this.totalRotation = servoModel.getRotation();;
-        initPos = init;
-
-        servoObject  = resources.hardwareMap.servo.get(servoName);
-        if(goToInit)servoObject.setPosition(initPos);
-        this.position = PSStaticFunction.arraysToHashMap(names, positions);
+    public PSServo(PSResources r, String name, PSEnum.ServoTotalRotation servoModel, double init, String[] names, double[] positions, boolean goToInit){
+        this(r,name,servoModel.getRotation(),init,goToInit);
+        this.position = PSGeneralUtils.arraysToHashMap(names, positions);
     }
 
     /**
@@ -121,7 +124,7 @@ public class PSServo {
 
         //TODO finish this
 
-        setPosition(position);
+        setPosition(position, speed);
     }
 
 }

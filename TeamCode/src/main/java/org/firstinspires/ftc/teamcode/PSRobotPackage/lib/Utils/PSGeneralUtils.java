@@ -1,4 +1,7 @@
-package org.firstinspires.ftc.teamcode.PSRobotPackage.lib;
+package org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Utils;
+
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSEnum;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSRobotConstants;
 
 import java.util.HashMap;
 
@@ -6,7 +9,7 @@ import java.util.HashMap;
  * Created by Brandon on 10/21/2017.
  */
 
-public class PSStaticFunction {
+public class PSGeneralUtils {
     public static double round(double val, int place){
         return Math.round(val*Math.pow(10, place))/Math.pow(10,place);
     }

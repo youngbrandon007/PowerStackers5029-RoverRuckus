@@ -36,7 +36,7 @@ public class PSTankDrive extends PSDriveAbstract {
 
 //    private void encoderDriveCounts(double speed, int counts) {
 //        if (resources.opMode.opModeIsActive()) {
-//            if (PSStaticFunction.isPositive(speed) != PSStaticFunction.isPositive(counts)) {
+//            if (PSGeneralUtils.isPositive(speed) != PSGeneralUtils.isPositive(counts)) {
 //                counts = -counts;
 //            }
 //
@@ -59,7 +59,7 @@ public class PSTankDrive extends PSDriveAbstract {
 //    private void encoderDriveDist(double speed, String distance, double wheelSize) {
 //        PSEnum.MotorValueType motorValueType = getUnit(distance);
 //        double value = getVal(distance);
-//        int counts = PSStaticFunction.distToCounts(value, motorValueType, wheelSize, getDriveCPR());
+//        int counts = PSGeneralUtils.distToCounts(value, motorValueType, wheelSize, getDriveCPR());
 //        String countsSring = counts+"ct";
 //        encoderDrive(speed, countsSring, wheelSize);
 //    }
