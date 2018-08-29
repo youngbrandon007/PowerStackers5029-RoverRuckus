@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.PSRobotPackage.examples.VisionExample;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Vision.PSCamera;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Vision.PSOverlay;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Vision.PSTracker;
-import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Utils.PSVisionUtils;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Utils.vision.PSVisionUtils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;

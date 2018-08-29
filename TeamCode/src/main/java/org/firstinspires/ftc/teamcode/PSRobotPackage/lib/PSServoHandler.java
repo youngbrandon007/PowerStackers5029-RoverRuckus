@@ -13,10 +13,12 @@ public class PSServoHandler {
     }
 
     public PSServo newLimitServo(String name, double pos, double init) {
-        return new PSServo(resources, name, PSEnum.ServoType.LIMIT, pos, init, true);
+//        return new PSServo(resources, name, , pos, init, true);
+        return new PSServo(resources,name,100,init,false);
     }
 
     public PSServo newContinuousServo(String name, double init){
-        return new PSServo(resources, name, PSEnum.ServoType.CONTINUOUS, 1, init, true);
+//        return new PSServo(resources, name, PSEnum.ServoType.CONTINUOUS, 1, init, true);
+        return new PSServo(resources,name,100,init,false);
     }
 }
