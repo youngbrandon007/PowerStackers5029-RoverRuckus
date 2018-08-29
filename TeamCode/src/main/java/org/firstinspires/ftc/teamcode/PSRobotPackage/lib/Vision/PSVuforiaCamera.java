@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSEnum;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSRobotConstants;
 
 public class PSVuforiaCamera extends PSCamera {
-    VuforiaLocalizer vuforia;
+    public VuforiaLocalizer vuforia;
 
 
     public PSVuforiaCamera(PSEnum.CameraDirection cameraDirection) {
@@ -44,4 +44,5 @@ public class PSVuforiaCamera extends PSCamera {
             return (imageWidth * 0.5) / Math.tan(0.5 * fov);
         }
     }
+
 }

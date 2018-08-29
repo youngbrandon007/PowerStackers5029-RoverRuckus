@@ -10,6 +10,7 @@ public class VuforiaVisionExample extends OpMode {
     @Override
     public void init() {
         vuforiaCamera.initialize();
+
     }
 
     @Override
