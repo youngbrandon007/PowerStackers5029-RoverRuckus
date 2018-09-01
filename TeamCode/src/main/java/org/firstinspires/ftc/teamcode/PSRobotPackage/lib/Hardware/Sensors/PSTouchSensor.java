@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Sensors;
+package org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Hardware.Sensors;
 
 import com.qualcomm.robotcore.hardware.TouchSensor;
 

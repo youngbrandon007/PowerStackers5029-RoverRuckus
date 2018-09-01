@@ -1,8 +1,10 @@
-package org.firstinspires.ftc.teamcode.PSRobotPackage.lib;
+package org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Hardware;
 
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSEnum;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSResources;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Utils.PSGeneralUtils;
 
 import java.util.HashMap;

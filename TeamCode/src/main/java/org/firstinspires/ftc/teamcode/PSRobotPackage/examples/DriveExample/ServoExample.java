@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSRobot;
-import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSServo;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Hardware.PSServo;
 
 /**
  * Created by young on 8/7/2017.

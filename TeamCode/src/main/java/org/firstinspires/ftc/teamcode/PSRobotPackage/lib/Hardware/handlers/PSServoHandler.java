@@ -1,4 +1,7 @@
-package org.firstinspires.ftc.teamcode.PSRobotPackage.lib;
+package org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Hardware.handlers;
+
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Hardware.PSServo;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSResources;
 
 /**
  * Created by Brandon on 9/13/2017.

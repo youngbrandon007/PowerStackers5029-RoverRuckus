@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.PSRobotPackage.lib;
 
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Hardware.PSMotor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

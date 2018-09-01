@@ -1,7 +1,11 @@
-package org.firstinspires.ftc.teamcode.PSRobotPackage.lib;
+package org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSEnum;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSResources;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.PSRobotConstants;
 
 /**
  * Created by Brandon on 6/19/2017.

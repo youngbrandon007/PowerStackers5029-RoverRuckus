@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Auto.PSAutoDrive;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Auto.PSSwitchBoard;
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Drive.PSDrive;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Hardware.handlers.PSMotorHandler;
+import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Hardware.handlers.PSServoHandler;
 
 /**
  * Created by Brandon on 6/26/2017.
@@ -12,19 +14,11 @@ import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Drive.PSDrive;
  */
 
 public class PSRobot {
-
     public PSMotorHandler motorHandler;
-
     public PSDrive drive;
-
     public PSAutoDrive auto;
-
-    public PSSensorHandler sensorHandler;
-
     private PSResources resources;
-
     public PSSwitchBoard switchBoard;
-
     public PSServoHandler servoHandler;
 
     public PSRobot(OpMode LOM){
@@ -32,7 +26,6 @@ public class PSRobot {
         motorHandler = new PSMotorHandler(resources);
         drive = new PSDrive(resources);
         auto = new PSAutoDrive(resources, drive);
-        sensorHandler = new PSSensorHandler(resources);
         servoHandler = new PSServoHandler(resources);
         switchBoard = new PSSwitchBoard(resources);
     }
