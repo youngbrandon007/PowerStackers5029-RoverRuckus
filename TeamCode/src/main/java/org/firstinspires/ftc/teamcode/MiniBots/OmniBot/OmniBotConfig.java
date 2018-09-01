@@ -15,6 +15,7 @@ abstract public class OmniBotConfig extends PSConfigOpMode {
     PSMotor leftBack;
     PSMotor rightBack;
     GyroSensor gyroSensor;
+    PSMotor[] psMotors = {leftFront,rightFront,rightBack,leftBack};
 
     @Override
     public void config(OpMode opMode) {
