@@ -1,15 +1,14 @@
-package org.firstinspires.ftc.teamcode.MiniBots.OmniBot;
+package org.firstinspires.ftc.teamcode.miniBots.omniBot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Control.Pose2d;
-import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Control.Vector2d;
-import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Control.motion.MotionConstraints;
-import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Control.motion.PIDFCoefficients;
-import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Control.path.Trajectory;
-import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Control.path.TrajectoryBuilder;
-import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Control.path.TrajectoryFollower;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.drive.control.Pose2d;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.drive.control.Vector2d;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.drive.control.motion.MotionConstraints;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.drive.control.motion.PIDFCoefficients;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.drive.control.path.Trajectory;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.drive.control.path.TrajectoryBuilder;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.drive.control.path.TrajectoryFollower;
 
 import java.util.Arrays;
 import java.util.Collections;

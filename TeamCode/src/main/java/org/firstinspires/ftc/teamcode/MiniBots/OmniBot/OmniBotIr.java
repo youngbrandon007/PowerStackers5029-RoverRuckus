@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.MiniBots.OmniBot;
+package org.firstinspires.ftc.teamcode.miniBots.omniBot;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 @TeleOp(name="OmniIr", group="omnibot")
