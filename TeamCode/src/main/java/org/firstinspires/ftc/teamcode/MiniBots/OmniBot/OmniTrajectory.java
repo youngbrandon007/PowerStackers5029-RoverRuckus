@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.MiniBots.OmniBot;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Control.Pose2d;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.PSRobotPackage.lib.Control.path.Trajectory
 import java.util.Arrays;
 import java.util.Collections;
 
+@Autonomous(name = "OmniTrajectory", group = "omnibot")
 public class OmniTrajectory extends OmniBotConfig {
 
     public static MotionConstraints AXIAL_CONSTRAINTS = new MotionConstraints(30.0, 40.0, 160.0, MotionConstraints.EndBehavior.OVERSHOOT);
@@ -48,6 +50,8 @@ public class OmniTrajectory extends OmniBotConfig {
                 .turnTo(-Math.PI/2)
                 .lineToPose(new Pose2d(0,0,Math.PI/2))
                 .build();
+
+
         trajectoryFollower = new TrajectoryFollower(HEADING_PIDF, AXIAL_PIDF, LATERAL_PIDF);
 
     }
@@ -55,11 +59,11 @@ public class OmniTrajectory extends OmniBotConfig {
     @Override
     public void start(){
         trajectoryFollower.follow(trajectory);
+        telemetry.clearAll();
     }
 
     @Override
     public void loop() {
-
         estimatedPose = getEstimatedPose();
         Pose2d update =  trajectoryFollower.update(estimatedPose);
         targetVel = update.pos();
@@ -69,7 +73,9 @@ public class OmniTrajectory extends OmniBotConfig {
             psMotors[i].setPower(powers[i]);
         }
 
-
+        telemetry.addData("X Position", estimatedPose.x());
+        telemetry.addData("Y Position", estimatedPose.y());
+        telemetry.addData("Heading", estimatedPose.heading());
     }
 
     private Pose2d getEstimatedPose() {
