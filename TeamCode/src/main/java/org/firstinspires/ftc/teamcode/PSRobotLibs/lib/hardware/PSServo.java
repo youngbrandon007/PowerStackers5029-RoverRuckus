@@ -40,6 +40,10 @@ public class PSServo {
      * A way to assign a servo position to a string for reference
      */
     private HashMap<String, Double> position;
+    /**
+     * A var to hold the last assigned pos so not re-set the pos
+     */
+    private double cachedPosition;
 
     /**
      * PowerStackers servo constructor
@@ -76,12 +80,14 @@ public class PSServo {
     }
 
     /**
-     * Sets a position to the servo from 0-1
+     * Sets a position to the servo from 0-1 and also caches the last pos
      *
      * @param position the set position
      */
     public void setPosition(double position) {
-        servoObject.setPosition(position);
+        if (cachedPosition != position)
+            servoObject.setPosition(position);
+        cachedPosition = position;
     }
 
     /**
@@ -95,7 +101,7 @@ public class PSServo {
         double position = Range.clip(degrees / totalRotation, 0, 1);
 
 
-        setPosition(position);
+        this.setPosition(position);
     }
 
     /**
@@ -108,34 +114,5 @@ public class PSServo {
             servoObject.setPosition(position.get(posName));
     }
 
-    /**
-     * The function sets the servo's position and moves at a specified speed to that position
-     *
-     * @param position The position that the servo is set to
-     * @param speed    The speed that a servo should move at from 0-1, 1 is max
-     */
-    public void setPosition(double position, double speed) {
-        if (speed == 1) {
-            setPosition(position);
-        } else {
-            //TODO finish this
-        }
-    }
-
-    /**
-     * The function sets the servo's angle and moves at a specified speed to that angle
-     *
-     * @param degrees The angle that the servo is set to
-     * @param speed   The speed that a servo should move at from 0-1, 1 is max
-     */
-    public void setDegrees(double degrees, double speed) {
-
-
-        double position = Range.clip(degrees / totalRotation, 0, 1);
-
-        //TODO finish this
-
-        setPosition(position, speed);
-    }
 
 }
