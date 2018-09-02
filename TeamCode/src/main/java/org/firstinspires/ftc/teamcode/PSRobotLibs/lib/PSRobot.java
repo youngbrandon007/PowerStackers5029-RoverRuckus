@@ -21,8 +21,8 @@ public class PSRobot {
     public PSSwitchBoard switchBoard;
     public PSServoHandler servoHandler;
 
-    public PSRobot(OpMode LOM){
-        resources = new PSResources(LOM);
+    public PSRobot(OpMode opMode){
+        resources = new PSResources(opMode);
         motorHandler = new PSMotorHandler(resources);
         drive = new PSDrive(resources);
         auto = new PSAutoDrive(resources, drive);
