@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
-import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobot;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.sensors.PSTouchSensor;
 
 /**

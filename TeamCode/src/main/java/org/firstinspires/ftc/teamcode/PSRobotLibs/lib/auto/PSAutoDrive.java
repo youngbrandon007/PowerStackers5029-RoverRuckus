@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.PSRobotLibs.lib.auto;
 
-import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.drive.PSDrive;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSResources;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.drive.PSDrive;
 
 /**
  * Created by young on 8/6/2017.

@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSConfigLinearOpMode;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
-import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobot;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 
 /**
  * Created by Brandon on 6/26/2017.

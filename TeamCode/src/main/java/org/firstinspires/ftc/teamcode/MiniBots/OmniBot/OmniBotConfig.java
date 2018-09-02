@@ -5,9 +5,8 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSConfigOpMode;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
-import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobot;
-import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSServo;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 
 abstract public class OmniBotConfig extends PSConfigOpMode {
 

@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.handlers;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
-import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSServo;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSResources;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSServo;
 
 /**
  * Created by Brandon on 9/13/2017.

@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.PSSettings;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
-import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSResources;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 
 import java.util.ArrayList;
 
