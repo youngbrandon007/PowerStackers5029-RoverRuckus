@@ -28,10 +28,9 @@ public class DriveEncoderExample extends LinearOpMode {
 
         robot = new PSRobot(this);
 
-        left = robot.motorHandler.newDriveMotor("left", 1, true , true, PSEnum.MotorLoc.LEFT, PSEnum.MotorType.NEV40);
-        right = robot.motorHandler.newDriveMotor("right", 1, true , true, PSEnum.MotorLoc.RIGHT, PSEnum.MotorType.NEV40);
+        left = robot.motorHandler.newDriveMotor("left", 1, true , true, PSEnum.MotorLoc.LEFT, 40);
+        right = robot.motorHandler.newDriveMotor("right", 1, true , true, PSEnum.MotorLoc.RIGHT, 40);
 
-        touch = robot.sensorHandler.newTouchSensor("touch");
 
         right.motorObject.setDirection(DcMotor.Direction.REVERSE);
 

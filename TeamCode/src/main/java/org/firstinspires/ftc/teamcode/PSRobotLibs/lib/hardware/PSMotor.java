@@ -13,51 +13,76 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobotConstants;
 
 public class PSMotor {
 
-    //Motor Properties
+    /**
+     * The location of the motor in the robot
+     */
+    public PSEnum.MotorLoc motorLoc;
+    /**
+     * the max power of the motor
+     */
+    private double maxPower = 1;
+    /**
+     * the min power of the motor
+     */
+    private double minPower = -1;
 
-    public PSEnum.MotorLoc motorLoc = PSEnum.MotorLoc.NONE;
-
-    public double maxPower = 1;
-    public double minPower = -1;
-
-    public double defaultPower = 0;
+    /**
+     * the defaultPower of the motor
+     */
+    private double defaultPower = 0;
+    /**
+     * the counts per revolution of the motor encoder
+     */
     public double cpr;
-    public double scaleBy = 1;
-    public PSEnum.MotorType motorType = PSEnum.MotorType.UNDI;
-
-    public boolean exponetional = false;
-
-    public boolean doDeadArea = false;
-
-    //Dead Area Array
-
+    /**
+     * scale for the motor speed
+     */
+    private double scaleBy = 1;
+    /**
+     * whether the motor has an exponetial input
+     */
+    public boolean exponential;
+    /**
+     * whether the motor has dead area or not
+     */
+    public boolean doDeadArea;
+    /**
+     * the gear ratio of the motor from bare to actuator
+     */
+    private final double gearRatio;
+    /**
+     * Dead Area Array
+     */
     private final double[] deadAreaArray = {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 0.9, 1.0};
-
-    //Motor Object
-
+    /**
+     * the motor delegate
+     */
     public DcMotor motorObject;
+    /**
+     * the name of the motor for hardware maps
+     */
     public String motorName;
-
-
-    //Resources
-
+    /**
+     * resources for the motor so it has access to everything
+     */
     private PSResources resources;
+    /**
+     * var to cache the last power so the the motor isn't set to the same power
+     */
+    private double cachedPower;
 
-
-    //Constructor
-
-    public PSMotor(PSResources resources, String motorName, double minPower, double maxPower, double defaultPower, double scaleBy, boolean exponetional, boolean doDeadArea, PSEnum.MotorLoc motorLoc, PSEnum.MotorType motorType) {
+    public PSMotor(PSResources resources, String motorName, double minPower, double maxPower, double defaultPower, double scaleBy, boolean exponential, boolean doDeadArea, PSEnum.MotorLoc motorLoc, double gearRatio) {
         this.resources = resources;
         this.motorLoc = motorLoc;
         this.maxPower = maxPower;
         this.minPower = minPower;
         this.defaultPower = defaultPower;
         this.scaleBy = scaleBy;
-        this.exponetional = exponetional;
+        this.exponential = exponential;
         this.doDeadArea = doDeadArea;
-        this.motorType = motorType;
         this.motorName = motorName;
-        cpr = motorTypeToCPR(motorType);
+        this.gearRatio = gearRatio;
+        cpr = getCpr();
         motorObject = this.resources.hardwareMap.dcMotor.get(motorName);
         setupEncoder();
     }
@@ -72,25 +97,12 @@ public class PSMotor {
     //Drive Encoder Functions//
     ///////////////////////////
 
-    private double motorTypeToCPR(PSEnum.MotorType type) {
-        switch (type) {
-            case NEV60:
-                return PSRobotConstants.NEV60CPR;
-            case NEV40:
-                return PSRobotConstants.NEV40CPR;
-            case NEV20:
-                return PSRobotConstants.NEV20CPR;
-            case NEV3_7:
-                return PSRobotConstants.NEV3_7CPR;
-            case UNDI:
-                return PSRobotConstants.TETRIXCPR;
-            default:
-                return 0;
-        }
+    private double getCpr() {
+        return PSRobotConstants.NEVERESTPPR * gearRatio;
     }
 
     public double getEncoderDistance(double wheelSize) {
-        double rotations = getEncoderPosition() / motorTypeToCPR(motorType);
+        double rotations = getEncoderPosition() / cpr;
         return wheelSize * Math.PI * rotations;
     }
 
@@ -98,67 +110,6 @@ public class PSMotor {
         return motorObject.getCurrentPosition();
     }
 
-    //Function called by user
-
-//    public void encoderDrive(double speed, double value, PSEnum.MotorValueType motorValueType, double wheelSize) {
-//        if (motorValueType == PSEnum.MotorValueType.COUNTS) {
-//            encoderDriveCounts(speed, (int) value);
-//        } else {
-//            encoderDriveDist(speed, value, wheelSize, motorValueType);
-//
-//        }
-//    }
-
-    //Main encoder drive function
-
-//    private void encoderDriveCounts(double speed, int counts){
-//        int target;
-//
-//        if(resources.opMode.opModeIsActive()){
-//            if (PSGeneralUtils.isPositive(speed) != PSGeneralUtils.isPositive(counts)){counts=-counts;}
-//
-//            target = motorObject.getCurrentPosition() + counts;
-//
-//            motorObject.setTargetPosition(target);
-//            motorObject.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//            motorObject.setPower(speed);
-//
-//            while (resources.opMode.opModeIsActive() && motorObject.isBusy()){
-//                resources.feedBack.sayFeedBack(motorName + " encoder", motorObject.getCurrentPosition());
-//            }
-//
-//            motorObject.setPower(0);
-//
-//            motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        }
-//    }
-
-    //Drive dist
-    //
-    //input distance for wheel to move
-
-//    private void encoderDriveDist(double speed, double inches, double wheelSize, PSEnum.MotorValueType motorValueType ){
-//        int counts = PSGeneralUtils.distToCounts(inches, motorValueType,wheelSize, cpr);
-//        encoderDriveCounts(speed, counts);
-//    }
-
-    //Encoder control functions
-    //
-    //start and stop function for motor
-
-//    public void encoderStart(double speed, int counts){
-//        int target;
-//        if(resources.opMode.opModeIsActive()){
-//            if (PSGeneralUtils.isPositive(speed) != PSGeneralUtils.isPositive(counts)){counts=-counts;}
-//            target = motorObject.getCurrentPosition() + counts;
-//
-//            motorObject.setTargetPosition(target);
-//            motorObject.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//            motorObject.setPower(speed);
-//        }
-//    }
 
     public void encoderStop() {
         motorObject.setPower(0);
@@ -176,7 +127,9 @@ public class PSMotor {
 
 
     public void setPower(double power) {
-        motorObject.setPower(clip(power));
+        if (cachedPower != power)
+            motorObject.setPower(clip(power));
+        cachedPower = power;
     }
 
     //Update Function
@@ -245,7 +198,7 @@ public class PSMotor {
 
     private double scale(double input) {
         input = input * scaleBy;
-        if (exponetional) input = input * input;
+        if (exponential) input = input * input;
         return input;
     }
 

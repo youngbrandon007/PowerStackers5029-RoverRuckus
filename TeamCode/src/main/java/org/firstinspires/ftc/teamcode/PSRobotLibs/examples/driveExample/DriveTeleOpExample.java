@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobot;
  * Created by Brandon on 7/14/2017.
  */
 
-@TeleOp(name = "PineEx-WorldTele", group = "Linear Opmode")
+@TeleOp(name = "PineEx-Tele", group = "Linear Opmode")
 @Disabled
 
 public class DriveTeleOpExample extends LinearOpMode {
@@ -26,8 +26,8 @@ public class DriveTeleOpExample extends LinearOpMode {
 
         robot = new PSRobot(this);
 
-        left = robot.motorHandler.newDriveMotor("r", 1, true , true, PSEnum.MotorLoc.LEFT, PSEnum.MotorType.NEV40);
-        right = robot.motorHandler.newDriveMotor("l", 1, true , true, PSEnum.MotorLoc.RIGHT, PSEnum.MotorType.NEV40);
+        left = robot.motorHandler.newDriveMotor("r", 1, true , true, PSEnum.MotorLoc.LEFT, 40);
+        right = robot.motorHandler.newDriveMotor("l", 1, true , true, PSEnum.MotorLoc.RIGHT, 40);
 
 
         waitForStart();
