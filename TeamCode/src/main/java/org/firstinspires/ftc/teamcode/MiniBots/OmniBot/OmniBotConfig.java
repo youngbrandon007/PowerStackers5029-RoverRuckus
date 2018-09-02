@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSConfigOpMode;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobot;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSServo;
 
 abstract public class OmniBotConfig extends PSConfigOpMode {
 
@@ -25,6 +26,5 @@ abstract public class OmniBotConfig extends PSConfigOpMode {
         rightFront = robotHandler.motorHandler.newDriveMotor("RF", PSEnum.MotorLoc.RIGHTFRONT);
         leftBack = robotHandler.motorHandler.newDriveMotor("LB", PSEnum.MotorLoc.LEFTBACK);
         rightBack = robotHandler.motorHandler.newDriveMotor("RB", PSEnum.MotorLoc.RIGHTBACK);
-
     }
 }

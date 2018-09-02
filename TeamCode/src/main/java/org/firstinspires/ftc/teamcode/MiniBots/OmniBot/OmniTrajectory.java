@@ -34,6 +34,7 @@ public class OmniTrajectory extends OmniBotConfig {
     private Vector2d estimatedPosition;
 
 
+
     @Override
     public void init() {
         config(this);

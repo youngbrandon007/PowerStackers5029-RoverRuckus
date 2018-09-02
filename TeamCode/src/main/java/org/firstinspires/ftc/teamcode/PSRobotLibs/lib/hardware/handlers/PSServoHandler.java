@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.handlers;
 
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSServo;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSResources;
 
@@ -15,13 +16,12 @@ public class PSServoHandler {
         resources = r;
     }
 
-    public PSServo newLimitServo(String name, double pos, double init) {
-//        return new PSServo(resources, name, , pos, init, true);
-        return new PSServo(resources,name,100,init,false);
+    public PSServo newServo(String name, double totalRotation, double init, boolean goToInit) {
+        return new PSServo(resources,name,totalRotation,init,goToInit);
     }
 
-    public PSServo newContinuousServo(String name, double init){
-//        return new PSServo(resources, name, PSEnum.ServoType.CONTINUOUS, 1, init, true);
-        return new PSServo(resources,name,100,init,false);
+    public PSServo newServo(String name, PSEnum.ServoTotalRotation servoTotalRotation, double init, String[] names, double[] poses, boolean goToInit) {
+        return new PSServo(resources,name,servoTotalRotation,init,names, poses,goToInit);
     }
+
 }

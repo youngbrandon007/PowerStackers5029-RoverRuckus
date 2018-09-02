@@ -15,6 +15,9 @@ import java.util.HashMap;
 
 public class PSServo {
 
+    /**
+     * resources for the servo
+     */
     private PSResources resources;
     /**
      * the name of the servo used for hardware mapping
@@ -28,11 +31,14 @@ public class PSServo {
      * the init position of the servo
      */
     private double initPos;
-
+    /**
+     * the servo object
+     */
     private Servo servoObject;
 
-    private PSEnum.ServoType servoType;
-
+    /**
+     * A way to assign a servo position to a string for reference
+     */
     private HashMap<String, Double> position;
 
     /**
