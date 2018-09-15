@@ -16,6 +16,7 @@ apply from: '../build.common.gradle'
 
 dependencies {
     implementation project(path: ':openCVLibrary341')
+    implementation files('C:/Users/ftcpi/Documents/PowerStackers5029-RoverRuckus/libs/jcodec-android-0.2.3.jar')
 }
 android {
     compileOptions {

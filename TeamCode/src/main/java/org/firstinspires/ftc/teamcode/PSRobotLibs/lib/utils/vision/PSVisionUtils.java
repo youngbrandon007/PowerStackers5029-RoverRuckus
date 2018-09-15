@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.vision;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.util.Rational;
 
 import com.vuforia.Image;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.jcodec.api.android.AndroidSequenceEncoder;
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -16,6 +18,7 @@ import org.opencv.imgproc.Moments;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 /**
@@ -95,8 +98,6 @@ public class PSVisionUtils {
                 kernel.release();
             }
             kernel = Mat.ones(TARGETHEIGHT, TARGETWIDTH, CvType.CV_8U);
-            width = TARGETWIDTH;
-            height = TARGETHEIGHT;
         }
 
     }
@@ -110,6 +111,10 @@ public class PSVisionUtils {
     public static Point maskCentroid(Mat mask){
         Moments mmnts = Imgproc.moments(mask, true);
         return new Point(mmnts.get_m10() / mmnts.get_m00(), mmnts.get_m01() / mmnts.get_m00());
+    }
+    public static boolean bitToMp4(Bitmap[] stream, double avgInterval) throws IOException {
+//        AndroidSequenceEncoder sequenceEncoder = new AndroidSequenceEncoder(, Rational.);
+        return true;
     }
 
 

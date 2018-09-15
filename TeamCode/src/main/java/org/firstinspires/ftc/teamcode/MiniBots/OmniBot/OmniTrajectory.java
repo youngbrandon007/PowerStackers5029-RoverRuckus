@@ -15,9 +15,9 @@ import java.util.Collections;
 
 @Autonomous(name = "OmniTrajectory", group = "omnibot")
 public class OmniTrajectory extends OmniBotConfig {
-
-    public static MotionConstraints AXIAL_CONSTRAINTS = new MotionConstraints(30.0, 40.0, 160.0, MotionConstraints.EndBehavior.OVERSHOOT);
-    public static MotionConstraints POINT_TURN_CONSTRAINTS = new MotionConstraints(2.0, 2.67, 10.67, MotionConstraints.EndBehavior.OVERSHOOT);
+    //TODO values not tuned
+    protected static MotionConstraints AXIAL_CONSTRAINTS = new MotionConstraints(30.0, 40.0, 160.0, MotionConstraints.EndBehavior.OVERSHOOT);
+    protected static MotionConstraints POINT_TURN_CONSTRAINTS = new MotionConstraints(2.0, 2.67, 10.67, MotionConstraints.EndBehavior.OVERSHOOT);
 
     TrajectoryBuilder trajectoryBuilder = new TrajectoryBuilder(new Pose2d(0,0,Math.PI/2),AXIAL_CONSTRAINTS,POINT_TURN_CONSTRAINTS);
     Trajectory trajectory;
