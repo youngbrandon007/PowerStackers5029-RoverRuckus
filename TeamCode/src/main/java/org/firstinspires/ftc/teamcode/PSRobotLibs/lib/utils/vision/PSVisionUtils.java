@@ -19,6 +19,8 @@ import org.opencv.imgproc.Moments;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.Vector;
 
 
 /**
@@ -29,9 +31,9 @@ public class PSVisionUtils {
     /**
      * Saves an inputted bitmap to a directory
      *
-     * @param bitmap    Input bitmap
-     * @param name      Name of the saved file
-     * @param fileDir   The name of the file directory for the image to be saved to
+     * @param bitmap  Input bitmap
+     * @param name    Name of the saved file
+     * @param fileDir The name of the file directory for the image to be saved to
      */
     public static void saveImageToFile(Bitmap bitmap, String name, String fileDir) {
 
@@ -56,9 +58,9 @@ public class PSVisionUtils {
     /**
      * Converts a bitmap and a type to a openCv mat
      *
-     * @param bit       the input bitmap
-     * @param cvType    the mat type
-     * @return          output mat
+     * @param bit    the input bitmap
+     * @param cvType the mat type
+     * @return output mat
      */
     public static Mat bitmapToMat(Bitmap bit, int cvType) {
         Mat newMat = new Mat(bit.getHeight(), bit.getWidth(), cvType);
@@ -69,8 +71,8 @@ public class PSVisionUtils {
     /**
      * Converts a openCv mat to a bitmap
      *
-     * @param mat   input mat
-     * @return      output bitmap
+     * @param mat input mat
+     * @return output bitmap
      */
     public static Bitmap matToBitmap(Mat mat) {
         Bitmap newBit = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888);
@@ -91,7 +93,7 @@ public class PSVisionUtils {
         return null;
     }
 
-    public static void refreshKernel(Mat kernel,int height, int width, int TARGETHEIGHT, int TARGETWIDTH){
+    public static void refreshKernel(Mat kernel, int height, int width, int TARGETHEIGHT, int TARGETWIDTH) {
 
         if (kernel == null || width != TARGETWIDTH || height != TARGETHEIGHT) {
             if (kernel != null) {
@@ -105,16 +107,12 @@ public class PSVisionUtils {
     /**
      * Method to find the centroid of a binary Mask
      *
-     * @param mask  the input binary mask
-     * @return      a openCv point with the x and y values of the centroid
+     * @param mask the input binary mask
+     * @return a openCv point with the x and y values of the centroid
      */
-    public static Point maskCentroid(Mat mask){
+    public static Point maskCentroid(Mat mask) {
         Moments mmnts = Imgproc.moments(mask, true);
         return new Point(mmnts.get_m10() / mmnts.get_m00(), mmnts.get_m01() / mmnts.get_m00());
-    }
-    public static boolean bitToMp4(Bitmap[] stream, double avgInterval) throws IOException {
-//        AndroidSequenceEncoder sequenceEncoder = new AndroidSequenceEncoder(, Rational.);
-        return true;
     }
 
 
