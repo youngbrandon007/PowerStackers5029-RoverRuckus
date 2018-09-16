@@ -33,7 +33,18 @@ public class PSServoHandler {
     public PSServo newServo(String name, double totalRotation, double init, boolean goToInit) {
         return new PSServo(resources,name,totalRotation,init,goToInit);
     }
+    /**
+     * PowerStacker Servo Constructor, with position storage
+     *
+     * @param name name of the servo for hardwaremapping
+     * @param servoTotalRotation the type of servo being use
+     * @param init the init position of the servo
 
+     * @param goToInit whether the servo should be set to the init after hwmap
+     */
+    public PSServo newServo(String name, PSEnum.ServoTotalRotation servoTotalRotation, double init, boolean goToInit) {
+        return new PSServo(resources,name,servoTotalRotation.getRotation(),init,goToInit);
+    }
     /**
      * PowerStacker Servo Constructor, with position storage
      *
