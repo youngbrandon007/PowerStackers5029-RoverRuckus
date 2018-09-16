@@ -114,5 +114,7 @@ public class PSServo {
             servoObject.setPosition(position.get(posName));
     }
 
-
+    public double getCachedPosition() {
+        return cachedPosition;
+    }
 }
