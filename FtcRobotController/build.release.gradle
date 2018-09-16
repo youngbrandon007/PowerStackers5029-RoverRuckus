@@ -1,4 +1,5 @@
 dependencies {
+<<<<<<< HEAD
     implementation (name:'Inspection-release', ext: 'aar')
     implementation (name:'Blocks-release', ext: 'aar')
     implementation (name:'RobotCore-release', ext: 'aar')
@@ -6,4 +7,12 @@ dependencies {
     implementation (name:'FtcCommon-release', ext: 'aar')
     implementation (name:'Analytics-release', ext:'aar')
     implementation (name:'WirelessP2p-release', ext:'aar')
+=======
+    compile (name:'Inspection-release', ext: 'aar')
+    compile (name:'Blocks-release', ext: 'aar')
+    compile (name:'RobotCore-release', ext: 'aar')
+    compile (name:'Hardware-release', ext: 'aar')
+    compile (name:'FtcCommon-release', ext: 'aar')
+    compile (name:'WirelessP2p-release', ext:'aar')
+>>>>>>> 612f456b1020dac06adbc24b050e2a612fc6c756
 }
