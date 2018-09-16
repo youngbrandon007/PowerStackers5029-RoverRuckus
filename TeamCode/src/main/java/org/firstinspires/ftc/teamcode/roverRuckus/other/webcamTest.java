@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.internal.camera.WebcamExample;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
 @TeleOp(name = "Webcam Test")
-public class test extends OpMode{
+public class webcamTest extends OpMode{
 
     @Override
     public void init() {
