@@ -26,7 +26,7 @@ public class OneMotorEncoderExample extends LinearOpMode {
 
         robot = new PSRobot(this);
 
-        motor = robot.motorHandler.newMotor("motor", 1, true , true, PSEnum.MotorType.NEV40);
+        motor = robot.motorHandler.newMotor("motor", 1, true , true,40);
 
         waitForStart();
         //motor.encoderDrive(1, 90, PSEnum.MotorValueType.DEGREES, 4);

@@ -14,7 +14,6 @@ public class basicProtoypingTele extends OpMode {
     PSMotor leftDriveMotor;
     PSMotor otherMotor;
     PSServo servo;
-    Webcam webcam;
     @Override
     public void init() {
         robot = new PSRobot(this);

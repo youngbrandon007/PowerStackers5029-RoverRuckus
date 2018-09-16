@@ -17,6 +17,6 @@ abstract public class Config extends PSConfigLinearOpMode {
 
     public void config(LinearOpMode linearOpMode){
         robotHandler = new PSRobot(linearOpMode);
-        testMotor = robotHandler.motorHandler.newMotor("testMotor", PSEnum.MotorType.NEV40);
+        testMotor = robotHandler.motorHandler.newMotor("testMotor", 40);
     }
 }

@@ -25,7 +25,7 @@ public class MotorExample extends LinearOpMode {
 
         robot = new PSRobot(this);
 
-        testMotor = robot.motorHandler.newMotor("test", 1, true , true, PSEnum.MotorType.NEV40);
+        testMotor = robot.motorHandler.newMotor("test", 1, true , true, 40);
 
 
         waitForStart();

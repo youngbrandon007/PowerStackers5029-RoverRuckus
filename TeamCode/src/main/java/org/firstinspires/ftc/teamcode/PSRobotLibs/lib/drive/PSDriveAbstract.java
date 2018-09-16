@@ -82,25 +82,6 @@ public class PSDriveAbstract {
         return output;
     }
 
-    PSEnum.MotorType getDriveType() {
-        ArrayList<PSMotor> motors = resources.storage.getDrivemotors();
-        PSEnum.MotorType motorType = PSEnum.MotorType.UNDI;
-        boolean firsttime = true;
-        for (PSMotor motor : motors) {
-            if (firsttime) {
-                motorType = motor.motorType;
-                firsttime = false;
-            } else {
-                if (motorType != motor.motorType) {
-                    resources.feedBack.sayFeedBackWithOutUpdate("ERROR", "Drive motors incompatiable");
-                    resources.feedBack.update();
-//                    wait(2000);
-                }
-                motorType = motor.motorType;
-            }
-        }
-        return motorType;
-    }
 
     double getDriveCPR()  {
         ArrayList<PSMotor> motors = resources.storage.getDrivemotors();

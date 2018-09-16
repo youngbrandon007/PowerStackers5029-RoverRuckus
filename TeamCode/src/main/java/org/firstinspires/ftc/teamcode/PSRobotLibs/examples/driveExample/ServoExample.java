@@ -22,7 +22,7 @@ public class ServoExample extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         robot = new PSRobot(this);
-        servo = robot.servoHandler.newContinuousServo("D", 0.5);
+//        servo = robot.servoHandler.("D", 0.5);
 
         waitForStart();
             while(opModeIsActive()){

@@ -21,9 +21,9 @@ abstract public class OmniBotConfig extends PSConfigOpMode {
     public void config(OpMode opMode) {
         robotHandler = new PSRobot(opMode);
         gyroSensor = hardwareMap.gyroSensor.get("GS");
-        leftFront = robotHandler.motorHandler.newDriveMotor("LF", PSEnum.MotorLoc.LEFTFRONT);
-        rightFront = robotHandler.motorHandler.newDriveMotor("RF", PSEnum.MotorLoc.RIGHTFRONT);
-        leftBack = robotHandler.motorHandler.newDriveMotor("LB", PSEnum.MotorLoc.LEFTBACK);
-        rightBack = robotHandler.motorHandler.newDriveMotor("RB", PSEnum.MotorLoc.RIGHTBACK);
+        leftFront = robotHandler.motorHandler.newDriveMotor("LF", PSEnum.MotorLoc.LEFTFRONT,40);
+        rightFront = robotHandler.motorHandler.newDriveMotor("RF", PSEnum.MotorLoc.RIGHTFRONT,40);
+        leftBack = robotHandler.motorHandler.newDriveMotor("LB", PSEnum.MotorLoc.LEFTBACK,40);
+        rightBack = robotHandler.motorHandler.newDriveMotor("RB", PSEnum.MotorLoc.RIGHTBACK,40);
     }
 }
