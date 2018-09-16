@@ -9,8 +9,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.configuration.WebcamConfiguration;
 
 import org.firstinspires.ftc.robotcore.external.android.util.Size;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureRequest;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSession;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraControls;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraFrame;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.CameraControl;
+import org.firstinspires.ftc.robotcore.internal.camera.CameraCaptureRequestImpl;
+import org.firstinspires.ftc.robotcore.internal.camera.libuvc.api.UvcApiCameraCaptureSequenceId;
 import org.firstinspires.ftc.robotcore.internal.camera.names.WebcamNameImpl;
 import org.firstinspires.ftc.robotcore.internal.camera.names.WebcamNameInternal;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
@@ -24,7 +31,6 @@ public class basicProtoypingTele extends OpMode {
     PSMotor leftDriveMotor;
     PSMotor otherMotor;
     PSServo servo;
-    WebcamName webcam;
 
     @Override
     public void init() {
@@ -33,7 +39,6 @@ public class basicProtoypingTele extends OpMode {
         leftDriveMotor = robot.motorHandler.newMotor("ldrive", 40);
         otherMotor = robot.motorHandler.newMotor("motor", 40);
         servo = robot.servoHandler.newServo("servo", PSEnum.ServoTotalRotation.HS_485HB,0,false);
-        WebcamNameInternal test;
 
     }
 
