@@ -22,10 +22,9 @@ apply plugin: 'com.android.application'
 android {
 
     compileSdkVersion 23
-<<<<<<< HEAD
+
     buildToolsVersion '27.0.3'
-=======
->>>>>>> 612f456b1020dac06adbc24b050e2a612fc6c756
+
 
     signingConfigs {
         debug {
