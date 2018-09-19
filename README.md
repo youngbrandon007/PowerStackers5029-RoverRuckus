@@ -2,13 +2,13 @@
 
 ## Competition Robot
 
-Main robot code will be in [teamcode/RoverRukus](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/roverRukus).
+Main robot code will be in [teamcode/RoverRukus](https://github.com/robotgenis/PowerStackers5029-RoverRuckus/tree/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/roverRukus).
 
 ### UVC camera
 
-Uvc camera testing can be found in [teamcode/roverRukus/other](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/roverRukus/other).
+Uvc camera testing can be found in [teamcode/roverRukus/other](https://github.com/robotgenis/PowerStackers5029-RoverRuckus/tree/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/roverRukus/other).
 
-UVC camera class can be found in [teamcode/PSRobotLibs](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/PSRobotLivs) folder.
+UVC camera class can be found in [teamcode/PSRobotLibs](https://github.com/robotgenis/PowerStackers5029-RoverRuckus/tree/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/PSRobotLibs) folder.
 
 ### OpenCV ball tracking
 
