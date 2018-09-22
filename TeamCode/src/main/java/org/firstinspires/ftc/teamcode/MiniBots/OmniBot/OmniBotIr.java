@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.miniBots.omniBot;
+package org.firstinspires.ftc.teamcode.MiniBots.OmniBot;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;

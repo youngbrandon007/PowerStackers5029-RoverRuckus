@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.miniBots.omniBot;
+package org.firstinspires.ftc.teamcode.MiniBots.OmniBot;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeManagerImpl;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import org.firstinspires.ftc.teamcode.MiniBots.OmniBot.OmniBotConfig;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.drive.control.PID;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;

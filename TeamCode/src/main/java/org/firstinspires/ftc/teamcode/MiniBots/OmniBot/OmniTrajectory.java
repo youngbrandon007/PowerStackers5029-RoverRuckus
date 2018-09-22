@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.miniBots.omniBot;
+package org.firstinspires.ftc.teamcode.MiniBots.OmniBot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.drive.control.path.Traject
 import java.util.Arrays;
 import java.util.Collections;
 
-import RobotLiveDataSending.RobotLiveData;
 
 @Autonomous(name = "OmniTrajectory", group = "omnibot")
 public class OmniTrajectory extends OmniBotConfig {

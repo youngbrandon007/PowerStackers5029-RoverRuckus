@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.support.annotation.NonNull;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.util.ThreadPool;
@@ -39,12 +43,26 @@ public class UVCCamera {
     int imageFormatWanted = ImageFormat.YUY2;
     Camera camera;
     Size sizeWanted;
+    private int cameraMonitorViewId;
+    private ViewGroup cameraMonitorView;
+
+    AppUtil appUtil = AppUtil.getInstance();
+    Activity activity;
 
     public UVCCamera(CameraManager cameraManager, CameraName cameraName){
         this.cameraManager = cameraManager;
         this.cameraName = cameraName;
+        this.activity = appUtil.getActivity();
+        Context context = AppUtil.getDefContext();
+        cameraMonitorViewId = context.getResources().getIdentifier("cameraMonitorViewId", "id", context.getPackageName());
     }
     public void test(){
+        if (cameraMonitorViewId == 0) {
+            cameraMonitorView = (ViewGroup) activity.findViewById(android.R.id.content);
+        } else {
+            cameraMonitorView = (LinearLayout) activity.findViewById(cameraMonitorViewId);
+        }
+        cameraMonitorView.addView(cameraView);
         Deadline deadline = new Deadline(10,TimeUnit.SECONDS);
 
         cameraName.asyncRequestCameraPermission(AppUtil.getDefContext(), deadline, Continuation.create(threadPool, new Consumer<Boolean>() {
@@ -163,7 +181,7 @@ public class UVCCamera {
         @Override
         public void onNewFrame(@NonNull CameraCaptureSession session, @NonNull CameraCaptureRequest request, @NonNull CameraFrame cameraFrame) {
             cameraFrame.copyToBitmap(bitmap);
-            PSVisionUtils.saveImageToFile(bitmap,"frame", "images");
+            PSVisionUtils.saveImageToFile(bitmap,"frame", "/saved_images");
         }
     }
 }
