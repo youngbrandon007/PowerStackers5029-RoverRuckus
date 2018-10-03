@@ -8,7 +8,6 @@ import android.util.Rational;
 import com.vuforia.Image;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.jcodec.api.android.AndroidSequenceEncoder;
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;

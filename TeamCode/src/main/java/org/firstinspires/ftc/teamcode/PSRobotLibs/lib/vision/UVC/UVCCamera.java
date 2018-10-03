@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC;
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.support.annotation.NonNull;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.util.ThreadPool;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.android.util.Size;
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
@@ -43,46 +39,64 @@ public class UVCCamera {
     int imageFormatWanted = ImageFormat.YUY2;
     Camera camera;
     Size sizeWanted;
-    private int cameraMonitorViewId;
-    private ViewGroup cameraMonitorView;
-
-    AppUtil appUtil = AppUtil.getInstance();
-    Activity activity;
+//    private int cameraMonitorViewId;
+//    private ViewGroup cameraMonitorView;
+//
+//    AppUtil appUtil = AppUtil.getInstance();
+//    Activity activity;
 
     public UVCCamera(CameraManager cameraManager, CameraName cameraName){
         this.cameraManager = cameraManager;
         this.cameraName = cameraName;
-        this.activity = appUtil.getActivity();
-        Context context = AppUtil.getDefContext();
-        cameraMonitorViewId = context.getResources().getIdentifier("cameraMonitorViewId", "id", context.getPackageName());
+//        this.activity = appUtil.getActivity();
+//        Context context = AppUtil.getDefContext();
+//        cameraMonitorViewId = context.getResources().getIdentifier("cameraMonitorViewId", "id", context.getPackageName());
     }
-    public void test(){
-        if (cameraMonitorViewId == 0) {
-            cameraMonitorView = (ViewGroup) activity.findViewById(android.R.id.content);
-        } else {
-            cameraMonitorView = (LinearLayout) activity.findViewById(cameraMonitorViewId);
-        }
-        cameraMonitorView.addView(cameraView);
+    public void test(Telemetry telemetry){
+//        if (cameraMonitorViewId == 0) {
+//            cameraMonitorView = (ViewGroup) activity.findViewById(android.R.id.content);
+//        } else {
+//            cameraMonitorView = (LinearLayout) activity.findViewById(cameraMonitorViewId);
+//        }
+        //cameraMonitorView.addView(cameraView);
         Deadline deadline = new Deadline(10,TimeUnit.SECONDS);
 
+//        Boolean value = cameraName.requestCameraPermission(deadline);
+
+        telemetry.addLine("1");
+        telemetry.update();
         cameraName.asyncRequestCameraPermission(AppUtil.getDefContext(), deadline, Continuation.create(threadPool, new Consumer<Boolean>() {
             @Override
             public void accept(Boolean value) {
+                telemetry.addLine("2");
+                telemetry.update();
                 if (value){
-                    characteristics = cameraName.getCameraCharacteristics();
+                    telemetry.addLine("3");
+                    telemetry.update();
+                    //characteristics = cameraName.getCameraCharacteristics();
+                    telemetry.addLine("4");
+                    telemetry.update();
                     cameraManager.asyncOpenCameraAssumingPermission(cameraName, Continuation.create(threadPool, new StateCallbackDefault(){
                         @Override public void onOpened(@NonNull final Camera camera)
                         {
+                            telemetry.addLine("5");
+                            telemetry.update();
                            UVCCamera.this.camera = camera;
 
                             if (Misc.contains(characteristics.getAndroidFormats(), imageFormatWanted))
                             {
+                                telemetry.addLine("6");
+                                telemetry.update();
                                 sizeWanted = characteristics.getDefaultSize(imageFormatWanted);
                                 try {
+                                    telemetry.addLine("7");
+                                    telemetry.update();
                                     camera.createCaptureSession(Continuation.create(threadPool, captureStateCallback));
                                 }
                                 catch (CameraException e)
                                 {
+                                    telemetry.addLine("8");
+                                    telemetry.update();
                                 }
                             }
                             else
@@ -96,10 +110,15 @@ public class UVCCamera {
 //                            RobotLog.vv(TAG, "camera reports closed: %s", camera);
                         }
                     }),10,TimeUnit.SECONDS);
+                    telemetry.addLine("9");
+                    telemetry.update();
                 }
+                telemetry.addLine("10");
+                telemetry.update();
             }
         }));
-
+        telemetry.addLine("20");
+        telemetry.update();
     }
     CameraCaptureSession.StateCallback captureStateCallback = new CameraCaptureSession.StateCallbackDefault()
     {

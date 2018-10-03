@@ -17,9 +17,10 @@ public class webcamTest extends OpMode{
         CameraManager cameraManager = ClassFactory.getInstance().getCameraManager();
         for (CameraName cameraName : cameraManager.getAllWebcams())
         {
-            new UVCCamera(cameraManager, cameraName).test();
+            new UVCCamera(cameraManager, cameraName).test(telemetry);
         }
     }
+
 
 
     @Override
