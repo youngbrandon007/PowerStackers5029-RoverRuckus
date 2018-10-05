@@ -65,18 +65,17 @@ public class UVCCamera {
 
         telemetry.addLine("1");
         telemetry.update();
-        cameraName.asyncRequestCameraPermission(AppUtil.getDefContext(), deadline, Continuation.create(threadPool, new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean value) {
-                telemetry.addLine("2");
-                telemetry.update();
-                if (value){
+        cameraName.asyncRequestCameraPermission(AppUtil.getDefContext(), deadline, Continuation.create(threadPool, new Consumer<Boolean>()
+        {
+            @Override public void accept(Boolean permissionGranted)
+            {
+                if (permissionGranted){
                     telemetry.addLine("3");
                     telemetry.update();
-                    //characteristics = cameraName.getCameraCharacteristics();
+                    characteristics = cameraName.getCameraCharacteristics();
                     telemetry.addLine("4");
                     telemetry.update();
-                    cameraManager.asyncOpenCameraAssumingPermission(cameraName, Continuation.create(threadPool, new StateCallbackDefault(){
+                    cameraManager.asyncOpenCameraAssumingPermission(cameraName, Continuation.create(threadPool, new Camera.StateCallbackDefault(){
                         @Override public void onOpened(@NonNull final Camera camera)
                         {
                             telemetry.addLine("5");
@@ -120,6 +119,7 @@ public class UVCCamera {
         telemetry.addLine("20");
         telemetry.update();
     }
+
     CameraCaptureSession.StateCallback captureStateCallback = new CameraCaptureSession.StateCallbackDefault()
     {
         @Override public void onConfigured(@NonNull CameraCaptureSession session)
