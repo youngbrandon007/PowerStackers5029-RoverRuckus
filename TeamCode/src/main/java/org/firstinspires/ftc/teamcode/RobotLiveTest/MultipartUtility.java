@@ -52,7 +52,7 @@ public class MultipartUtility {
     public void addFilePart(String fieldName, String fileName, InputStream inputStream) throws IOException {
         this.writer.append("--" + this.boundary).append("\r\n");
         this.writer.append("Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + fileName + "\"").append("\r\n");
-        this.writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(fileName)).append("\r\n");
+        this.writer.append("Content-Type: image/jpeg").append("\r\n");// + URLConnection.guessContentTypeFromName(fileName)
         this.writer.append("Content-Transfer-Encoding: binary").append("\r\n");
         this.writer.append("\r\n");
         this.writer.flush();

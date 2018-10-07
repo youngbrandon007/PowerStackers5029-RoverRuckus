@@ -52,7 +52,7 @@ public class RobotLiveSendTemp {
             }
 
             if (data.live != null) {
-                multipart.addFilePart("LIVE", "live.jpeg", data.live);
+                multipart.addFilePart("LIVE", "live.jpg", data.live);
             }
 
             if (data.files.size() != 0) {

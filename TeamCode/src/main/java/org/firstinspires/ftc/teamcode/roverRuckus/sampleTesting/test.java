@@ -5,6 +5,7 @@ import android.os.Environment;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.vision.PSVisionUtils;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
@@ -23,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +40,7 @@ public class test extends config implements UVCCamera.Callback {
     int sampleNow;
     double angle;
     static String load = "";
+    boolean save = false;
 
     static {
         if (!OpenCVLoader.initDebug()) {
@@ -54,7 +57,7 @@ public class test extends config implements UVCCamera.Callback {
         camera = UVCCamera.getCamera(this);
 
         telemetry.addLine(load);
-        //data = RobotLiveSendTemp.createNewRun("http://192.168.0.116");
+        data = RobotLiveSendTemp.createNewRun("http://192.168.200.113");
     }
 
     @Override
@@ -81,33 +84,38 @@ public class test extends config implements UVCCamera.Callback {
             robot.drive.mecanum.updateMecanum(gamepad1,1);
             sampleNow = sampPos;
         }
-//        if(data == null){
-//            telemetry.addData("Error","data is null");
-//
-//        }else {
-//            try {
-//                if (bm != null) {
+        if(data == null){
+            telemetry.addData("Error","data is null");
+
+        }else {
+            try {
+                if (bm != null) {
 //                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//                    bm.compress(Bitmap.CompressFormat.JPEG, 2 /*ignored for PNG*/, bos);
-//
-//                    bos.close();
-//
+//                    bm.compress(Bitmap.CompressFormat.JPEG, 100 /*ignored for PNG*/, bos);
 //                    byte[] bitmapdata = bos.toByteArray();
-//                    ByteArrayInputStream bs = new ByteArrayInputStream(bitmapdata);
+//                    InputStream bs = new ByteArrayInputStream(bitmapdata);
 //
-//                    telemetry.addData("Image", bs != null);
-//                    telemetry.addData("Image2", bos != null);
 //
 //                    data.addLiveImage(bs);
-//                } else telemetry.addData("Error", "image is null");
-//
-//                data.addStringData("Test", "Data is coming");
-//
-//                RobotLiveSendTemp.send(data, "http://192.168.0.116");
-//            }catch(Exception e){
-//                telemetry.addData("Error",e);
-//            }
-//        }
+                    String root = Environment.getExternalStorageDirectory().getAbsolutePath();
+                    File myDir = new File(root + "/saved_images");
+                    myDir.mkdirs();
+
+                    String fname = "image_before" + ".jpg";
+                    File file = new File(myDir, fname);
+
+                    data.addLiveImage(file);
+
+                } else telemetry.addData("Error", "image is null");
+
+                data.addStringData("Test", "Data is coming");
+
+                RobotLiveSendTemp.send(data, "http://192.168.200.113");
+                save = true;
+            }catch(Exception e){
+                telemetry.addData("Error",e);
+            }
+        }
     }
 
 
@@ -157,8 +165,13 @@ public class test extends config implements UVCCamera.Callback {
         }
 
         telemetry.addData("Sample", sampPos);
-        PSVisionUtils.saveImageToFile(bm,"image_before", "/saved_images");
-        return PSVisionUtils.matToBitmap(mask);
+        if(save) {
+            PSVisionUtils.saveImageToFile(bm,"image_before", "/saved_images");
+            save = false;
+            return PSVisionUtils.matToBitmap(mask);
+        }
+
+        return null;
 //        return bm;
     }
 }
