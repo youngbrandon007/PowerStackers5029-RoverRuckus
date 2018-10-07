@@ -120,7 +120,7 @@ public class test extends config implements UVCCamera.Callback {
         Utils.bitmapToMat(bmp32, input);
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
         Mat mask = new Mat();
-        Core.inRange(hsv, new Scalar(10 * 180 / 255, 100, 100), new Scalar(30 * 180 / 255, 255, 255), mask);
+        Core.inRange(hsv, new Scalar(25, 100, 100), new Scalar(35, 255, 255), mask);
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
         Imgproc.findContours(mask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
         double maxArea = 0;
@@ -157,7 +157,8 @@ public class test extends config implements UVCCamera.Callback {
         }
 
         telemetry.addData("Sample", sampPos);
-        return null;//PSVisionUtils.matToBitmap(hsv);
+        PSVisionUtils.saveImageToFile(bm,"image_before", "/saved_images");
+        return PSVisionUtils.matToBitmap(mask);
 //        return bm;
     }
 }
