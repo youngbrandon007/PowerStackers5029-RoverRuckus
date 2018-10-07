@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.qualcomm.robotcore.util.ThreadPool;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.android.util.Size;
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
@@ -39,20 +40,33 @@ public class UVCCamera {
     int imageFormatWanted = ImageFormat.YUY2;
     Camera camera;
     Size sizeWanted;
+    UVCCamera.Callback frameCallback;
 //    private int cameraMonitorViewId;
 //    private ViewGroup cameraMonitorView;
 //
 //    AppUtil appUtil = AppUtil.getInstance();
 //    Activity activity;
 
-    public UVCCamera(CameraManager cameraManager, CameraName cameraName){
+    public UVCCamera(CameraManager cameraManager, CameraName cameraName, UVCCamera.Callback frameCallback){
         this.cameraManager = cameraManager;
         this.cameraName = cameraName;
+        this.frameCallback = frameCallback;
 //        this.activity = appUtil.getActivity();
 //        Context context = AppUtil.getDefContext();
 //        cameraMonitorViewId = context.getResources().getIdentifier("cameraMonitorViewId", "id", context.getPackageName());
     }
-    public void test(Telemetry telemetry){
+
+    public static UVCCamera getCamera(UVCCamera.Callback callback){
+        CameraManager cameraManager = ClassFactory.getInstance().getCameraManager();
+        UVCCamera ret = null;
+        for (CameraName cameraName : cameraManager.getAllWebcams())
+        {
+            ret = new UVCCamera(cameraManager,cameraName, callback);
+        }
+        return ret;
+    }
+
+    public void start(){
 //        if (cameraMonitorViewId == 0) {
 //            cameraMonitorView = (ViewGroup) activity.findViewById(android.R.id.content);
 //        } else {
@@ -63,39 +77,25 @@ public class UVCCamera {
 
 //        Boolean value = cameraName.requestCameraPermission(deadline);
 
-        telemetry.addLine("1");
-        telemetry.update();
         cameraName.asyncRequestCameraPermission(AppUtil.getDefContext(), deadline, Continuation.create(threadPool, new Consumer<Boolean>()
         {
             @Override public void accept(Boolean permissionGranted)
             {
                 if (permissionGranted){
-                    telemetry.addLine("3");
-                    telemetry.update();
                     characteristics = cameraName.getCameraCharacteristics();
-                    telemetry.addLine("4");
-                    telemetry.update();
                     cameraManager.asyncOpenCameraAssumingPermission(cameraName, Continuation.create(threadPool, new Camera.StateCallbackDefault(){
                         @Override public void onOpened(@NonNull final Camera camera)
                         {
-                            telemetry.addLine("5");
-                            telemetry.update();
                            UVCCamera.this.camera = camera;
 
                             if (Misc.contains(characteristics.getAndroidFormats(), imageFormatWanted))
                             {
-                                telemetry.addLine("6");
-                                telemetry.update();
                                 sizeWanted = characteristics.getDefaultSize(imageFormatWanted);
                                 try {
-                                    telemetry.addLine("7");
-                                    telemetry.update();
                                     camera.createCaptureSession(Continuation.create(threadPool, captureStateCallback));
                                 }
                                 catch (CameraException e)
                                 {
-                                    telemetry.addLine("8");
-                                    telemetry.update();
                                 }
                             }
                             else
@@ -109,19 +109,14 @@ public class UVCCamera {
 //                            RobotLog.vv(TAG, "camera reports closed: %s", camera);
                         }
                     }),10,TimeUnit.SECONDS);
-                    telemetry.addLine("9");
-                    telemetry.update();
                 }
-                telemetry.addLine("10");
-                telemetry.update();
             }
         }));
-        telemetry.addLine("20");
-        telemetry.update();
     }
 
     CameraCaptureSession.StateCallback captureStateCallback = new CameraCaptureSession.StateCallbackDefault()
     {
+
         @Override public void onConfigured(@NonNull CameraCaptureSession session)
         {
             try {
@@ -130,7 +125,7 @@ public class UVCCamera {
 
                 /** Start streaming! Flow continues in the captureCallback. */
                 CameraCaptureSequenceId cameraCaptureSequenceId = session.startCapture(cameraCaptureRequest,
-                        new UVCCamera.WebcamCaptureCallback(cameraCaptureRequest), // callback, not continuation; avoids copying frame
+                        new UVCCamera.WebcamCaptureCallback(cameraCaptureRequest, frameCallback), // callback, not continuation; avoids copying frame
                         Continuation.create(threadPool, new CameraCaptureSession.StatusCallback()
                         {
                             @Override public void onCaptureSequenceCompleted(@NonNull CameraCaptureSession session, CameraCaptureSequenceId cameraCaptureSequenceId, long lastFrameNumber)
@@ -190,17 +185,25 @@ public class UVCCamera {
         }
     };
 
+    public interface Callback{
+        Bitmap onFrame(Bitmap bm);
+    }
+
+
     public class WebcamCaptureCallback implements CameraCaptureSession.CaptureCallback {
         Bitmap bitmap;
-        public WebcamCaptureCallback(CameraCaptureRequest request) {
+        UVCCamera.Callback callback;
+        public WebcamCaptureCallback(CameraCaptureRequest request, UVCCamera.Callback callback) {
             bitmap = request.createEmptyBitmap();
-
+            this.callback = callback;
         }
 
         @Override
         public void onNewFrame(@NonNull CameraCaptureSession session, @NonNull CameraCaptureRequest request, @NonNull CameraFrame cameraFrame) {
             cameraFrame.copyToBitmap(bitmap);
-            PSVisionUtils.saveImageToFile(bitmap,"frame", "/saved_images");
+            Bitmap save = callback.onFrame(bitmap);
+            if(save != null) PSVisionUtils.saveImageToFile(save,"frame", "/saved_images");
+
         }
     }
 }

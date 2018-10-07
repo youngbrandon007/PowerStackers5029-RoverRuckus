@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.WebcamExampleTe
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name = "Webcam Test")
+//@TeleOp(name = "Webcam Test")
 public class webcamTest extends OpMode{
 
     //final Executor threadPool = ThreadPool.newSingleThreadExecutor("UVCCamera");
@@ -43,7 +43,7 @@ public class webcamTest extends OpMode{
         CameraManager cameraManager = ClassFactory.getInstance().getCameraManager();
         for (CameraName cameraName : cameraManager.getAllWebcams())
         {
-            new UVCCamera(cameraManager,cameraName).test(telemetry);
+            //new UVCCamera(cameraManager,cameraName).start();
 
 
         }

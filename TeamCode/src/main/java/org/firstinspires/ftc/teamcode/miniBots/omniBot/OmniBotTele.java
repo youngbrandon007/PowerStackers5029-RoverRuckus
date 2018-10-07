@@ -22,9 +22,9 @@ public class OmniBotTele extends OmniBotConfig {
     public void loop() {
         telemetry.addData("Gyro", gyroSensor.getHeading());
         if (thing) {
-            robotHandler.drive.mecanum.updateMecanumThirdPerson(gamepad1, 1, Math.toRadians(gyroSensor.getHeading()));
+            robot.drive.mecanum.updateMecanumThirdPerson(gamepad1, 1, Math.toRadians(gyroSensor.getHeading()));
         } else {
-            robotHandler.drive.mecanum.updateMecanum(gamepad1, 1);
+            robot.drive.mecanum.updateMecanum(gamepad1, 1);
         }
         if (gamepad1.left_bumper) {
             thing = true;

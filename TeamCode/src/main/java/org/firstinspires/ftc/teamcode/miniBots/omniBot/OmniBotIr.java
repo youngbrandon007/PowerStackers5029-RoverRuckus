@@ -27,21 +27,21 @@ public class OmniBotIr extends OmniBotConfig {
         telemetry.addData("IR Mode", irOn);
         telemetry.addData("Gyro", gyroSensor.getHeading());
         if (irOn == 1) {
-            robotHandler.drive.mecanum.setMecanumThridPerson(Math.toRadians(ir.getAngle()+90), 0.03*(255-ir.getStrength()),0.05*(gyroSensor.getHeading()-ir.getAngle()),1,Math.toRadians(gyroSensor.getHeading()));
+            robot.drive.mecanum.setMecanumThridPerson(Math.toRadians(ir.getAngle()+90), 0.03*(255-ir.getStrength()),0.05*(gyroSensor.getHeading()-ir.getAngle()),1,Math.toRadians(gyroSensor.getHeading()));
         } else if (irOn == 2){
             if (ir.getAngle()>-20&&ir.getAngle()<20){
                 if (ir.getAngle()>0){
-                    robotHandler.drive.tank.setPower(0.05,0.05);
+                    robot.drive.tank.setPower(0.05,0.05);
                 }else{
-                    robotHandler.drive.tank.setPower(-0.05,-0.05);
+                    robot.drive.tank.setPower(-0.05,-0.05);
                 }
             }
         else if(ir.getStrength()<240){
-            robotHandler.drive.tank.setPower(-0.2,0.2);
+            robot.drive.tank.setPower(-0.2,0.2);
 
         }
             else{
-                robotHandler.drive.tank.setPower(0,0);
+                robot.drive.tank.setPower(0,0);
             }
 
         }
