@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.sampleTesting;
+package org.firstinspires.ftc.teamcode.roverRuckus.Testing.sampleTesting;
 
 import android.graphics.Bitmap;
 import android.os.Environment;
@@ -6,7 +6,6 @@ import android.os.Environment;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.vision.PSVisionUtils;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
 import org.firstinspires.ftc.teamcode.RobotLiveTest.RobotLiveSendTemp;
@@ -19,20 +18,16 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import RobotLiveDataSending.RobotLiveSend;
+//import RobotLiveDataSending.RobotLiveSend;
 
-@TeleOp(name = "UVC-Camera", group = "test")
+@TeleOp(name = "sampling", group = "test")
 public class test extends config implements UVCCamera.Callback {
+
 
     UVCCamera camera;
     Bitmap bm;
@@ -104,7 +99,7 @@ public class test extends config implements UVCCamera.Callback {
                     String fname = "image_before" + ".jpg";
                     File file = new File(myDir, fname);
 
-                    data.addLiveImage(file);
+                    //data.addLiveImage(file);
 
                 } else telemetry.addData("Error", "image is null");
 

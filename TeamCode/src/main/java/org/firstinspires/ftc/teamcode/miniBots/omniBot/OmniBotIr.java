@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.miniBots.omniBot;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 @TeleOp(name="OmniIr", group="omnibot")
+@Disabled
 public class OmniBotIr extends OmniBotConfig {
     IrSeekerSensor ir;
     double irOn = 0;

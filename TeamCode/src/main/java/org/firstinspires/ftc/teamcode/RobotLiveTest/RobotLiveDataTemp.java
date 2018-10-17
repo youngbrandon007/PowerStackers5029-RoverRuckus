@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotLiveTest;
 
+import android.graphics.Bitmap;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,7 +15,7 @@ public class RobotLiveDataTemp {
         ArrayList<String> data;
         ArrayList<String> fileNames;
         ArrayList<File> files;
-        InputStream live = null;
+        Bitmap live = null;
 
         public RobotLiveDataTemp(int roundNumber) {
             this.RIN = roundNumber;
@@ -63,17 +65,10 @@ public class RobotLiveDataTemp {
             this.files.add(f);
         }
 
-        public void addLiveImage(File f) {
-            try {
-                this.live = new FileInputStream(f);
-            } catch (FileNotFoundException var3) {
-                var3.printStackTrace();
+        public void addLiveImage(Bitmap bm) {
+            if(bm != null) {
+                live = bm;
             }
-
-        }
-
-        public void addLiveImage(InputStream f) {
-            this.live = f;
         }
     }
 

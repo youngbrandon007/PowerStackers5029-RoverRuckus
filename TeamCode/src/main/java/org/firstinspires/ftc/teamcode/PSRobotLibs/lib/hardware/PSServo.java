@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware;
 
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
@@ -34,7 +35,7 @@ public class PSServo {
     /**
      * the servo object
      */
-    private Servo servoObject;
+    private ServoImplEx servoObject;
 
     /**
      * A way to assign a servo position to a string for reference
@@ -59,7 +60,7 @@ public class PSServo {
         servoName = name;
         this.totalRotation = totalRotation;
         initPos = init;
-        servoObject = resources.hardwareMap.get(Servo.class, servoName);
+        servoObject = resources.hardwareMap.get(ServoImplEx.class, servoName);
         if (goToInit) servoObject.setPosition(initPos);
     }
 
@@ -116,5 +117,13 @@ public class PSServo {
 
     public double getCachedPosition() {
         return cachedPosition;
+    }
+
+    public void off(){
+        servoObject.setPwmDisable();
+    }
+
+    public void on(){
+        servoObject.setPwmEnable();
     }
 }

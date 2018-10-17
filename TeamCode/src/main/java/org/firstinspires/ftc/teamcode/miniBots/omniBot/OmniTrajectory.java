@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.miniBots.omniBot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.drive.control.Pose2d;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.drive.control.Vector2d;
@@ -15,6 +16,7 @@ import java.util.Collections;
 
 
 @Autonomous(name = "OmniTrajectory", group = "omnibot")
+@Disabled
 public class OmniTrajectory extends OmniBotConfig {
     //TODO values not tuned
     protected static MotionConstraints AXIAL_CONSTRAINTS = new MotionConstraints(30.0, 40.0, 160.0, MotionConstraints.EndBehavior.OVERSHOOT);

@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.miniBots.omniBot;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "OmniTele", group = "omnibot")
+@Disabled
 public class OmniBotTele extends OmniBotConfig {
     boolean thing = false;
 

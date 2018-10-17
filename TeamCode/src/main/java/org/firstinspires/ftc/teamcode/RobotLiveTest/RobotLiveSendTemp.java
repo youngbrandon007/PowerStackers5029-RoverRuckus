@@ -36,9 +36,12 @@ public class RobotLiveSendTemp {
         }
     }
 
-    public static void send(RobotLiveDataTemp data, String ip) {
+    public static String send(RobotLiveDataTemp data, String ip) {
         if (!ip.endsWith("/")) {
             ip = ip + "/";
+        }
+        if(data == null){
+            return "RobotLive.DataSend - null round number";
         }
 
         try {
@@ -52,7 +55,7 @@ public class RobotLiveSendTemp {
             }
 
             if (data.live != null) {
-                multipart.addFilePart("LIVE", "live.jpg", data.live);
+                multipart.addBitmap("LIVE", data.live);
             }
 
             if (data.files.size() != 0) {
@@ -63,8 +66,11 @@ public class RobotLiveSendTemp {
 
             multipart.finish();
             data.reset();
+
+            return "RobotLive.DataSend - success";
         } catch (IOException var4) {
             var4.printStackTrace();
+            return "RobotLive.DataSend - error sending data";
         }
 
     }

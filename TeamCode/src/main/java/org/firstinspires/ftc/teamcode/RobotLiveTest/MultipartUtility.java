@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.RobotLiveTest;
 
+import android.graphics.Bitmap;
+
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,6 +15,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +70,35 @@ public class MultipartUtility {
 
         this.outputStream.flush();
         inputStream.close();
+        this.writer.append("\r\n");
+        this.writer.flush();
+    }
+
+    public void addBitmap(String fieldName, Bitmap bitmap) throws IOException {
+        this.writer.append("--" + this.boundary).append("\r\n");
+        this.writer.append("Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + fieldName + ".jpg\"").append("\r\n");
+        //this.writer.append("Content-Type: image/jpeg").append("\r\n");// + URLConnection.guessContentTypeFromName(fileName)
+        this.writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(fieldName + ".jpg")).append("\r\n");
+        this.writer.append("Content-Transfer-Encoding: binary").append("\r\n");
+        this.writer.append("\r\n");
+        this.writer.flush();
+//        byte[] buffer = new byte[4096];
+//        boolean var5 = true;
+
+
+//        int width = bitmap.getWidth();
+//        int height = bitmap.getHeight();
+//
+//        int size = bitmap.getRowBytes() * bitmap.getHeight();
+//        ByteBuffer byteBuffer = ByteBuffer.allocate(size);
+//        bitmap.copyPixelsToBuffer(byteBuffer);
+// this.outputStream.write(byteBuffer.array());
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90 /*ignored for PNG*/, bos);
+        byte[] bitmapdata = bos.toByteArray();
+        this.outputStream.write(bitmapdata);
+        this.outputStream.flush();
         this.writer.append("\r\n");
         this.writer.flush();
     }

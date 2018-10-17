@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.miniBots.humanoid;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSServo;
 
 @TeleOp(name = "human", group = "hi")
+@Disabled
 public class humanoidTele extends OpMode{
 
     PSRobot robotHandler;

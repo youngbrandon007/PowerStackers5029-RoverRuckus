@@ -1,30 +1,13 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.other;
-
-import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+package org.firstinspires.ftc.teamcode.roverRuckus.Testing.other;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.configuration.WebcamConfiguration;
 
-import org.firstinspires.ftc.robotcore.external.android.util.Size;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureRequest;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSession;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraControls;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraFrame;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.CameraControl;
-import org.firstinspires.ftc.robotcore.internal.camera.CameraCaptureRequestImpl;
-import org.firstinspires.ftc.robotcore.internal.camera.libuvc.api.UvcApiCameraCaptureSequenceId;
-import org.firstinspires.ftc.robotcore.internal.camera.names.WebcamNameImpl;
-import org.firstinspires.ftc.robotcore.internal.camera.names.WebcamNameInternal;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobot;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSServo;
-@TeleOp(name = "prototypetele")
+@TeleOp(name = "prototypetele",group = "robot")
 public class basicProtoypingTele extends OpMode {
     PSRobot robot;
     PSMotor rightDrivetMotor;
