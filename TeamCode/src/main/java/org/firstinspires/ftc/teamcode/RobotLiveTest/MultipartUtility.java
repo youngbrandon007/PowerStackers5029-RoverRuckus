@@ -78,7 +78,7 @@ public class MultipartUtility {
         this.writer.append("--" + this.boundary).append("\r\n");
         this.writer.append("Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + fieldName + ".jpg\"").append("\r\n");
         //this.writer.append("Content-Type: image/jpeg").append("\r\n");// + URLConnection.guessContentTypeFromName(fileName)
-        this.writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(fieldName + ".jpg")).append("\r\n");
+        this.writer.append("Content-Type: image/jpeg").append("\r\n");//URLConnection.guessContentTypeFromName(fieldName + ".jpg")).append("\r\n");
         this.writer.append("Content-Transfer-Encoding: binary").append("\r\n");
         this.writer.append("\r\n");
         this.writer.flush();
@@ -94,10 +94,11 @@ public class MultipartUtility {
 //        bitmap.copyPixelsToBuffer(byteBuffer);
 // this.outputStream.write(byteBuffer.array());
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 90 /*ignored for PNG*/, bos);
-        byte[] bitmapdata = bos.toByteArray();
-        this.outputStream.write(bitmapdata);
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 90 /*ignored for PNG*/, bos);
+//        byte[] bitmapdata = bos.toByteArray();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, this.outputStream);
+        //this.outputStream.write(bitmapdata);
         this.outputStream.flush();
         this.writer.append("\r\n");
         this.writer.flush();

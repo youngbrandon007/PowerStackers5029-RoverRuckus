@@ -46,11 +46,11 @@ abstract class config extends PSConfigOpMode{
 
         }
         public void update(){
-            robot.drive.mecanum.setMecanum(angle,pidController.getError(getSpeed()));
+//            robot.drive.mecanum.setMecanum(angle,pidController.getError(getSpeed()));
         }
 
-        public double getSpeed() {
-
-        }
+//        public double getSpeed() {
+//
+//        }
     }
 }

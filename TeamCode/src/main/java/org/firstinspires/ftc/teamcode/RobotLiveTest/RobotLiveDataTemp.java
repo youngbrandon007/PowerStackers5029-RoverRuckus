@@ -30,6 +30,7 @@ public class RobotLiveDataTemp {
             this.data = new ArrayList();
             this.fileNames = new ArrayList();
             this.files = new ArrayList();
+            live = null;
         }
 
         public void addStringData(String name, String str) {
@@ -42,6 +43,21 @@ public class RobotLiveDataTemp {
             this.data.add("T:" + d);
         }
 
+        public void addChartDouble(String name, ArrayList<Double> xCoords, ArrayList<Double> yCoords){
+            if(xCoords.size() == yCoords.size()){
+                ArrayList<String> x = new ArrayList<String>();
+                ArrayList<String> y = new ArrayList<String>();
+
+                for(int i = 0; i < xCoords.size(); i++){
+                    x.add(String.valueOf((double)Math.round(xCoords.get(i)*100.0)/100.0));
+                    y.add(String.valueOf((double)Math.round(yCoords.get(i)*100.0)/100.0));
+
+                }
+
+                addChartData(name, x, y);
+            }
+        }
+
         public void addChartData(String name, ArrayList<String> xCoords, ArrayList<String> yCoords) {
             if (xCoords.size() == yCoords.size()) {
                 this.dataNames.add(name);
@@ -49,7 +65,7 @@ public class RobotLiveDataTemp {
                 int size = xCoords.size();
 
                 for(int i = 0; i < size; ++i) {
-                    dataLine = dataLine + (String)xCoords.get(i) + "-" + (String)yCoords.get(i);
+                    dataLine = dataLine + (String)xCoords.get(i) + "|" + (String)yCoords.get(i);
                     if (i + 1 < size) {
                         dataLine = dataLine + "~";
                     }
