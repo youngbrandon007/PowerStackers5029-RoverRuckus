@@ -83,7 +83,8 @@ public class PSMotor {
         this.motorName = motorName;
         this.gearRatio = gearRatio;
         cpr = getCpr();
-        motorObject = this.resources.hardwareMap.dcMotor.get(motorName);
+        //motorObject = this.resources.hardwareMap.dcMotor.get(motorName);
+        motorObject = this.resources.hardwareMap.get(DcMotor.class, motorName);
         setupEncoder();
     }
 
