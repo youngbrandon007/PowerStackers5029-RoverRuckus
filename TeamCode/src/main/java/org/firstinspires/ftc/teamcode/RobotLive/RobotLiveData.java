@@ -1,14 +1,11 @@
-package org.firstinspires.ftc.teamcode.RobotLiveTest;
+package org.firstinspires.ftc.teamcode.RobotLive;
 
 import android.graphics.Bitmap;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
-public class RobotLiveDataTemp {
+public class RobotLiveData {
 
         public final int RIN;
         ArrayList<String> dataNames;
@@ -17,7 +14,7 @@ public class RobotLiveDataTemp {
         ArrayList<File> files;
         Bitmap live = null;
 
-        public RobotLiveDataTemp(int roundNumber) {
+        public RobotLiveData(int roundNumber) {
             this.RIN = roundNumber;
             this.dataNames = new ArrayList();
             this.data = new ArrayList();

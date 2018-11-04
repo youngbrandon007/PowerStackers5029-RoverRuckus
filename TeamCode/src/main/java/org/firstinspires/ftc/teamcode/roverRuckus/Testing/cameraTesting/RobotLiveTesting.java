@@ -5,10 +5,8 @@ import android.graphics.Bitmap;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.PSGeneralUtils;
-import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.vision.PSVisionUtils;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
-import org.firstinspires.ftc.teamcode.RobotLiveTest.RobotLiveSendTemp;
+import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveSend;
 
 import java.util.ArrayList;
 
@@ -30,7 +28,7 @@ public class RobotLiveTesting extends config implements UVCCamera.Callback{
 
         time.reset();
         t.reset();
-        data = RobotLiveSendTemp.createNewRun("http://192.168.200.113");
+        data = RobotLiveSend.createNewRun("http://192.168.200.113");
     }
 
     @Override
@@ -58,7 +56,7 @@ public class RobotLiveTesting extends config implements UVCCamera.Callback{
 
        data.addChartDouble("gamepad",x, y);
 
-       telemetry.addLine(RobotLiveSendTemp.send(data, "http://192.168.200.113"));
+       telemetry.addLine(RobotLiveSend.send(data, "http://192.168.200.113"));
 
 //        if(send != null) {
 //            PSVisionUtils.saveImageToFile(send, "UVCcamera.jpg", "/saved_images");

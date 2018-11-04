@@ -6,13 +6,13 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSConfigOpMode;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobot;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
-import org.firstinspires.ftc.teamcode.RobotLiveTest.RobotLiveDataTemp;
+import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveData;
 
 import RobotLiveDataSending.RobotLiveData;
 
 abstract class config extends PSConfigOpMode{
 
-    RobotLiveDataTemp data;
+    RobotLiveData data;
     PSMotor leftFront;
     PSMotor rightFront;
     PSMotor leftBack;

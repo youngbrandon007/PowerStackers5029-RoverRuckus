@@ -17,6 +17,6 @@ public class EncoderTesting extends Config{
 //        telemetry.addData("drive.LB", lb);
 //        telemetry.addData("drive.RF", rf);
 //        telemetry.addData("drive.RB", rb);
-        drive.autoDive(90, 500, .2, 0.0);
+//        drive.autoDive(90, 500, .2, 0.0);
     }
 }

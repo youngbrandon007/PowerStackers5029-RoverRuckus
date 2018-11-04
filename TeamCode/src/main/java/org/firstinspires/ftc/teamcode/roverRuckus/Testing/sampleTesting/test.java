@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.vision.PSVisionUtils;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
-import org.firstinspires.ftc.teamcode.RobotLiveTest.RobotLiveSendTemp;
+import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveSend;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -52,7 +52,7 @@ public class test extends config implements UVCCamera.Callback {
         camera = UVCCamera.getCamera(this);
 
         telemetry.addLine(load);
-        data = RobotLiveSendTemp.createNewRun("http://192.168.200.113");
+        data = RobotLiveSend.createNewRun("http://192.168.200.113");
     }
 
     @Override
@@ -105,7 +105,7 @@ public class test extends config implements UVCCamera.Callback {
 
                 data.addStringData("Test", "Data is coming");
 
-                RobotLiveSendTemp.send(data, "http://192.168.200.113");
+                RobotLiveSend.send(data, "http://192.168.200.113");
                 save = true;
             }catch(Exception e){
                 telemetry.addData("Error",e);

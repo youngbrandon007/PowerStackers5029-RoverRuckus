@@ -1,24 +1,18 @@
-package org.firstinspires.ftc.teamcode.RobotLiveTest;
+package org.firstinspires.ftc.teamcode.RobotLive;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 
 
-
-
-public class RobotLiveSendTemp {
-    public RobotLiveSendTemp() {
+public class RobotLiveSend {
+    public RobotLiveSend() {
     }
 
-    public static RobotLiveDataTemp createNewRun(String ip) {
+    public static RobotLiveData createNewRun(String ip) {
         if (!ip.endsWith("/")) {
             ip = ip + "/";
         }
@@ -29,14 +23,14 @@ public class RobotLiveSendTemp {
             BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
             int rin = Integer.parseInt(in.readLine());
             in.close();
-            return new RobotLiveDataTemp(rin);
+            return new RobotLiveData(rin);
         } catch (IOException var5) {
             var5.printStackTrace();
             return null;
         }
     }
 
-    public static String send(RobotLiveDataTemp data, String ip) {
+    public static String send(RobotLiveData data, String ip) {
         if (!ip.endsWith("/")) {
             ip = ip + "/";
         }

@@ -25,7 +25,7 @@ public class UVCTesting extends config implements UVCCamera.Callback{
 
         time.reset();
 
-//        data = RobotLiveSendTemp.createNewRun("http://192.168.200.174");
+//        data = RobotLiveSend.createNewRun("http://192.168.200.174");
     }
 
     @Override
@@ -39,7 +39,7 @@ public class UVCTesting extends config implements UVCCamera.Callback{
 //
 //       data.addStringData("Sent", "1");
 //
-//       telemetry.addLine(RobotLiveSendTemp.send(data, "http://192.168.200.174"));
+//       telemetry.addLine(RobotLiveSend.send(data, "http://192.168.200.174"));
         if(send != null) {
             PSVisionUtils.saveImageToFile(send, "UVCcamera.jpg", "/saved_images");
         }
