@@ -37,6 +37,11 @@ public class PSTelemetry {
     }
 
     public void update(){
+        updateNoClear();
+        clear();
+    }
+
+    public void updateNoClear(){
         for (Map.Entry<String, String> entry : telemetryData.entrySet()) {
             String name = entry.getKey();
             Object value = entry.getValue();
@@ -46,12 +51,23 @@ public class PSTelemetry {
                 telemetry.addData(name, value);
             }
         }
-        clear();
     }
 
-    public void update_telemtry(){
+    public void updateTelemtry(){
         telemetry.update();
     }
+
+    public void updateAll(){
+        update();
+        telemetry.update();
+    }
+
+    public void updateAdd(){
+        updateNoClear();
+        telemetry.update();
+    }
+
+
 
     public void add(String name, String data){
         telemetryData.put(name, String.valueOf(data));

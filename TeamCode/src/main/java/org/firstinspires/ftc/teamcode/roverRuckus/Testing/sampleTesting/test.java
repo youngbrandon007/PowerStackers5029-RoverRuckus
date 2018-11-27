@@ -34,8 +34,10 @@ public class test extends config implements UVCCamera.Callback {
     int sampPos = 1; //0 = Left, 1 = center
     int sampleNow;
     double angle;
-    static String load = "";
     boolean save = false;
+
+
+    static String load = "";
 
     static {
         if (!OpenCVLoader.initDebug()) {

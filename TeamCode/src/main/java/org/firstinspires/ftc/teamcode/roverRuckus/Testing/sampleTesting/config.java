@@ -8,8 +8,6 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobot;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveData;
 
-import RobotLiveDataSending.RobotLiveData;
-
 abstract class config extends PSConfigOpMode{
 
     RobotLiveData data;

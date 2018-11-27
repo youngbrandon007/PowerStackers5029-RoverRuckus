@@ -63,6 +63,10 @@ public class PSMecanumDrive extends PSDriveAbstract {
 
     }
 
+    public void updateMecanumCustom(double angle, double speed, double rotation, double scale){
+        setMecanum(angle, speed, rotation, scale);
+    }
+
     public void updateMecanum(Gamepad pad, double scale, double PID) {
 
         double angle = mecDirectionFromJoystick(pad);
