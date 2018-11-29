@@ -61,8 +61,8 @@ public class RobotLiveData {
                 String dataLine = "C:";
                 int size = xCoords.size();
 
-                for(int i = 0; i < size; ++i) {
-                    dataLine = dataLine + (String)xCoords.get(i) + "|" + (String)yCoords.get(i);
+                for(int i = 0; i < size; i++) {
+                    dataLine = dataLine + (String)xCoords.get(i) + "-" + (String)yCoords.get(i);
                     if (i + 1 < size) {
                         dataLine = dataLine + "~";
                     }

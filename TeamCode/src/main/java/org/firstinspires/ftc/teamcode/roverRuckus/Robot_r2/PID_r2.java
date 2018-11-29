@@ -46,9 +46,9 @@ public class PID_r2 extends Config{
 
     @Override
     public void loop() {
-        times.add(String.valueOf(time.milliseconds()/1000.0));
+        times.add(String.valueOf(Math.round(time.milliseconds()/1000.0)));
 
-        value.add(String.valueOf(gyro.getAngle()));//pid value
+        value.add(String.valueOf(Math.round(gyro.getAngle()/1000.0)*1000.0));//pid value
 
 
         if(set.robotLiveEnabled) {
