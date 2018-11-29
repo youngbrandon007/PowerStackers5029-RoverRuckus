@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.roverRuckus.Testing.cameraTesting;
 
 import android.graphics.Bitmap;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.vision.PSVisionUtils
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
 
 @TeleOp(name = "UVC Camera", group = "test")
+@Disabled
 public class UVCTesting extends config implements UVCCamera.Callback{
 
     ElapsedTime time = new ElapsedTime();

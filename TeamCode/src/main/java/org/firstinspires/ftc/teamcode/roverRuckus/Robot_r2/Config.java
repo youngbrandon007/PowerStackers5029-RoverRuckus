@@ -1,8 +1,14 @@
 package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2;
 
+import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSConfigOpMode;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobot;
@@ -18,6 +24,18 @@ import java.util.ArrayList;
 abstract class Config extends PSConfigOpMode {
 
 
+    ///////////////////////////////////----Run Settings----///////////////////////////////////////////
+    static class set {
+        static boolean doLanding = false;
+        static boolean doSample = true;
+        static boolean useCamera = true;
+
+        //Real Match these value must be FALSE
+        static boolean saveImages = false;
+        static boolean robotLiveEnabled = true;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+
     Drive drive;
     RobotLive robotLive;
     PSTelemetry tel;
@@ -25,6 +43,7 @@ abstract class Config extends PSConfigOpMode {
     Collector collector;
     Transfer transfer;
     Lift lift;
+    Gyro gyro;
 
     @Override
     public void config(OpMode opMode) {
@@ -32,9 +51,10 @@ abstract class Config extends PSConfigOpMode {
 
         //robot parts
         drive = new Drive();
-        collector = new Collector();
-        transfer = new Transfer();
-        lift = new Lift();
+        //collector = new Collector();
+        //transfer = new Transfer();
+        //lift = new Lift();
+        gyro = new Gyro();
 
         //extras
         tel = new PSTelemetry(telemetry);
@@ -54,11 +74,15 @@ abstract class Config extends PSConfigOpMode {
 
         double PIDoutput = 0.0;
 
+        double P = 0.1;
+        double I = 0.0;
+        double D = 0.1;
+
         public Drive(){
-            leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT,40);
-            rightFront = robot.motorHandler.newDriveMotor("D.RF", PSEnum.MotorLoc.RIGHTFRONT,40);
-            leftBack = robot.motorHandler.newDriveMotor("D.LB", PSEnum.MotorLoc.LEFTBACK,40);
-            rightBack = robot.motorHandler.newDriveMotor("D.RB", PSEnum.MotorLoc.RIGHTBACK,40);
+            //leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT,40);
+            //rightFront = robot.motorHandler.newDriveMotor("D.RF", PSEnum.MotorLoc.RIGHTFRONT,40);
+            //leftBack = robot.motorHandler.newDriveMotor("D.LB", PSEnum.MotorLoc.LEFTBACK,40);
+            //rightBack = robot.motorHandler.newDriveMotor("D.RB", PSEnum.MotorLoc.RIGHTBACK,40);
         }
 
         public void resetEncoders(){
@@ -169,6 +193,20 @@ abstract class Config extends PSConfigOpMode {
             bridge = new Bridge();
         }
     }
+
+    class Gyro {
+        NavxMicroNavigationSensor navxMicro;
+        IntegratingGyroscope gyro;
+        public Gyro() {
+            navxMicro = hardwareMap.get(NavxMicroNavigationSensor.class,"navx");
+            gyro =(IntegratingGyroscope)navxMicro;
+        }
+
+        public double getAngle(){
+            Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            return angles.firstAngle;
+        }
+    }
     /*
      * Auto
      */
@@ -181,7 +219,7 @@ abstract class Config extends PSConfigOpMode {
         }
 
         public void send(){
-
+            RobotLiveSend.send(data, ip);
         }
     }
 

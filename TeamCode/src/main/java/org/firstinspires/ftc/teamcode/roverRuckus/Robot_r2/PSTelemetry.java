@@ -29,7 +29,7 @@ public class PSTelemetry {
     }
 
     public void clear(){
-        telemetryData = new HashMap<>();
+        telemetryData = new HashMap<String, String>();
     }
 
     public void clearDisabled(){
@@ -42,11 +42,14 @@ public class PSTelemetry {
     }
 
     public void updateNoClear(){
+        if(telemetryData.size() == 0){
+            return;
+        }
         for (Map.Entry<String, String> entry : telemetryData.entrySet()) {
             String name = entry.getKey();
             Object value = entry.getValue();
             String section = null;
-            section = (name.contains(".") ? name.split(".")[0] : name);
+            section = (name.contains(".")) ? name.split(".")[0] : name;
             if(!disabled.contains(section)){
                 telemetry.addData(name, value);
             }

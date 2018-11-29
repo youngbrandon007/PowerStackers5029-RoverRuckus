@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.roverRuckus.Testing;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobot;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 
 @TeleOp(name = "_prototype_", group = "proto")
+@Disabled
 public class prototypeTesting extends OpMode {
 
     PSMotor driveLeft;

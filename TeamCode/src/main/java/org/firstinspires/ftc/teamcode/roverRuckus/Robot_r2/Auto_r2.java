@@ -23,19 +23,6 @@ import java.util.List;
 @Autonomous(name = "r2.Auto", group = "r2")
 public class Auto_r2 extends Config implements UVCCamera.Callback{
 
-
-    ///////////////////////////////////----Run Settings----///////////////////////////////////////////
-    static class set {
-        static boolean doLanding = false;
-        static boolean doSample = true;
-        static boolean useCamera = true;
-
-        //Real Match these value must be FALSE
-        static boolean saveImages = false;
-        static boolean robotLiveEnabled = true;
-    }
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
-
     //General
     ElapsedTime time = new ElapsedTime();
     AutoTasks task = AutoTasks.LAND;
@@ -53,31 +40,33 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
 
     @Override
     public void init() {
-        tel.updateAll();
-        tel.add("auto.status", "init");
-        tel.updateAdd();
-
         config(this);
-        tel.add("robotLive.enabled", set.robotLiveEnabled);
+
+//        tel.updateAll();
+//        tel.add("auto.status", "init");
+//        tel.updateAdd();
+
+
+//        tel.add("robotLive.enabled", set.robotLiveEnabled);
         if(set.robotLiveEnabled) {
             robotLive = new RobotLive();
             set.robotLiveEnabled = (robotLive != null);
-            tel.add("robotLive.connected", set.robotLiveEnabled);
+//            tel.add("robotLive.connected", set.robotLiveEnabled);
         }
-        tel.updateAdd();
-
-        tel.add("camera.enabled", set.useCamera);
-        tel.add("camera.opencv", opencvLoad);
+//        tel.updateAdd();
+//
+//        tel.add("camera.enabled", set.useCamera);
+//        tel.add("camera.opencv", opencvLoad);
         if(set.useCamera) {
             camera.load(this);
             set.useCamera = (camera != null);
             if (set.useCamera) camera.start();
-            tel.add("camera.status", (set.useCamera) ? "started" : "error");
+//            tel.add("camera.status", (set.useCamera) ? "started" : "error");
         }
-        tel.updateAdd();
+//        tel.updateAdd();
 
-        tel.add("auto.status", "init_loop");
-        tel.updateAdd();
+//        tel.add("auto.status", "init_loop");
+//        tel.updateAdd();
     }
 
     @Override
@@ -86,10 +75,10 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
             camera.load(this);
             set.useCamera = (camera != null);
             if (set.useCamera) camera.start();
-            tel.add("camera.status", (set.useCamera) ? "started" : "error");
+//            tel.add("camera.status", (set.useCamera) ? "started" : "error");
         }
 
-        tel.updateNoClear();
+//        tel.updateNoClear();
     }
 
     @Override
@@ -146,12 +135,12 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
             case PARKDRIVEBACK:
                 break;
         }
-        tel.add("auto.status", task);
-        tel.add("drive.encoder-LF", drive.leftFront.getEncoderPosition());
-        tel.add("drive.encoder-RF", drive.rightFront.getEncoderPosition());
-        tel.add("drive.encoder-LB", drive.leftBack.getEncoderPosition());
-        tel.add("drive.encoder-RB", drive.rightBack.getEncoderPosition());
-        tel.update();
+//        tel.add("auto.status", task);
+//        tel.add("drive.encoder-LF", drive.leftFront.getEncoderPosition());
+//        tel.add("drive.encoder-RF", drive.rightFront.getEncoderPosition());
+//        tel.add("drive.encoder-LB", drive.leftBack.getEncoderPosition());
+//        tel.add("drive.encoder-RB", drive.rightBack.getEncoderPosition());
+//        tel.update();
     }
 
 
@@ -204,10 +193,10 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
             samplePos = 0;
         }
 
-        tel.add("sample.sample", samplePos);
-        tel.add("sample.location", locationX);
-        tel.add("sample.position", posX);
-        tel.add("sample.size", size);
+//        tel.add("sample.sample", samplePos);
+//        tel.add("sample.location", locationX);
+//        tel.add("sample.position", posX);
+//        tel.add("sample.size", size);
 
 
         if(set.saveImages){

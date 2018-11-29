@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.roverRuckus.Testing.sampleTesting;
 import android.graphics.Bitmap;
 import android.os.Environment;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
@@ -26,6 +27,7 @@ import java.util.List;
 //import RobotLiveDataSending.RobotLiveSend;
 
 @TeleOp(name = "sampling", group = "test")
+@Disabled
 public class test extends config implements UVCCamera.Callback {
 
 
