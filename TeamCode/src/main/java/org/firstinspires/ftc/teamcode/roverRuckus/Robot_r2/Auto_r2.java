@@ -92,6 +92,14 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
         drive.PIDoutput = 0.0;
 
         switch (task){
+            case UNRATCHET:
+                lift.extension.setPower(-1);
+                lift.ratchetOn();
+                if (time.milliseconds()>200){
+                    task = AutoTasks.LAND;
+                    time.reset();
+                }
+                break;
             case LAND:
 
                 task = AutoTasks.SAMPLEPICTURE;

@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.Testing.sampleTesting;
+package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2;
 
 import android.graphics.Bitmap;
 import android.os.Environment;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.vision.PSVisionUtils;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
-import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveSend;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -23,12 +23,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+@Autonomous(name = "samp")
+public class sample extends Config implements UVCCamera.Callback {
 
-//import RobotLiveDataSending.RobotLiveSend;
-
-@TeleOp(name = "sampling", group = "test")
-@Disabled
-public class test extends config implements UVCCamera.Callback {
+    ElapsedTime time = new ElapsedTime();
 
 
     UVCCamera camera;
@@ -51,7 +49,7 @@ public class test extends config implements UVCCamera.Callback {
 
     @Override
     public void init() {
-        angle = Math.PI/2;
+        angle = Math.PI / 2;
         config(this);
         camera = UVCCamera.getCamera(this);
 
@@ -62,12 +60,13 @@ public class test extends config implements UVCCamera.Callback {
     @Override
     public void start() {
         camera.start();
+        time.reset();
     }
 
     @Override
     public void loop() {
-        if (gamepad1.a){
-            switch (sampleNow){
+        while (time.milliseconds()>4000) {
+            switch (sampleNow) {
                 case 0:
                     angle = Math.toRadians(120);
                     break;
@@ -78,43 +77,9 @@ public class test extends config implements UVCCamera.Callback {
                     angle = Math.toRadians(60);
                     break;
             }
-            robot.drive.mecanum.setMecanum(angle,0.3, 0, 1);
-        } else {
-            robot.drive.mecanum.updateMecanum(gamepad1,1);
-            sampleNow = sampPos;
+            robot.drive.mecanum.setMecanum(angle, 0.5, 0, 1);
         }
-        if(data == null){
-            telemetry.addData("Error","data is null");
-
-        }else {
-            try {
-                if (bm != null) {
-//                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//                    bm.compress(Bitmap.CompressFormat.JPEG, 100 /*ignored for PNG*/, bos);
-//                    byte[] bitmapdata = bos.toByteArray();
-//                    InputStream bs = new ByteArrayInputStream(bitmapdata);
-//
-//
-//                    data.addLiveImage(bs);
-                    String root = Environment.getExternalStorageDirectory().getAbsolutePath();
-                    File myDir = new File(root + "/saved_images");
-                    myDir.mkdirs();
-
-                    String fname = "image_before" + ".jpg";
-                    File file = new File(myDir, fname);
-
-                    //data.addLiveImage(file);
-
-                } else telemetry.addData("Error", "image is null");
-
-//                data.addStringData("Test", "Data is coming");
-
-//                RobotLiveSend.send(data, "http://192.168.200.113");
-//                save = true;
-            }catch(Exception e){
-                telemetry.addData("Error",e);
-            }
-        }
+        robot.drive.stop();
     }
 
 
@@ -155,17 +120,17 @@ public class test extends config implements UVCCamera.Callback {
         telemetry.addData("Position", posX);
         telemetry.addData("Size", size);
 
-        if(posX < -100){
+        if (posX < -100) {
             sampPos = 2;
-        }else if(posX > -100 && posX < 100){
+        } else if (posX > -100 && posX < 100) {
             sampPos = 1;
-        }else if(posX > 100){
+        } else if (posX > 100) {
             sampPos = 0;
         }
 
         telemetry.addData("Sample", sampPos);
-        if(save) {
-            PSVisionUtils.saveImageToFile(bm,"image_before", "/saved_images");
+        if (save) {
+            PSVisionUtils.saveImageToFile(bm, "image_before", "/saved_images");
             save = false;
             return PSVisionUtils.matToBitmap(mask);
         }
@@ -173,4 +138,7 @@ public class test extends config implements UVCCamera.Callback {
         return null;
 //        return bm;
     }
+
+
 }
+

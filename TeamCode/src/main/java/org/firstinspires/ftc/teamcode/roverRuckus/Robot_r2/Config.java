@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.Range;
 
@@ -51,9 +52,9 @@ abstract class Config extends PSConfigOpMode {
 
         //robot parts
         drive = new Drive();
-        //collector = new Collector();
-        //transfer = new Transfer();
-        //lift = new Lift();
+        collector = new Collector();
+        transfer = new Transfer();
+        lift = new Lift();
         gyro = new Gyro();
 
         //extras
@@ -79,10 +80,10 @@ abstract class Config extends PSConfigOpMode {
         double D = 0.1;
 
         public Drive(){
-            //leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT,40);
-            //rightFront = robot.motorHandler.newDriveMotor("D.RF", PSEnum.MotorLoc.RIGHTFRONT,40);
-            //leftBack = robot.motorHandler.newDriveMotor("D.LB", PSEnum.MotorLoc.LEFTBACK,40);
-            //rightBack = robot.motorHandler.newDriveMotor("D.RB", PSEnum.MotorLoc.RIGHTBACK,40);
+            leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT,40);
+            rightFront = robot.motorHandler.newDriveMotor("D.RF", PSEnum.MotorLoc.RIGHTFRONT,40);
+            leftBack = robot.motorHandler.newDriveMotor("D.LB", PSEnum.MotorLoc.LEFTBACK,40);
+            rightBack = robot.motorHandler.newDriveMotor("D.RB", PSEnum.MotorLoc.RIGHTBACK,40);
         }
 
         public void resetEncoders(){
@@ -141,22 +142,38 @@ abstract class Config extends PSConfigOpMode {
     class Collector{
         public PSMotor extension;
         public PSMotor sweeper;
-        public Boolean sweeperOn;
+        public PSServo door;
+        public PSServo ramp;
+        public Boolean sweeperOn = false;
         public Collector(){
             extension = robot.motorHandler.newMotor("C.E",10);
             sweeper = robot.motorHandler.newMotor("C.S", 3.7);
-        }
+            door = robot.servoHandler.newServo("C.D",197, 0.7, true);
+            ramp = robot.servoHandler.newServo("C.R",100, .7, true);
 
+        }
+        public void openDoor(){
+            door.setPosition(0);
+        }
+        public void closeDoor(){
+            door.setPosition(0.6);
+        }
+        public void rampDown(){
+            ramp.setPosition(0.6);
+        }
+        public void rampUp(){
+            ramp.setPosition(0.7);
+        }
     }
 
     class Transfer{
         public PSMotor shooter;
-        public boolean shooterOn;
-        public PSServo feeder;
-        public boolean feederOn;
+        public boolean shooterOn = false;
+        public CRServo feeder;
+        public boolean feederOn = false;
         public Transfer(){
             shooter = robot.motorHandler.newMotor("T.S", 3.7);
-            feeder = robot.servoHandler.newServo("T.F", 1, .5, true);
+            feeder = hardwareMap.crservo.get("T.F");
         }
     }
 
@@ -173,15 +190,14 @@ abstract class Config extends PSConfigOpMode {
                 rotateL = robot.servoHandler.newServo("L.L", 240, .5, false);
                 rotateR = robot.servoHandler.newServo("L.R", 240, .5, false);
             }
-            public void setBridge(double degrees){
-                double r = Range.scale(degrees, 0, 180, right[0], right[1]);
-                double l = Range.scale(degrees, 0, 180, left[0], left[1]);
-                rotateR.setPosition(r);
-                rotateL.setPosition(l);
+            public void setBridge(double input){
+                rotateR.setPosition(Math.abs(input));
+                rotateL.setPosition(Math.abs(input));
             }
         }
         public PSMotor extension;
         public PSServo drop;
+        public PSServo ratchet;
         public final double dropInit = .5;
         public final double dropNormal = .8;
         public final double dropOpposite = .2;
@@ -189,8 +205,15 @@ abstract class Config extends PSConfigOpMode {
         public Bridge bridge;
         public Lift(){
             extension = robot.motorHandler.newMotor("L.E", 70);
-            drop = robot.servoHandler.newServo("L.D", 140, .5, true);
+            drop = robot.servoHandler.newServo("L.SO", 140, .5, true);
+            ratchet = robot.servoHandler.newServo("L.D", 140, 0.3, false);
             bridge = new Bridge();
+        }
+        public void ratchetOn(){
+            lift.ratchet.setPosition(0.2);
+        }
+        public void ratchetOff(){
+            ratchet.setPosition(0);
         }
     }
 
@@ -224,7 +247,7 @@ abstract class Config extends PSConfigOpMode {
     }
 
     enum AutoTasks {
-        LAND, SAMPLEPICTURE, SAMPLEDRIVE, SAMPLEDRIVEBACK, DRIVEROTATETOWALL, DRIVETOWALL, DRIVEROTATETODEPOT, DRIVETODEPOT, SAMPLESECONDDRIVE, SAMPLESECONDDRIVEBACK, CLAIM, PARKDRIVEBACK
+        UNRATCHET, LAND, SAMPLEPICTURE, SAMPLEDRIVE, SAMPLEDRIVEBACK, DRIVEROTATETOWALL, DRIVETOWALL, DRIVEROTATETODEPOT, DRIVETODEPOT, SAMPLESECONDDRIVE, SAMPLESECONDDRIVEBACK, CLAIM, PARKDRIVEBACK
     }
 
     class Auto{
