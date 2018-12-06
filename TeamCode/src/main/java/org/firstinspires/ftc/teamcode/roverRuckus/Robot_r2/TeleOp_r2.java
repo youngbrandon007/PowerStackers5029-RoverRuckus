@@ -11,15 +11,28 @@ import static java.lang.Math.abs;
 @TeleOp(name = "r2.Tele", group = "r2")
 public class TeleOp_r2 extends Config {
 
+
+     double cal = 0.0;
     @Override
     public void init() {
         config(this);
+
+        while(gyro.navxMicro.isCalibrating()){
+            telemetry.addData("gyro","cal");
+            telemetry.update();
+        }
+        telemetry.addData("gyro", "ready");
+        telemetry.update();
     }
 
     @Override
     public void loop() {
         //Drive switch drive and rotation sticks
-        robot.drive.mecanum.updateMecanum(gamepad1, (gamepad1.right_bumper) ? .5 : 1.0);
+        if(gamepad1.left_stick_button){
+            cal = gyro.getAngle();
+        }
+        robot.drive.mecanum.updateMecanumThirdPerson(gamepad1, (gamepad1.right_bumper) ? .5 : 1.0, Math.toRadians(gyro.getAngle() - cal));
+        //robot.drive.mecanum.updateMecanum(gamepad1, (gamepad1.right_bumper) ? .5 : 1.0);
 
         //backup
         //robot.drive.mecanum.updateMecanum(gamepad1, 1.0);

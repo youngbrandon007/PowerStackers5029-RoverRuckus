@@ -242,7 +242,7 @@ abstract class Config extends PSConfigOpMode {
 
         public double getAngle(){
             Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            return angles.firstAngle;
+            return angles.secondAngle;
         }
     }
     /*
