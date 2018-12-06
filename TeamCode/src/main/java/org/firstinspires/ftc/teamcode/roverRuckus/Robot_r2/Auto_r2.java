@@ -20,12 +20,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.SAMPLEPICTURE;
+import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.WAITPICTURE;
+
 @Autonomous(name = "r2.Auto", group = "r2")
 public class Auto_r2 extends Config implements UVCCamera.Callback{
 
     //General
     ElapsedTime time = new ElapsedTime();
-    AutoTasks task = AutoTasks.LAND;
+    AutoTasks task = AutoTasks.TAKEPICTURE;
     int samplePos = 0;
 
     //Camera
@@ -42,43 +45,16 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
     public void init() {
         config(this);
 
-//        tel.updateAll();
-//        tel.add("auto.status", "init");
-//        tel.updateAdd();
-
-
-//        tel.add("robotLive.enabled", set.robotLiveEnabled);
-        if(set.robotLiveEnabled) {
-            robotLive = new RobotLive();
-            set.robotLiveEnabled = (robotLive != null);
-//            tel.add("robotLive.connected", set.robotLiveEnabled);
-        }
-//        tel.updateAdd();
-//
-//        tel.add("camera.enabled", set.useCamera);
-//        tel.add("camera.opencv", opencvLoad);
         if(set.useCamera) {
             camera.load(this);
             set.useCamera = (camera != null);
             if (set.useCamera) camera.start();
-//            tel.add("camera.status", (set.useCamera) ? "started" : "error");
         }
-//        tel.updateAdd();
 
-//        tel.add("auto.status", "init_loop");
-//        tel.updateAdd();
     }
 
     @Override
     public void init_loop() {
-        if(gamepad1.y){
-            camera.load(this);
-            set.useCamera = (camera != null);
-            if (set.useCamera) camera.start();
-//            tel.add("camera.status", (set.useCamera) ? "started" : "error");
-        }
-
-//        tel.updateNoClear();
     }
 
     @Override
@@ -102,45 +78,37 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
                 break;
             case LAND:
 
+
+
                 task = AutoTasks.SAMPLEPICTURE;
                 break;
-            case SAMPLEPICTURE:
+            case TAKEPICTURE:
                 //Get picture
+                camera.start();
+                task = WAITPICTURE;
+                break;
+            case WAITPICTURE:
 
-                task = (samplePos == 0) ? AutoTasks.DRIVEROTATETOWALL : AutoTasks.SAMPLEDRIVE;
+                break;
+            case SAMPLEPICTURE:
+
+                if(samplePos == 0){
+                    samplePos = 2;
+                }
+                task = AutoTasks.SAMPLEDRIVE;
                 drive.resetEncoders();
                 break;
             case SAMPLEDRIVE:
                 drive.setMecanum(con.sampleAngle[samplePos], .2, true);
 
                 if(drive.distanceTraveled() > con.sampleDis[samplePos]){
-                    task = AutoTasks.SAMPLEDRIVEBACK;
+                    task = AutoTasks.PARK;
                     drive.resetEncoders();
                 }
                 break;
-            case SAMPLEDRIVEBACK:
-                drive.setMecanum(270, .2, true);
+            case PARK:
 
-                if(drive.distanceTraveled() > 4){
-                    task = AutoTasks.DRIVEROTATETOWALL;
-                    drive.resetEncoders();
-                }
-                break;
-            case DRIVEROTATETOWALL:
-                break;
-            case DRIVETOWALL:
-                break;
-            case DRIVEROTATETODEPOT:
-                break;
-            case DRIVETODEPOT:
-                break;
-            case SAMPLESECONDDRIVE:
-                break;
-            case SAMPLESECONDDRIVEBACK:
-                break;
-            case CLAIM:
-                break;
-            case PARKDRIVEBACK:
+
                 break;
         }
 //        tel.add("auto.status", task);
@@ -149,6 +117,8 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
 //        tel.add("drive.encoder-LB", drive.leftBack.getEncoderPosition());
 //        tel.add("drive.encoder-RB", drive.rightBack.getEncoderPosition());
 //        tel.update();
+
+        telemetry.addData("sample.pos", samplePos);
     }
 
 
@@ -194,11 +164,11 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
         double size = maxArea;
 
         if(posX < con.sampleRange[0]){
-            samplePos = 2;
+            samplePos = 3;
         }else if(posX > con.sampleRange[0] && posX < con.sampleRange[1]){
-            samplePos = 1;
+            samplePos = 2;
         }else if(posX > con.sampleRange[1]){
-            samplePos = 0;
+            samplePos = 1;
         }
 
 //        tel.add("sample.sample", samplePos);
@@ -206,10 +176,13 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
 //        tel.add("sample.position", posX);
 //        tel.add("sample.size", size);
 
-
+        if(task == WAITPICTURE)
+            task = SAMPLEPICTURE;
         if(set.saveImages){
             PSVisionUtils.saveImageToFile(bm,"R2-frame", "/saved_images");
         }
+
+        camera.stop();
         return null;
     }
 

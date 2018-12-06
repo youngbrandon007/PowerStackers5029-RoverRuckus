@@ -32,8 +32,8 @@ abstract class Config extends PSConfigOpMode {
         static boolean useCamera = true;
 
         //Real Match these value must be FALSE
-        static boolean saveImages = false;
-        static boolean robotLiveEnabled = true;
+        static boolean saveImages = true;
+        static boolean robotLiveEnabled = false;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -152,14 +152,17 @@ abstract class Config extends PSConfigOpMode {
             ramp = robot.servoHandler.newServo("C.R",100, .7, true);
 
         }
+        public void initDoor(){
+            door.setPosition(.6);
+        }
         public void openDoor(){
             door.setPosition(0);
         }
         public void closeDoor(){
-            door.setPosition(0.6);
+            door.setPosition(0.3);
         }
         public void rampDown(){
-            ramp.setPosition(0.6);
+            ramp.setPosition(0.45);
         }
         public void rampUp(){
             ramp.setPosition(0.7);
@@ -178,29 +181,41 @@ abstract class Config extends PSConfigOpMode {
     }
 
     class Lift{
-        class Bridge{
+        class Bridge {
             public PSServo rotateR;
             public PSServo rotateL;
-            public double[] right = new double[]{0.25, 0.75}; //first value 0 degrees in robot, second 180 degrees toward lander
+            public double[] right = new double[]{0.55, 0.05}; //first value 0 degrees in robot, second 180 degrees toward lander
             public double[] left = new double[]{0.75, 0.25};
             public final double init = -20;
             public final double vert = 90;
             public final double out = 210;
-            public Bridge(){
+
+            public Bridge() {
                 rotateL = robot.servoHandler.newServo("L.L", 240, .5, false);
                 rotateR = robot.servoHandler.newServo("L.R", 240, .5, false);
             }
-            public void setBridge(double input){
+
+            public void setBridge(double input) {
                 rotateR.setPosition(Math.abs(input));
                 rotateL.setPosition(Math.abs(input));
+            }
+
+            public double setBridge2(double degrees) {
+                degrees += (degrees < -90) ? 360 : (degrees > 270) ? -360 : 0;
+                double r = Range.scale(degrees, 0, 180, right[0], right[1]);
+                double l = Range.scale(degrees, 0, 180, left[0], left[1]);
+                rotateR.setPosition(r);
+                rotateL.setPosition(l);
+                return r;
+
             }
         }
         public PSMotor extension;
         public PSServo drop;
         public PSServo ratchet;
         public final double dropInit = .5;
-        public final double dropNormal = .8;
-        public final double dropOpposite = .2;
+        public final double dropNormal = .2;
+        public final double dropOpposite = .8;
         public double dropPos = .5;
         public Bridge bridge;
         public Lift(){
@@ -247,7 +262,7 @@ abstract class Config extends PSConfigOpMode {
     }
 
     enum AutoTasks {
-        UNRATCHET, LAND, SAMPLEPICTURE, SAMPLEDRIVE, SAMPLEDRIVEBACK, DRIVEROTATETOWALL, DRIVETOWALL, DRIVEROTATETODEPOT, DRIVETODEPOT, SAMPLESECONDDRIVE, SAMPLESECONDDRIVEBACK, CLAIM, PARKDRIVEBACK
+        UNRATCHET, LAND, TAKEPICTURE, SAMPLEPICTURE, SAMPLEDRIVE, WAITPICTURE, PARK
     }
 
     class Auto{

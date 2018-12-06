@@ -30,28 +30,35 @@ public class TeleOp_r2 extends Config {
         collector.sweeper.setPower((collector.sweeperOn) ? 1.0 : (gamepad1.right_trigger > 0.15f) ? gamepad1.right_trigger : -gamepad1.left_trigger);
         if (gamepad2.x) {
             collector.rampDown();
+            collector.closeDoor();
         } else if (gamepad2.y) {
             collector.rampUp();
+            collector.initDoor();
+            collector.sweeperOn = false;
         }
-        if (gamepad2.a && gamepad2.b) {
+        if (gamepad2.a) {
             collector.openDoor();
-        } else if (gamepad2.a) {
-            collector.closeDoor();
         }
         //Transfer
         transfer.shooterOn = (gamepad2.right_trigger > 0.15f) ? true : (gamepad2.left_trigger > 0.15f) ? false : transfer.shooterOn;
         transfer.shooter.setPower((transfer.shooterOn) ? 1.0 : -gamepad2.left_trigger);
-        transfer.feeder.setPower((gamepad2.right_bumper) ? .5 : ((gamepad2.left_bumper) ? -.5 : 0));
+        transfer.feeder.setPower((gamepad2.right_bumper) ? -.5 : ((gamepad2.left_bumper) ? .5 : 0));
 
         //Lift
         lift.extension.setPower((gamepad2.dpad_up) ? 1.0 : (gamepad2.dpad_down) ? -1.0 : 0.0);
+        if(!(abs(gamepad2.left_stick_x) < 0.6f && abs(gamepad2.left_stick_y) < 0.6f)) {
+            telemetry.addData("bridge ",lift.bridge.setBridge2(Math.toDegrees(atan2(-gamepad2.left_stick_y, -gamepad2.left_stick_x))));
+            telemetry.addData("bride.pos", Math.toDegrees(atan2(-gamepad2.left_stick_y, -gamepad2.left_stick_x)));
+
+        }
+
         if (gamepad2.dpad_left) {
 
             lift.bridge.rotateL.setPosition(0);
         } else if (gamepad2.dpad_right) {
             lift.bridge.rotateL.setPosition(1);
         } else {
-            lift.bridge.rotateL.off();
+            //lift.bridge.rotateL.off();
         } lift.drop.setPosition((gamepad1.b) ? lift.dropNormal : lift.dropInit);
         if (gamepad2.right_stick_button) {
             lift.ratchetOn();
