@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -63,7 +64,7 @@ abstract class Config extends PSConfigOpMode {
     }
 
 
-    class Drive{
+    class Drive {
         PSMotor leftFront;
         PSMotor rightFront;
         PSMotor leftBack;
@@ -79,45 +80,45 @@ abstract class Config extends PSConfigOpMode {
         double I = 0.0;
         double D = 0.1;
 
-        public Drive(){
-            leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT,40);
-            rightFront = robot.motorHandler.newDriveMotor("D.RF", PSEnum.MotorLoc.RIGHTFRONT,40);
-            leftBack = robot.motorHandler.newDriveMotor("D.LB", PSEnum.MotorLoc.LEFTBACK,40);
-            rightBack = robot.motorHandler.newDriveMotor("D.RB", PSEnum.MotorLoc.RIGHTBACK,40);
+        public Drive() {
+            leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT, 40);
+            rightFront = robot.motorHandler.newDriveMotor("D.RF", PSEnum.MotorLoc.RIGHTFRONT, 40);
+            leftBack = robot.motorHandler.newDriveMotor("D.LB", PSEnum.MotorLoc.LEFTBACK, 40);
+            rightBack = robot.motorHandler.newDriveMotor("D.RB", PSEnum.MotorLoc.RIGHTBACK, 40);
         }
 
-        public void resetEncoders(){
+        public void resetEncoders() {
             plf = drive.leftFront.getEncoderDistance(4);// - plf;
             plb = drive.leftBack.getEncoderDistance(4);// - plb;
             prf = drive.rightFront.getEncoderDistance(4);// - prf;
             prb = drive.rightBack.getEncoderDistance(4);// - prb;
         }
 
-        public double[] getPosition(){
-            double lf = drive.leftFront.getEncoderDistance(4)- plf;
-            double lb = drive.leftBack.getEncoderDistance(4)- plb;
-            double rf = drive.rightFront.getEncoderDistance(4)- prf;
-            double rb = drive.rightBack.getEncoderDistance(4)- prb;
-            double d1 = (lf-rb)/2.0;
-            double d2 = (lb-rf)/2.0;
+        public double[] getPosition() {
+            double lf = drive.leftFront.getEncoderDistance(4) - plf;
+            double lb = drive.leftBack.getEncoderDistance(4) - plb;
+            double rf = drive.rightFront.getEncoderDistance(4) - prf;
+            double rb = drive.rightBack.getEncoderDistance(4) - prb;
+            double d1 = (lf - rb) / 2.0;
+            double d2 = (lb - rf) / 2.0;
             return new double[]{d1, d2};
         }
 
-        public double distanceTraveled(){
+        public double distanceTraveled() {
             double[] pos = getPosition();
             double distance = Math.sqrt(Math.pow(pos[0], 2) + Math.pow(pos[1], 2));
             return distance;
         }
 
-        public void setMecanum(double angle, double speed, boolean PID){
+        public void setMecanum(double angle, double speed, boolean PID) {
             robot.drive.mecanum.setMecanum(angle, speed, (PID) ? PIDoutput : 0, 1.0);
         }
 
         @Deprecated
-        public boolean autoDive(double angle, double distance, double speed, double PID){
+        public boolean autoDrive(double angle, double distance, double speed, double PID) {
             angle -= 45;
-            double xTarget = Math.sin(Math.toRadians(angle))*distance;
-            double yTarget = Math.cos(Math.toRadians(angle))*distance;
+            double xTarget = Math.sin(Math.toRadians(angle)) * distance;
+            double yTarget = Math.cos(Math.toRadians(angle)) * distance;
             double[] currentPos = getPosition();
             double xPos = currentPos[1];
             double yPos = currentPos[0];
@@ -139,48 +140,55 @@ abstract class Config extends PSConfigOpMode {
         }
     }
 
-    class Collector{
+    class Collector {
         public PSMotor extension;
         public PSMotor sweeper;
         public PSServo door;
         public PSServo ramp;
         public Boolean sweeperOn = false;
-        public Collector(){
-            extension = robot.motorHandler.newMotor("C.E",10);
+
+        public Collector() {
+            extension = robot.motorHandler.newMotor("C.E", 10);
             sweeper = robot.motorHandler.newMotor("C.S", 3.7);
-            door = robot.servoHandler.newServo("C.D",197, 0.7, true);
-            ramp = robot.servoHandler.newServo("C.R",100, .7, true);
+            door = robot.servoHandler.newServo("C.D", 197, 0.7, true);
+            ramp = robot.servoHandler.newServo("C.R", 100, .7, true);
 
         }
-        public void initDoor(){
+
+        public void initDoor() {
             door.setPosition(.6);
         }
-        public void openDoor(){
+
+        public void openDoor() {
             door.setPosition(0);
         }
-        public void closeDoor(){
+
+        public void closeDoor() {
             door.setPosition(0.3);
         }
-        public void rampDown(){
-            ramp.setPosition(0.45);
+
+        public void rampDown() {
+            ramp.setPosition(0.76);
         }
-        public void rampUp(){
-            ramp.setPosition(0.7);
+
+        public void rampUp() {
+            ramp.setPosition(0.55);
         }
     }
 
-    class Transfer{
+    class Transfer {
         public PSMotor shooter;
         public boolean shooterOn = false;
         public CRServo feeder;
         public boolean feederOn = false;
-        public Transfer(){
+
+        public Transfer() {
             shooter = robot.motorHandler.newMotor("T.S", 3.7);
             feeder = hardwareMap.crservo.get("T.F");
         }
     }
 
-    class Lift{
+    class Lift {
         class Bridge {
             public PSServo rotateR;
             public PSServo rotateL;
@@ -210,6 +218,7 @@ abstract class Config extends PSConfigOpMode {
 
             }
         }
+
         public PSMotor extension;
         public PSServo drop;
         public PSServo ratchet;
@@ -218,45 +227,71 @@ abstract class Config extends PSConfigOpMode {
         public final double dropOpposite = .8;
         public double dropPos = .5;
         public Bridge bridge;
-        public Lift(){
+
+        public Lift() {
             extension = robot.motorHandler.newMotor("L.E", 70);
             drop = robot.servoHandler.newServo("L.SO", 140, .5, true);
             ratchet = robot.servoHandler.newServo("L.D", 140, 0.3, false);
             bridge = new Bridge();
         }
-        public void ratchetOn(){
-            lift.ratchet.setPosition(0.2);
+
+        public void ratchetOn() {
+            lift.ratchet.setPosition(0.6);
         }
-        public void ratchetOff(){
+
+        public void ratchetOff() {
             ratchet.setPosition(0);
         }
     }
 
     class Gyro {
-        NavxMicroNavigationSensor navxMicro;
-        IntegratingGyroscope gyro;
+        //        NavxMicroNavigationSensor navxMicro;
+//        IntegratingGyroscope gyro;
+        BNO055IMU imu;
+        Orientation angles;
+
+
         public Gyro() {
-            navxMicro = hardwareMap.get(NavxMicroNavigationSensor.class,"navx");
-            gyro =(IntegratingGyroscope)navxMicro;
+//            navxMicro = hardwareMap.get(NavxMicroNavigationSensor.class,"navx");
+//            gyro =(IntegratingGyroscope)navxMicro;
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+            imu = hardwareMap.get(BNO055IMU.class, "imu");
+            imu.initialize(parameters);
+
+        }
+        public double getAngle() {
+            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            return angles.firstAngle;
+        }
+        public double getAngle1() {
+            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            return angles.firstAngle;
         }
 
-        public double getAngle(){
-            Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        public double getAngle2() {
+            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             return angles.secondAngle;
         }
+
+        public double getAngle3() {
+            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            return angles.thirdAngle;
+        }
     }
+
     /*
      * Auto
      */
-    class RobotLive{
+    class RobotLive {
         RobotLiveData data;
         String ip = "http://50.5.236.197:400";
 
-        public RobotLive(){
+        public RobotLive() {
             data = RobotLiveSend.createNewRun(ip);
         }
 
-        public void send(){
+        public void send() {
             RobotLiveSend.send(data, ip);
         }
     }
@@ -265,34 +300,34 @@ abstract class Config extends PSConfigOpMode {
         UNRATCHET, LAND, TAKEPICTURE, SAMPLEPICTURE, SAMPLEDRIVE, WAITPICTURE, PARK
     }
 
-    class Auto{
+    class Auto {
 
     }
 
     static class con {
-        final static double[] sampleAngle = new double[]{0, 75, 90, 105};
+        final static double[] sampleAngle = new double[]{0, 60, 90, 120};
         final static double[] sampleDis = new double[]{0, 12, 10, 12};
 
-        final static double[] sampleRange = new double[]{-100,100};
+        final static double[] sampleRange = new double[]{-100, 100};
     }
 
-    class Camera{
+    class Camera {
         UVCCamera camera;
 
-        public void load(UVCCamera.Callback callback){
-            if(camera == null) {
+        public void load(UVCCamera.Callback callback) {
+            if (camera == null) {
                 camera = UVCCamera.getCamera(callback);
             }
         }
 
-        public void start(){
-            if(camera != null) {
+        public void start() {
+            if (camera != null) {
                 camera.start();
             }
         }
 
-        public void stop(){
-            if(camera != null){
+        public void stop() {
+            if (camera != null) {
                 camera.stop();
                 camera = null;
             }

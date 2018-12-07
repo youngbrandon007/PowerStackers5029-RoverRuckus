@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2;
 
 import android.graphics.Bitmap;
+import android.graphics.ImageFormat;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,7 +21,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static java.lang.Math.atan2;
+import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.LAND;
 import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.SAMPLEPICTURE;
+import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.TAKEPICTURE;
 import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.WAITPICTURE;
 
 @Autonomous(name = "r2.Auto", group = "r2")
@@ -28,7 +32,7 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
 
     //General
     ElapsedTime time = new ElapsedTime();
-    AutoTasks task = AutoTasks.TAKEPICTURE;
+    AutoTasks task = AutoTasks.UNRATCHET;
     int samplePos = 0;
 
     //Camera
@@ -44,7 +48,7 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
     @Override
     public void init() {
         config(this);
-
+        lift.ratchetOff();
         if(set.useCamera) {
             camera.load(this);
             set.useCamera = (camera != null);
@@ -71,35 +75,43 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
             case UNRATCHET:
                 lift.extension.setPower(-1);
                 lift.ratchetOn();
-                if (time.milliseconds()>200){
-                    task = AutoTasks.LAND;
+                if (time.milliseconds()>500){
+                    task = LAND;
                     time.reset();
+                    lift.bridge.setBridge2(90);
+                    lift.extension.setPower(0);
                 }
                 break;
             case LAND:
+                lift.extension.setPower(1);
+                if (lift.extension.getEncoderPosition()>7100){
+                    task = TAKEPICTURE;
+                    lift.extension.setPower(0);
+                }
 
-
-
-                task = AutoTasks.SAMPLEPICTURE;
                 break;
             case TAKEPICTURE:
                 //Get picture
                 camera.start();
+                time.reset();
                 task = WAITPICTURE;
                 break;
             case WAITPICTURE:
-
+                if (time.milliseconds()>1000){
+                    task = SAMPLEPICTURE;
+                }
                 break;
             case SAMPLEPICTURE:
 
                 if(samplePos == 0){
                     samplePos = 2;
                 }
+                camera.stop();
                 task = AutoTasks.SAMPLEDRIVE;
                 drive.resetEncoders();
                 break;
             case SAMPLEDRIVE:
-                drive.setMecanum(con.sampleAngle[samplePos], .2, true);
+                drive.setMecanum(Math.toRadians(con.sampleAngle[samplePos]), .7, false);
 
                 if(drive.distanceTraveled() > con.sampleDis[samplePos]){
                     task = AutoTasks.PARK;
@@ -107,7 +119,13 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
                 }
                 break;
             case PARK:
+                drive.setMecanum(90, .4, false);
 
+                if(drive.distanceTraveled() > 400){
+                    robot.drive.stop();
+                    drive.resetEncoders();
+                    stop();
+                }
 
                 break;
         }
@@ -124,7 +142,7 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
 
     @Override
     public void stop() {
-        camera.stop();
+//        camera.stop();
     }
 
     @Override

@@ -82,7 +82,7 @@ public class PSMecanumDrive extends PSDriveAbstract {
         double speed = mecSpeedFromJoystick(pad);
         double rotation = mecSpinFromJoystick(pad);
 
-        setMecanumThridPerson(angle, speed, rotation, scale, gyroAngle);
+        setMecanumThridPerson(angle, speed, rotation*scale, 1, gyroAngle);
     }
 
     public void setMecanumThridPerson(double angle, double speed, double rotation, double scale, double gyroAngle){

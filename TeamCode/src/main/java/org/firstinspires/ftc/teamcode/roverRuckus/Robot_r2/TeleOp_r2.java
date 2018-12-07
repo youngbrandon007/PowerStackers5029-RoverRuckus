@@ -12,15 +12,16 @@ import static java.lang.Math.abs;
 public class TeleOp_r2 extends Config {
 
 
-     double cal = 0.0;
+    double cal = 0.0;
+
     @Override
     public void init() {
         config(this);
-
-        while(gyro.navxMicro.isCalibrating()){
-            telemetry.addData("gyro","cal");
-            telemetry.update();
-        }
+        lift.ratchetOn();
+//        while (gyro..isCalibrating()) {
+//            telemetry.addData("gyro", "cal");
+//            telemetry.update();
+//        }
         telemetry.addData("gyro", "ready");
         telemetry.update();
     }
@@ -28,10 +29,11 @@ public class TeleOp_r2 extends Config {
     @Override
     public void loop() {
         //Drive switch drive and rotation sticks
-        if(gamepad1.left_stick_button){
+        if (gamepad1.left_stick_button) {
             cal = gyro.getAngle();
         }
-        robot.drive.mecanum.updateMecanumThirdPerson(gamepad1, (gamepad1.right_bumper) ? .5 : 1.0, Math.toRadians(gyro.getAngle() - cal));
+        telemetry.addData("gyro", gyro.getAngle());
+        robot.drive.mecanum.updateMecanumThirdPerson(gamepad1, (gamepad1.right_stick_button) ? 1 : .5, Math.toRadians(gyro.getAngle() - cal));
         //robot.drive.mecanum.updateMecanum(gamepad1, (gamepad1.right_bumper) ? .5 : 1.0);
 
         //backup
@@ -40,11 +42,11 @@ public class TeleOp_r2 extends Config {
         //collector
         collector.extension.setPower(-((abs(gamepad1.right_stick_y) > 0.70f) ? gamepad1.right_stick_y : gamepad2.right_stick_y));
         collector.sweeperOn = (gamepad1.right_trigger > 0.9f) ? true : (gamepad1.left_trigger > 0.15f) ? false : collector.sweeperOn;
-        collector.sweeper.setPower((collector.sweeperOn) ? 1.0 : (gamepad1.right_trigger > 0.15f) ? gamepad1.right_trigger : -gamepad1.left_trigger);
-        if (gamepad2.x) {
+        collector.sweeper.setPower((collector.sweeperOn) ? 0.75 : (gamepad1.right_trigger > 0.15f) ? gamepad1.right_trigger : -gamepad1.left_trigger);
+        if (gamepad1.right_bumper) {
             collector.rampDown();
             collector.closeDoor();
-        } else if (gamepad2.y) {
+        } else if (gamepad1.left_bumper) {
             collector.rampUp();
             collector.initDoor();
             collector.sweeperOn = false;
@@ -56,11 +58,11 @@ public class TeleOp_r2 extends Config {
         transfer.shooterOn = (gamepad2.right_trigger > 0.15f) ? true : (gamepad2.left_trigger > 0.15f) ? false : transfer.shooterOn;
         transfer.shooter.setPower((transfer.shooterOn) ? 1.0 : -gamepad2.left_trigger);
         transfer.feeder.setPower((gamepad2.right_bumper) ? -.5 : ((gamepad2.left_bumper) ? .5 : 0));
-
+//        transfer.feeder.setPower(gamepad2.left_stick_x/2);
         //Lift
         lift.extension.setPower((gamepad2.dpad_up) ? 1.0 : (gamepad2.dpad_down) ? -1.0 : 0.0);
-        if(!(abs(gamepad2.left_stick_x) < 0.6f && abs(gamepad2.left_stick_y) < 0.6f)) {
-            telemetry.addData("bridge ",lift.bridge.setBridge2(Math.toDegrees(atan2(-gamepad2.left_stick_y, -gamepad2.left_stick_x))));
+        if (!(abs(gamepad2.left_stick_x) < 0.6f && abs(gamepad2.left_stick_y) < 0.6f)) {
+            telemetry.addData("bridge ", lift.bridge.setBridge2(Math.toDegrees(atan2(-gamepad2.left_stick_y, -gamepad2.left_stick_x))));
             telemetry.addData("bride.pos", Math.toDegrees(atan2(-gamepad2.left_stick_y, -gamepad2.left_stick_x)));
 
         }
@@ -72,11 +74,14 @@ public class TeleOp_r2 extends Config {
             lift.bridge.rotateL.setPosition(1);
         } else {
             //lift.bridge.rotateL.off();
-        } lift.drop.setPosition((gamepad1.b) ? lift.dropNormal : lift.dropInit);
+        }
+        lift.drop.setPosition((gamepad1.b) ? lift.dropNormal : lift.dropInit);
+
         if (gamepad2.right_stick_button) {
             lift.ratchetOn();
+        } else if (gamepad2.left_stick_button) {
+            lift.ratchetOff();
         }
-        lift.ratchetOff();
     }
 
     private double getSpeed(Gamepad pad) {

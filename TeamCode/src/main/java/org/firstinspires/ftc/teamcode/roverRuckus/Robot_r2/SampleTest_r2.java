@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2;
 
 import android.graphics.Bitmap;
-import android.os.Environment;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.vision.PSVisionUtils;
@@ -19,80 +16,78 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-@Autonomous(name = "samp")
-public class sample extends Config implements UVCCamera.Callback {
 
-    ElapsedTime time = new ElapsedTime();
+import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.LAND;
+import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.SAMPLEPICTURE;
+import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.TAKEPICTURE;
+import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.WAITPICTURE;
 
+@Autonomous(name = "r2.SampleTest", group = "r2")
+public class SampleTest_r2 extends Config implements UVCCamera.Callback{
 
-    UVCCamera camera;
-    Bitmap bm;
-    int sampPos = 1; //0 = Left, 1 = center
-    int sampleNow;
-    double angle;
-    boolean save = false;
+    //General
 
+    int samplePos = 0;
 
-    static String load = "";
-
+    //Camera
+    static String opencvLoad = "";
     static {
         if (!OpenCVLoader.initDebug()) {
-            load = "Error Loading!";
+            opencvLoad = "Error Loading!";
         } else {
-            load = "Loaded Successfully!";
+            opencvLoad = "Loaded Successfully!";
         }
     }
 
     @Override
     public void init() {
-        angle = Math.PI / 2;
         config(this);
-        camera = UVCCamera.getCamera(this);
+        lift.ratchetOff();
+        if(set.useCamera) {
+            camera.load(this);
+            set.useCamera = (camera != null);
+            if (set.useCamera) camera.start();
+        }
 
-        telemetry.addLine(load);
-//        data = RobotLiveSend.createNewRun("http://192.168.200.113");
+    }
+
+    @Override
+    public void init_loop() {
     }
 
     @Override
     public void start() {
         camera.start();
-        time.reset();
     }
 
     @Override
     public void loop() {
-        while (time.milliseconds()>4000) {
-            switch (sampleNow) {
-                case 0:
-                    angle = Math.toRadians(120);
-                    break;
-                case 1:
-                    angle = Math.toRadians(90);
-                    break;
-                case 2:
-                    angle = Math.toRadians(60);
-                    break;
-            }
-            robot.drive.mecanum.setMecanum(angle, 0.5, 0, 1);
-        }
-        robot.drive.stop();
+//                telemetry.addData("Pos", samplePos);
+//                telemetry.update();
     }
 
 
     @Override
+    public void stop() {
+        camera.stop();
+    }
+
+    @Override
     public Bitmap onFrame(Bitmap bm) {
-        this.bm = bm;
+        //Mask
         Mat input = new Mat();
+//        Imgproc.f
         Mat hsv = new Mat();
         Bitmap bmp32 = bm.copy(Bitmap.Config.ARGB_8888, true);
         Utils.bitmapToMat(bmp32, input);
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
         Mat mask = new Mat();
         Core.inRange(hsv, new Scalar(25, 100, 100), new Scalar(35, 255, 255), mask);
+
+        //Contours
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
         Imgproc.findContours(mask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
         double maxArea = 0;
@@ -110,35 +105,33 @@ public class sample extends Config implements UVCCamera.Callback {
             }
         }
 
-        //Centroid setup
+        //@todo fix this so it only looks at the biggest contour
+        //Centroid
         Moments mmnts = Imgproc.moments(mask, true);
         double locationX = mmnts.get_m10() / mmnts.get_m00();
         double posX = (input.width() / 2) - locationX;
         double size = maxArea;
 
-        telemetry.addData("Location", locationX);
-        telemetry.addData("Position", posX);
-        telemetry.addData("Size", size);
-
-        if (posX < -100) {
-            sampPos = 2;
-        } else if (posX > -100 && posX < 100) {
-            sampPos = 1;
-        } else if (posX > 100) {
-            sampPos = 0;
+        if(posX < con.sampleRange[0]){
+            samplePos = 3;
+        }else if(posX > con.sampleRange[0] && posX < con.sampleRange[1]){
+            samplePos = 2;
+        }else if(posX > con.sampleRange[1]){
+            samplePos = 1;
         }
 
-        telemetry.addData("Sample", sampPos);
-        if (save) {
-            PSVisionUtils.saveImageToFile(bm, "image_before", "/saved_images");
-            save = false;
-            return PSVisionUtils.matToBitmap(mask);
+        telemetry.addData("sample.sample", samplePos);
+        telemetry.addData("sample.location", locationX);
+        telemetry.addData("sample.position", posX);
+        telemetry.addData("sample.size", size);
+        telemetry.update();
+
+        if(set.saveImages){
+            PSVisionUtils.saveImageToFile(bm,"R2-frame", "/saved_images");
         }
 
-        return null;
-//        return bm;
+        return bm;
     }
 
 
 }
-

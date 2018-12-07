@@ -23,9 +23,9 @@ public class PID_r2 extends Config{
         value = new ArrayList<String>();
 
 
-        while (gyro.navxMicro.isCalibrating())  {
-            telemetry.addData("gyro.status", "calibrating");
-        }
+//        while (gyro.navxMicro.isCalibrating())  {
+//            telemetry.addData("gyro.status", "calibrating");
+//        }
         telemetry.addData("gyro.status", "ready");
     }
 
