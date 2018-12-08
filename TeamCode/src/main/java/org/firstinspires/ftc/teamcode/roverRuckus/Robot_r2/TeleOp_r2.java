@@ -31,18 +31,24 @@ public class TeleOp_r2 extends Config {
         //Drive switch drive and rotation sticks
         if (gamepad1.left_stick_button) {
             cal = gyro.getAngle();
+            drive.thirdPerson = true;
+        }else if(gamepad1.a){
+            drive.thirdPerson = false;
         }
         telemetry.addData("gyro", gyro.getAngle());
-        robot.drive.mecanum.updateMecanumThirdPerson(gamepad1, (gamepad1.right_stick_button) ? 1 : .5, Math.toRadians(gyro.getAngle() - cal));
-        //robot.drive.mecanum.updateMecanum(gamepad1, (gamepad1.right_bumper) ? .5 : 1.0);
+        if(drive.thirdPerson) {
+            robot.drive.mecanum.updateMecanumThirdPerson(gamepad1,  (gamepad1.right_stick_button) ? 1 : .5, Math.toRadians(gyro.getAngle() - cal));
+        }else{
+            robot.drive.mecanum.updateMecanum(gamepad1, (gamepad1.right_stick_button) ? 1.0 : .5);
+        }
 
         //backup
         //robot.drive.mecanum.updateMecanum(gamepad1, 1.0);
 
         //collector
         collector.extension.setPower(-((abs(gamepad1.right_stick_y) > 0.70f) ? gamepad1.right_stick_y : gamepad2.right_stick_y));
-        collector.sweeperOn = (gamepad1.right_trigger > 0.9f) ? true : (gamepad1.left_trigger > 0.15f) ? false : collector.sweeperOn;
-        collector.sweeper.setPower((collector.sweeperOn) ? 0.75 : (gamepad1.right_trigger > 0.15f) ? gamepad1.right_trigger : -gamepad1.left_trigger);
+        //collector.sweeperOn = (gamepad1.right_trigger > 0.9f) ? true : (gamepad1.left_trigger > 0.15f) ? false : collector.sweeperOn;
+        collector.sweeper.setPower((collector.sweeperOn) ? 0.75 : (gamepad1.right_trigger > 0.15f) ? gamepad1.right_trigger : -(.65 * gamepad1.left_trigger));
         if (gamepad1.right_bumper) {
             collector.rampDown();
             collector.closeDoor();
@@ -56,7 +62,7 @@ public class TeleOp_r2 extends Config {
         }
         //Transfer
         transfer.shooterOn = (gamepad2.right_trigger > 0.15f) ? true : (gamepad2.left_trigger > 0.15f) ? false : transfer.shooterOn;
-        transfer.shooter.setPower((transfer.shooterOn) ? 1.0 : -gamepad2.left_trigger);
+        transfer.shooter.setPower((transfer.shooterOn) ? -1.0 : gamepad2.left_trigger);
         transfer.feeder.setPower((gamepad2.right_bumper) ? -.5 : ((gamepad2.left_bumper) ? .5 : 0));
 //        transfer.feeder.setPower(gamepad2.left_stick_x/2);
         //Lift

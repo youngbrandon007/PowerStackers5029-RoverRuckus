@@ -74,6 +74,8 @@ abstract class Config extends PSConfigOpMode {
         double prf;
         double prb;
 
+        boolean thirdPerson = false;
+
         double PIDoutput = 0.0;
 
         double P = 0.1;
@@ -150,8 +152,8 @@ abstract class Config extends PSConfigOpMode {
         public Collector() {
             extension = robot.motorHandler.newMotor("C.E", 10);
             sweeper = robot.motorHandler.newMotor("C.S", 3.7);
-            door = robot.servoHandler.newServo("C.D", 197, 0.7, true);
-            ramp = robot.servoHandler.newServo("C.R", 100, .7, true);
+            door = robot.servoHandler.newServo("C.D", 197, 0.00, false);
+            ramp = robot.servoHandler.newServo("C.R", 100, .62, true);
 
         }
 
@@ -160,19 +162,19 @@ abstract class Config extends PSConfigOpMode {
         }
 
         public void openDoor() {
-            door.setPosition(0);
+            door.setPosition(0.01);
         }
 
         public void closeDoor() {
-            door.setPosition(0.3);
+            door.setPosition(0.55);
         }
 
         public void rampDown() {
-            ramp.setPosition(0.76);
+            ramp.setPosition(0.72);
         }
 
         public void rampUp() {
-            ramp.setPosition(0.55);
+            ramp.setPosition(0.62);
         }
     }
 
