@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static java.lang.Math.atan2;
+import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.IDLE;
 import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.LAND;
 import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.SAMPLEPICTURE;
 import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.TAKEPICTURE;
@@ -84,7 +85,7 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
                 break;
             case LAND:
                 lift.extension.setPower(1);
-                if (lift.extension.getEncoderPosition()>7100){
+                if (lift.extension.getEncoderPosition()>7500){
                     task = TAKEPICTURE;
                     lift.extension.setPower(0);
                 }
@@ -111,7 +112,7 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
                 drive.resetEncoders();
                 break;
             case SAMPLEDRIVE:
-                drive.setMecanum(Math.toRadians(con.sampleAngle[samplePos]), .7, false);
+                drive.setMecanum(Math.toRadians(con.sampleAngle[samplePos]), .5, false);
 
                 if(drive.distanceTraveled() > con.sampleDis[samplePos]){
                     task = AutoTasks.PARK;
@@ -121,12 +122,14 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
             case PARK:
                 drive.setMecanum(90, .4, false);
 
-                if(drive.distanceTraveled() > 400){
+                if(drive.distanceTraveled() > 7){
                     robot.drive.stop();
                     drive.resetEncoders();
-                    stop();
+                    task = AutoTasks.IDLE;
                 }
 
+                break;
+            case IDLE:
                 break;
         }
 //        tel.add("auto.status", task);
@@ -137,6 +140,7 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
 //        tel.update();
 
         telemetry.addData("sample.pos", samplePos);
+        telemetry.addData("task", task);
     }
 
 
@@ -154,7 +158,7 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
         Utils.bitmapToMat(bmp32, input);
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
         Mat mask = new Mat();
-        Core.inRange(hsv, new Scalar(25, 100, 100), new Scalar(35, 255, 255), mask);
+        Core.inRange(hsv, new Scalar(15, 100, 100), new Scalar(40, 255, 255), mask);
 
         //Contours
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
@@ -194,13 +198,13 @@ public class Auto_r2 extends Config implements UVCCamera.Callback{
 //        tel.add("sample.position", posX);
 //        tel.add("sample.size", size);
 
-        if(task == WAITPICTURE)
-            task = SAMPLEPICTURE;
+//        if(task == WAITPICTURE)
+//            task = SAMPLEPICTURE;
         if(set.saveImages){
-            PSVisionUtils.saveImageToFile(bm,"R2-frame", "/saved_images");
+//            PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(mask),"R2-frame", "/saved_images");
         }
 
-        camera.stop();
+//        camera.stop();
         return null;
     }
 

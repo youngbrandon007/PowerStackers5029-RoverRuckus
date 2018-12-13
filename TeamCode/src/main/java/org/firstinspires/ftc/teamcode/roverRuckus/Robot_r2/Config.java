@@ -299,7 +299,7 @@ abstract class Config extends PSConfigOpMode {
     }
 
     enum AutoTasks {
-        UNRATCHET, LAND, TAKEPICTURE, SAMPLEPICTURE, SAMPLEDRIVE, WAITPICTURE, PARK
+        UNRATCHET, LAND, TAKEPICTURE, SAMPLEPICTURE, SAMPLEDRIVE, WAITPICTURE, PARK, IDLE
     }
 
     class Auto {
@@ -307,7 +307,7 @@ abstract class Config extends PSConfigOpMode {
     }
 
     static class con {
-        final static double[] sampleAngle = new double[]{0, 60, 90, 120};
+        final static double[] sampleAngle = new double[]{0, 30, 90, 150};
         final static double[] sampleDis = new double[]{0, 12, 10, 12};
 
         final static double[] sampleRange = new double[]{-100, 100};

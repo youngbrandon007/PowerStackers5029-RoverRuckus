@@ -65,8 +65,8 @@ public class SampleTest_r2 extends Config implements UVCCamera.Callback{
 
     @Override
     public void loop() {
-//                telemetry.addData("Pos", samplePos);
-//                telemetry.update();
+                telemetry.addData("Pos", samplePos);
+                telemetry.update();
     }
 
 
@@ -85,7 +85,7 @@ public class SampleTest_r2 extends Config implements UVCCamera.Callback{
         Utils.bitmapToMat(bmp32, input);
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
         Mat mask = new Mat();
-        Core.inRange(hsv, new Scalar(25, 100, 100), new Scalar(35, 255, 255), mask);
+        Core.inRange(hsv, new Scalar(15, 100, 100), new Scalar(40, 255, 255), mask);
 
         //Contours
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
@@ -127,7 +127,7 @@ public class SampleTest_r2 extends Config implements UVCCamera.Callback{
         telemetry.update();
 
         if(set.saveImages){
-            PSVisionUtils.saveImageToFile(bm,"R2-frame", "/saved_images");
+            PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(mask),"R2-frame", "/saved_images");
         }
 
         return bm;

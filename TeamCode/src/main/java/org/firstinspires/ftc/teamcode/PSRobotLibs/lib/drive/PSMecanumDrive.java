@@ -59,7 +59,7 @@ public class PSMecanumDrive extends PSDriveAbstract {
         double speed = mecSpeedFromJoystick(pad);
         double rotation = mecSpinFromJoystick(pad);
 
-        setMecanum(angle, speed, rotation, scale);
+        setMecanum(angle, speed, rotation*scale, 1.0);
 
     }
 
