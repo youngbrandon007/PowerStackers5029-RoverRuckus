@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2;
+package org.firstinspires.ftc.teamcode.roverRuckus.Testing.Robot_r2;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -9,6 +10,7 @@ import static java.lang.Math.sqrt;
 import static java.lang.Math.abs;
 
 @TeleOp(name = "r2.Tele", group = "r2")
+@Disabled
 public class TeleOp_r2 extends Config {
 
 

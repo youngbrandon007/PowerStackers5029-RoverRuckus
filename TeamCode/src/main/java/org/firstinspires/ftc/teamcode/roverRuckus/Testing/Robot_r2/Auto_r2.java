@@ -1,12 +1,11 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2;
+package org.firstinspires.ftc.teamcode.roverRuckus.Testing.Robot_r2;
 
 import android.graphics.Bitmap;
-import android.graphics.ImageFormat;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.vision.PSVisionUtils;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -21,14 +20,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static java.lang.Math.atan2;
-import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.IDLE;
-import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.LAND;
-import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.SAMPLEPICTURE;
-import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.TAKEPICTURE;
-import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.WAITPICTURE;
+import static org.firstinspires.ftc.teamcode.roverRuckus.Testing.Robot_r2.Config.AutoTasks.LAND;
+import static org.firstinspires.ftc.teamcode.roverRuckus.Testing.Robot_r2.Config.AutoTasks.SAMPLEPICTURE;
+import static org.firstinspires.ftc.teamcode.roverRuckus.Testing.Robot_r2.Config.AutoTasks.TAKEPICTURE;
+import static org.firstinspires.ftc.teamcode.roverRuckus.Testing.Robot_r2.Config.AutoTasks.WAITPICTURE;
 
 @Autonomous(name = "r2.Auto", group = "r2")
+@Disabled
 public class Auto_r2 extends Config implements UVCCamera.Callback{
 
     //General

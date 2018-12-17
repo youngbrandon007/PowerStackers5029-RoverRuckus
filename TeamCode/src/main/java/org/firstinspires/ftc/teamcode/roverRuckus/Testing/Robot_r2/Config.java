@@ -1,10 +1,8 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2;
+package org.firstinspires.ftc.teamcode.roverRuckus.Testing.Robot_r2;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -16,12 +14,9 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobot;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSServo;
-import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.PSGeneralUtils;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
 import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveData;
 import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveSend;
-
-import java.util.ArrayList;
 
 abstract class Config extends PSConfigOpMode {
 

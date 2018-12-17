@@ -1,8 +1,10 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2;
+package org.firstinspires.ftc.teamcode.roverRuckus.Testing.Robot_r2;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "r2.sensor", group = "r2")
+@Disabled
 public class Sensor_r2 extends Config {
     @Override
     public void init() {

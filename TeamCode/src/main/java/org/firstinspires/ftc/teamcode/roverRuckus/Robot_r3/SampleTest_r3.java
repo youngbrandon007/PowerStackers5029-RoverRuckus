@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2;
+package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r3;
 
 import android.graphics.Bitmap;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.vision.PSVisionUtils;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
@@ -20,13 +19,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.LAND;
-import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.SAMPLEPICTURE;
-import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.TAKEPICTURE;
-import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r2.Config.AutoTasks.WAITPICTURE;
-
-@Autonomous(name = "r2.SampleTest", group = "r2")
-public class SampleTest_r2 extends Config implements UVCCamera.Callback{
+@Autonomous(name = "r3.SampleTest", group = "r3")
+public class SampleTest_r3 extends Config_r3 implements UVCCamera.Callback{
 
     //General
 
