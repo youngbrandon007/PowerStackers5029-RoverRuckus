@@ -107,7 +107,7 @@ public class PSMotor {
         return wheelSize * Math.PI * rotations;
     }
 
-    public double getEncoderPosition() {
+    public int getEncoderPosition() {
         return motorObject.getCurrentPosition();
     }
 

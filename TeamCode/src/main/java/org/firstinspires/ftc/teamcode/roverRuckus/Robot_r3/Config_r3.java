@@ -65,6 +65,7 @@ abstract class Config_r3 extends PSConfigOpMode {
         PSMotor rightFront;
         PSMotor leftBack;
         PSMotor rightBack;
+
         double plf;
         double plb;
         double prf;
@@ -79,10 +80,10 @@ abstract class Config_r3 extends PSConfigOpMode {
         double D = 0.1;
 
         public Drive() {
-            leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT, 40);
-            rightFront = robot.motorHandler.newDriveMotor("D.RF", PSEnum.MotorLoc.RIGHTFRONT, 40);
-            leftBack = robot.motorHandler.newDriveMotor("D.LB", PSEnum.MotorLoc.LEFTBACK, 40);
-            rightBack = robot.motorHandler.newDriveMotor("D.RB", PSEnum.MotorLoc.RIGHTBACK, 40);
+            leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT, 20);
+            rightFront = robot.motorHandler.newDriveMotor("D.RF", PSEnum.MotorLoc.RIGHTFRONT, 20);
+            leftBack = robot.motorHandler.newDriveMotor("D.LB", PSEnum.MotorLoc.LEFTBACK, 20);
+            rightBack = robot.motorHandler.newDriveMotor("D.RB", PSEnum.MotorLoc.RIGHTBACK, 20);
         }
 
         public void resetEncoders() {
@@ -245,7 +246,7 @@ abstract class Config_r3 extends PSConfigOpMode {
     class Gyro {
         //        NavxMicroNavigationSensor navxMicro;
 //        IntegratingGyroscope gyro;
-        BNO055IMU imu;
+        BNO055IMU gyro;
         Orientation angles;
 
 
@@ -254,28 +255,19 @@ abstract class Config_r3 extends PSConfigOpMode {
 //            gyro =(IntegratingGyroscope)navxMicro;
             BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
             parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-            imu = hardwareMap.get(BNO055IMU.class, "imu");
-            imu.initialize(parameters);
+            gyro = hardwareMap.get(BNO055IMU.class, "gyro");
+            gyro.initialize(parameters);
 
         }
-        public double getAngle() {
-            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        public double getHeading() {
+            angles   = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             return angles.firstAngle;
         }
-        public double getAngle1() {
-            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            return angles.firstAngle;
+        public Orientation getOrientation() {
+            angles   = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            return angles;
         }
 
-        public double getAngle2() {
-            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            return angles.secondAngle;
-        }
-
-        public double getAngle3() {
-            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            return angles.thirdAngle;
-        }
     }
 
     /*

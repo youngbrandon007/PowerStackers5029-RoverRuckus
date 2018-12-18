@@ -30,14 +30,14 @@ public class TeleOp_r3 extends Config_r3 {
     public void loop() {
         //Drive switch drive and rotation sticks
         if (gamepad1.left_stick_button) {
-            cal = gyro.getAngle();
+            cal = gyro.getHeading();
             drive.thirdPerson = true;
         }else if(gamepad1.a){
             drive.thirdPerson = false;
         }
-        telemetry.addData("gyro", gyro.getAngle());
+        telemetry.addData("gyro", gyro.getHeading());
         if(drive.thirdPerson) {
-            robot.drive.mecanum.updateMecanumThirdPerson(gamepad1,  (gamepad1.right_stick_button) ? 1.0 : .5, Math.toRadians(gyro.getAngle() - cal));
+            robot.drive.mecanum.updateMecanumThirdPerson(gamepad1,  (gamepad1.right_stick_button) ? 1.0 : .5, Math.toRadians(gyro.getHeading() - cal));
         }else{
             robot.drive.mecanum.updateMecanum(gamepad1, (gamepad1.right_stick_button) ? 1.0 : .5);
         }

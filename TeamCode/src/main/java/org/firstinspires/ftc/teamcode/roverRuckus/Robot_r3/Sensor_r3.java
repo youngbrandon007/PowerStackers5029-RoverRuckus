@@ -18,9 +18,10 @@ public class Sensor_r3 extends Config_r3 {
 
         telemetry.addData("lift", lift.extension.getEncoderPosition());
 
-        telemetry.addData("gyro", gyro.getAngle1());
-        telemetry.addData("gyro", gyro.getAngle2());
-        telemetry.addData("gyro", gyro.getAngle3());
+        telemetry.addData("gyro1", gyro.getOrientation().firstAngle);
+        telemetry.addData("gyro2", gyro.getOrientation().secondAngle);
+        telemetry.addData("gyro3", gyro.getOrientation().thirdAngle);
+
 
         telemetry.update();
     }

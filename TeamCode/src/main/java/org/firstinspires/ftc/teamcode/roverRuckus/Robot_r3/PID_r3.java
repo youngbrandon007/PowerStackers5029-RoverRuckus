@@ -35,7 +35,7 @@ public class PID_r3 extends Config_r3 {
         drive.D += (gamepad1.right_stick_y > .9) ? .001 : (gamepad1.right_stick_y < -.9) ? -.001 : 0.0;
 
         telemetry.addLine("P:" + drive.P + " I:" + drive.I + " D:" + drive.D);
-        telemetry.addData("gyro.heading", gyro.getAngle());
+        telemetry.addData("gyro.heading", gyro.getHeading());
         telemetry.update();
     }
 
@@ -48,12 +48,12 @@ public class PID_r3 extends Config_r3 {
     public void loop() {
         times.add(String.valueOf(Math.round(time.milliseconds()/1000.0)));
 
-        value.add(String.valueOf(Math.round(gyro.getAngle()/1000.0)*1000.0));//pid value
+        value.add(String.valueOf(Math.round(gyro.getHeading()/1000.0)*1000.0));//pid value
 
 
         if(set.robotLiveEnabled) {
             robotLive.data.addChartData("PID", times, value);
-            robotLive.data.addStringData("Gyro", String.valueOf(gyro.getAngle()));
+            robotLive.data.addStringData("Gyro", String.valueOf(gyro.getHeading()));
             robotLive.send();
         }
     }
