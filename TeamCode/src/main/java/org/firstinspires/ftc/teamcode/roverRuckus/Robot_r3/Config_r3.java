@@ -1,8 +1,22 @@
 package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r3;
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.acmerobotics.roadrunner.drive.MecanumDrive;
+import com.acmerobotics.roadrunner.followers.MecanumPIDVAFollower;
+import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
+import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
+import com.acmerobotics.roadrunner.trajectory.constraints.MecanumConstraints;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.MotorControlAlgorithm;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -18,6 +32,11 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSServo;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
 import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveData;
 import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveSend;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 abstract class Config_r3 extends PSConfigOpMode {
 
@@ -60,7 +79,8 @@ abstract class Config_r3 extends PSConfigOpMode {
     }
 
 
-    class Drive {
+    class Drive extends MecanumDrive {
+        private final List<PSMotor> motors;
         PSMotor leftFront;
         PSMotor rightFront;
         PSMotor leftBack;
@@ -73,17 +93,33 @@ abstract class Config_r3 extends PSConfigOpMode {
 
         boolean thirdPerson = false;
 
+        TrajectoryFollower trajectoryFollower;
+
+        PIDCoefficients HEADING_PID = new PIDCoefficients(0.05, 0, 0.0);
+        PIDCoefficients LATERAL_PID = new PIDCoefficients(0.05, 0, 0.0);
+        public final double K = (18 + 18) / 4;
+
         double PIDoutput = 0.0;
 
         double P = 0.1;
         double I = 0.0;
         double D = 0.1;
+        private Vector2d estimatedPosition = new Vector2d(0,0);
+        private double[] lastRotations;
 
         public Drive() {
+            super(DriveConstants_r3.TRACK_WIDTH);
             leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT, 20);
             rightFront = robot.motorHandler.newDriveMotor("D.RF", PSEnum.MotorLoc.RIGHTFRONT, 20);
             leftBack = robot.motorHandler.newDriveMotor("D.LB", PSEnum.MotorLoc.LEFTBACK, 20);
             rightBack = robot.motorHandler.newDriveMotor("D.RB", PSEnum.MotorLoc.RIGHTBACK, 20);
+            motors = Arrays.asList(leftFront, leftBack, rightBack, rightFront);
+
+            trajectoryFollower = new MecanumPIDVAFollower(this, LATERAL_PID, HEADING_PID,
+                    DriveConstants_r3.kV, DriveConstants_r3.kA, DriveConstants_r3.kStatic);
+            for (PSMotor motor : motors) {
+                motor.motorObject.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            }
         }
 
         public void resetEncoders() {
@@ -136,6 +172,95 @@ abstract class Config_r3 extends PSConfigOpMode {
             robot.drive.mecanum.setMecanum(Math.toRadians(travelAngle), speed, PID, 1.0);
 
             return (distanceToPoint < 50);
+        }
+
+        @Override
+        public double getExternalHeading() {
+            return Math.toRadians(-gyro.getHeading());
+        }
+
+        @NotNull
+        @Override
+        public List<Double> getWheelPositions() {
+            List<Double> wheelPositions = new ArrayList<>();
+            for (PSMotor motor : motors) {
+                wheelPositions.add(DriveConstants_r3.encoderTicksToInches(motor.getEncoderPosition()));
+            }
+            return wheelPositions;
+        }
+
+        @Override
+        public void setMotorPowers(double v, double v1, double v2, double v3) {
+            leftFront.setPower(v);
+            leftBack.setPower(v1);
+            rightBack.setPower(-v2);
+            rightFront.setPower(-v3);
+        }
+
+        public TrajectoryBuilder trajectoryBuilder() {
+            return new TrajectoryBuilder(getEstimatedPose(), DriveConstants_r3.BASE_CONSTRAINTS);
+        }
+
+        public void followTrajectory(Trajectory trajectory) {
+            trajectoryFollower.followTrajectory(trajectory);
+        }
+
+        public void updateFollower() {
+            trajectoryFollower.update(getEstimatedPose());
+        }
+
+        public void update() {
+            getEstimatedPose();
+            updateFollower();
+        }
+
+        public boolean isFollowingTrajectory() {
+            return trajectoryFollower.isFollowing();
+        }
+
+        public Pose2d getFollowingError() {
+            return trajectoryFollower.getLastError();
+        }
+
+        public Pose2d getEstimatedPose() {
+            double[] rotations = new double[4];
+
+            for (int i = 0; i < 4; i++) {
+                int encoderPosition = motors.get(i).getEncoderPosition();
+                rotations[i] = driveEncoderTicksToRadians(encoderPosition);
+
+            }
+
+            if (lastRotations != null) {
+                double[] rotationDeltas = new double[4];
+                for (int i = 0; i < 4; i++) {
+                    rotationDeltas[i] = rotations[i] - lastRotations[i];
+                }
+
+                Vector2d robotPoseDelta = getPoseDelta(rotationDeltas).pos();
+                Vector2d fieldPoseDelta = robotPoseDelta.rotated(Math.toRadians(gyro.getHeading()));
+
+                estimatedPosition = estimatedPosition.plus(fieldPoseDelta);
+            }
+            lastRotations = rotations;
+            return new Pose2d(estimatedPosition, -Math.toRadians(gyro.getHeading()));
+        }
+
+
+        private double driveEncoderTicksToRadians(int ticks) {
+            double ticksPerRev = 28*20;
+            return 2 * Math.PI * ticks / ticksPerRev;
+        }
+
+        public Pose2d getPoseDelta(double[] rot) {
+            if (rot.length != 4) {
+                throw new IllegalArgumentException("length must be four");
+            }
+            double RADIUS = 2;
+            double x = RADIUS * (rot[0] + rot[1] - rot[2] - rot[3]) / 4;
+            double y = RADIUS * (-rot[0] + rot[1] + rot[2] - rot[3]) / 4;
+            double h = RADIUS * (-rot[0] - rot[1] - rot[2] - rot[3]) / (4 * K);
+            return new Pose2d(x, y, h);
         }
     }
 
@@ -259,12 +384,14 @@ abstract class Config_r3 extends PSConfigOpMode {
             gyro.initialize(parameters);
 
         }
+
         public double getHeading() {
-            angles   = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             return angles.firstAngle;
         }
+
         public Orientation getOrientation() {
-            angles   = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             return angles;
         }
 
