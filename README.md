@@ -6,8 +6,6 @@
 
 Main robot code can be found in [teamcode/RoverRukus](https://github.com/robotgenis/PowerStackers5029-RoverRuckus/tree/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/roverRuckus).
 
-### UVC camera
+### Trajectory App
 
-Uvc camera testing can be found in [teamcode/roverRukus/other](https://github.com/robotgenis/PowerStackers5029-RoverRuckus/tree/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/roverRuckus/other).
-
-UVC camera class can be found in [teamcode/PSRobotLibs](https://github.com/robotgenis/PowerStackers5029-RoverRuckus/tree/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/PSRobotLibs/lib/vision/UVC).
+[Found Here](https://github.com/robotgenis/PowerStackersAuto)
