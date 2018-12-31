@@ -127,7 +127,7 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
 
         //todo test this code, it should create a mask with only the biggest contour
         Mat mask2 = new Mat(mask.rows(), mask.cols(), mask.type(), Scalar.all(0));
-        Imgproc.drawContours(mask, biggest, 0, new Scalar(1), Core.FILLED);
+        Imgproc.drawContours(mask2, biggest, 0, new Scalar(1), Core.FILLED);
 
 
         //@todo fix this so it only looks at the biggest contour

@@ -17,13 +17,18 @@ class LoadConfig {
             return null;
     }
 
-    private static String getPath(){
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/auto/data.txt";
+    private static String getDir(String file){
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/auto/" + file;
     }
+
+    public static String getDataPath(){
+        return getDir("data.txt");
+    }
+
 
     private static String[] loadfile(){
         try {
-            BufferedReader br = new BufferedReader(new FileReader(new File(getPath())));
+            BufferedReader br = new BufferedReader(new FileReader(new File(getDataPath())));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
             ArrayList<String> output = new ArrayList<>();

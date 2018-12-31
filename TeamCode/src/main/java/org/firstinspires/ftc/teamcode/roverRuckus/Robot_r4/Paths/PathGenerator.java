@@ -9,7 +9,6 @@ import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4.Paths.PathPoin
 
 public class PathGenerator {
 
-
     //sample 0-3 (0 default, 1-3 left to right)
     private static String[] dataArray;
     private static TrajectoryBuilder trajectoryBuilder;
@@ -60,25 +59,25 @@ public class PathGenerator {
 
         for(PathElement element : elements){
             switch (element.type){
-                case PathPoints.SPLINEINTERPOLER:
-                    trajectoryBuilder.splineTo(element.getPose2d(), element.getInterpolar());
+                case PathElement.SPLINEINTERPOLER:
+                    trajectoryBuilder.splineTo(element.getPose2d(), element.getInterpolator());
                     break;
-                case PathPoints.SPLINE:
+                case PathElement.SPLINE:
                     trajectoryBuilder.splineTo(element.getPose2d());
                     break;
-                case PathPoints.STRAFE:
+                case PathElement.STRAFE:
                     trajectoryBuilder.strafeTo(element.getVector2d());
                     break;
-                case PathPoints.ROTATE:
+                case PathElement.ROTATE:
                     trajectoryBuilder.turnTo(element.getRot());
                     break;
-                case PathPoints.DELAY:
+                case PathElement.DELAY:
                     trajectoryBuilder.waitFor(element.getDelay());
                     break;
-                case PathPoints.REVERSE:
+                case PathElement.REVERSE:
                     trajectoryBuilder.setReversed(element.reverse());
                     break;
-                case PathPoints.DRIVE:
+                case PathElement.DRIVE:
                     trajectoryBuilder.forward(element.distance());
                     break;
             }
