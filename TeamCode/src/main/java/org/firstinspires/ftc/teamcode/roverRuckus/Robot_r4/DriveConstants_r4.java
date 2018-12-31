@@ -19,7 +19,7 @@ public class DriveConstants_r4 {
     public static double GEAR_RATIO = 20; // output/input
     public static double TRACK_WIDTH = 15; // in
 
-    public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(30.0, 30.0, Math.PI / 2, Math.PI / 2);
+    public static DriveConstraints BASE_CONSTRAINTS;// = new DriveConstraints(30.0, 30.0, Math.PI / 2, Math.PI / 2);
 
     public static double kV = 0.01;
     public static double kA = 0;

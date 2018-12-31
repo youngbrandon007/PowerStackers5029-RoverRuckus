@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
 import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveData;
 import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveSend;
 import org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4.DriveConstants_r4;
+import org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4.Paths.ConstantsLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -89,6 +90,7 @@ abstract class Config_r4 extends PSConfigOpMode {
 
         public Drive() {
             super(DriveConstants_r4.TRACK_WIDTH);
+            DriveConstants_r4.BASE_CONSTRAINTS = ConstantsLoader.getDriveConstraints();
             leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT, 20);
             rightFront = robot.motorHandler.newDriveMotor("D.RF", PSEnum.MotorLoc.RIGHTFRONT, 20);
             leftBack = robot.motorHandler.newDriveMotor("D.LB", PSEnum.MotorLoc.LEFTBACK, 20);
