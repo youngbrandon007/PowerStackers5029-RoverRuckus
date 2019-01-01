@@ -8,15 +8,10 @@ import com.acmerobotics.roadrunner.followers.MecanumPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
-import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
-import com.acmerobotics.roadrunner.trajectory.constraints.MecanumConstraints;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.MotorControlAlgorithm;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -104,7 +99,7 @@ abstract class Config_r3 extends PSConfigOpMode {
         double P = 0.1;
         double I = 0.0;
         double D = 0.1;
-        private Vector2d estimatedPosition = new Vector2d(0,0);
+        private Vector2d estimatedPosition = new Vector2d(0, 0);
         private double[] lastRotations;
 
         public Drive() {
@@ -248,14 +243,10 @@ abstract class Config_r3 extends PSConfigOpMode {
 
 
         private double driveEncoderTicksToRadians(int ticks) {
-            double ticksPerRev = 28*20;
-            return 2 * Math.PI * ticks / ticksPerRev;
+            return 2 * Math.PI * ticks / DriveConstants_r3.TICKS_PER_REV;
         }
 
         public Pose2d getPoseDelta(double[] rot) {
-            if (rot.length != 4) {
-                throw new IllegalArgumentException("length must be four");
-            }
             double RADIUS = 2;
             double x = RADIUS * (rot[0] + rot[1] - rot[2] - rot[3]) / 4;
             double y = RADIUS * (-rot[0] + rot[1] + rot[2] - rot[3]) / 4;

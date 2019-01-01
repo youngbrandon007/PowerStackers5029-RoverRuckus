@@ -108,24 +108,6 @@ public class Auto_r3 extends Config_r3 implements UVCCamera.Callback{
                 task = AutoTasks.SAMPLEDRIVE;
                 drive.resetEncoders();
                 break;
-            case SAMPLEDRIVE:
-                drive.setMecanum(Math.toRadians(con.sampleAngle[samplePos]), .5, false);
-
-                if(drive.distanceTraveled() > con.sampleDis[samplePos]){
-                    task = AutoTasks.PARK;
-                    drive.resetEncoders();
-                }
-                break;
-            case PARK:
-                drive.setMecanum(90, .4, false);
-
-                if(drive.distanceTraveled() > 7){
-                    robot.drive.stop();
-                    drive.resetEncoders();
-                    task = AutoTasks.IDLE;
-                }
-
-                break;
             case IDLE:
                 break;
         }
