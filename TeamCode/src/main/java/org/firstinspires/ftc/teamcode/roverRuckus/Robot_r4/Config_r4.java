@@ -76,8 +76,8 @@ abstract class Config_r4 extends PSConfigOpMode {
 
         TrajectoryFollower trajectoryFollower;
 
-        PIDCoefficients HEADING_PID = new PIDCoefficients(0.05, 0, 0.0);
-        PIDCoefficients LATERAL_PID = new PIDCoefficients(0.05, 0, 0.0);
+        PIDCoefficients HEADING_PID;
+        PIDCoefficients LATERAL_PID;
         public final double K = (18 + 18) / 4;
 
         double PIDoutput = 0.0;
@@ -91,6 +91,13 @@ abstract class Config_r4 extends PSConfigOpMode {
         public Drive() {
             super(DriveConstants_r4.TRACK_WIDTH);
             DriveConstants_r4.BASE_CONSTRAINTS = ConstantsLoader.getDriveConstraints();
+            double[] rotationPID = ConstantsLoader.getRotationPIDVA();
+            double[] motionPID = ConstantsLoader.getMotionPIDVA();
+            HEADING_PID = new PIDCoefficients(rotationPID[0], rotationPID[1], rotationPID[2]);
+            LATERAL_PID = new PIDCoefficients(motionPID[0], motionPID[1], motionPID[2]);
+            DriveConstants_r4.kV = motionPID[3];
+            DriveConstants_r4.kA = motionPID[4];
+
             leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT, 20);
             rightFront = robot.motorHandler.newDriveMotor("D.RF", PSEnum.MotorLoc.RIGHTFRONT, 20);
             leftBack = robot.motorHandler.newDriveMotor("D.LB", PSEnum.MotorLoc.LEFTBACK, 20);
