@@ -6,7 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "t.rot", group = "r3")
+@TeleOp(name = "t.rot", group = "r4")
 public class Rotate_r4 extends Config_r4 {
 
 
