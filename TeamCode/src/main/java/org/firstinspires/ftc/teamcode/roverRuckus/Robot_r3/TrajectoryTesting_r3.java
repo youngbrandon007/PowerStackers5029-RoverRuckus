@@ -46,17 +46,14 @@ public class TrajectoryTesting_r3 extends Config_r3 {
     @Override
     public void loop() {
         if (drive.isFollowingTrajectory()) {
-            telemetry.addData("error",drive.getFollowingError());
+            estimatedPose = drive.getEstimatedPose();
+            telemetry.addData("pose", estimatedPose);
+            telemetry.addData("gyro", Math.toDegrees(estimatedPose.getHeading()));
+            telemetry.addData("error", drive.getFollowingError());
             drive.update();
-        } else {
-            robot.drive.mecanum.updateMecanumThirdPerson(gamepad1, 1.0, Math.toRadians(gyro.getHeading() - cal));
-
+            telemetry.update();
         }
-        estimatedPose = drive.getEstimatedPose();
-        telemetry.addData("pose", estimatedPose);
-        telemetry.addData("gyro", Math.toDegrees(estimatedPose.getHeading()));
-//        telemetry.addData("drive.pos", drive.getWheelPositions());
-        telemetry.update();
+
     }
 
 }
