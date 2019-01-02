@@ -179,7 +179,7 @@ abstract class Config_r3 extends PSConfigOpMode {
         public List<Double> getWheelPositions() {
             List<Double> wheelPositions = new ArrayList<>();
             for (PSMotor motor : motors) {
-                wheelPositions.add(DriveConstants_r3.encoderTicksToInches(motor.getEncoderPosition()));
+//                wheelPositions.add(DriveConstants_r3.encoderTicksToInches(motor.getEncoderPosition()));
             }
             return wheelPositions;
         }

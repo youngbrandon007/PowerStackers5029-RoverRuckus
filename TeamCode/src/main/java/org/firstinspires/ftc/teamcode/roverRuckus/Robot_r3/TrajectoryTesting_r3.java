@@ -35,8 +35,9 @@ public class TrajectoryTesting_r3 extends Config_r3 {
     @Override
     public void start() {
         Trajectory trajectory = drive.trajectoryBuilder()
-                .splineTo(new Pose2d(20,20,Math.PI/2))
-                .splineTo(new Pose2d(40,20,-Math.PI/2))
+                .lineTo(new Vector2d(24,0))
+//                .splineTo(new Pose2d(20,20,Math.PI/2))
+//                .splineTo(new Pose2d(40,20,-Math.PI/2))
                 .build();
 
         drive.followTrajectory(trajectory);

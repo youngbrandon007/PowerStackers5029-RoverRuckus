@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -25,13 +26,21 @@ public class Line_r4 extends Config_r4 {
     public void init_loop() {
 
         telemetry.addData("gyro.heading", gyro.getHeading());
+        telemetry.addData("P",drive.HEADING_PID.kP);
+        telemetry.addData("I",drive.HEADING_PID.kI);
+        telemetry.addData("D",drive.HEADING_PID.kD);
+        telemetry.addData("P",drive.LATERAL_PID.kP);
+        telemetry.addData("I",drive.LATERAL_PID.kI);
+        telemetry.addData("D",drive.LATERAL_PID.kD);
         telemetry.update();
     }
 
     @Override
     public void start() {
         Trajectory trajectory = drive.trajectoryBuilder()
-                .lineTo(new Vector2d(24, 0))
+                .lineTo(new Vector2d(50, 0), new LinearInterpolator(0,Math.PI/2))
+//                .splineTo(new Pose2d(20,20,Math.PI/2))
+//                .splineTo(new Pose2d(40,20,-Math.PI/2))
                 .build();
 
         drive.followTrajectory(trajectory);
@@ -42,6 +51,7 @@ public class Line_r4 extends Config_r4 {
     public void loop() {
         if (drive.isFollowingTrajectory()) {
             telemetry.addData("error",drive.getFollowingError());
+
             drive.update();
         } else {
             robot.drive.mecanum.updateMecanumThirdPerson(gamepad1, 1.0, Math.toRadians(gyro.getHeading() - cal));
@@ -49,6 +59,7 @@ public class Line_r4 extends Config_r4 {
         estimatedPose = drive.getEstimatedPose();
         telemetry.addData("pose", estimatedPose);
         telemetry.addData("gyro", Math.toDegrees(estimatedPose.getHeading()));
+
 //        telemetry.addData("drive.pos", drive.getWheelPositions());
         telemetry.update();
     }

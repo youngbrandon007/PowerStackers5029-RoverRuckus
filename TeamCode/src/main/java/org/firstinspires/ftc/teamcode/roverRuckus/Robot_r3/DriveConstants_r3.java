@@ -21,8 +21,8 @@ public class DriveConstants_r3 {
 
     public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(30.0, 30.0, Math.PI / 2, Math.PI / 2);
 
-    public static double kV = 0.01;
-    public static double kA = 0.01;
+    public static double kV = 0.00;
+    public static double kA = 0.00;
     public static double kStatic = 0;
 
 }
