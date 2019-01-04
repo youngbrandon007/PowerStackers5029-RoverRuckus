@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r3;
+package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -9,9 +8,8 @@ import static java.lang.Math.abs;
 import static java.lang.Math.atan2;
 import static java.lang.Math.sqrt;
 
-@TeleOp(name = "r3.Tele", group = "r3")
-@Disabled
-public class TeleOp_r3 extends Config_r3 {
+@TeleOp(name = "r4.Tele", group = "r4")
+public class TeleOp_r4 extends Config_r4 {
 
 
     double cal = 0.0;
@@ -20,10 +18,6 @@ public class TeleOp_r3 extends Config_r3 {
     public void init() {
         config(this);
         lift.ratchetOn();
-//        while (gyro..isCalibrating()) {
-//            telemetry.addData("gyro", "cal");
-//            telemetry.update();
-//        }
         telemetry.addData("gyro", "ready");
         telemetry.update();
     }
@@ -49,23 +43,7 @@ public class TeleOp_r3 extends Config_r3 {
 
         //collector
         collector.extension.setPower(-((abs(gamepad1.right_stick_y) > 0.70f) ? gamepad1.right_stick_y : gamepad2.right_stick_y));
-        //collector.sweeperOn = (gamepad1.right_trigger  > 0.9f) ? true : (gamepad1.left_trigger > 0.15f) ? false : collector.sweeperOn;
-        collector.sweeper.setPower((collector.sweeperOn) ? 0.75 : (gamepad1.right_trigger > 0.15f) ? gamepad1.right_trigger : -(.65 * gamepad1.left_trigger));
-        if (gamepad1.right_bumper) {
-            collector.rampDown();
-            collector.closeDoor();
-        } else if (gamepad1.left_bumper) {
-            collector.rampUp();
-            collector.initDoor();
-            collector.sweeperOn = false;
-        }
-        if (gamepad2.a) {
-            collector.openDoor();
-        }
-        //Transfer
-        transfer.shooterOn = (gamepad2.right_trigger > 0.15f) ? true : (gamepad2.left_trigger > 0.15f) ? false : transfer.shooterOn;
-        transfer.shooter.setPower((transfer.shooterOn) ? -1.0 : gamepad2.left_trigger);
-        transfer.feeder.setPower((gamepad2.right_bumper) ? -.5 : ((gamepad2.left_bumper) ? .5 : 0));
+
 //        transfer.feeder.setPower(gamepad2.left_stick_x/2);
         //Lift
         lift.extension.setPower((gamepad2.dpad_up) ? 1.0 : (gamepad2.dpad_down) ? -1.0 : 0.0);

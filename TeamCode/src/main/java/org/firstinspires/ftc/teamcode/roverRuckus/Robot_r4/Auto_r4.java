@@ -2,24 +2,22 @@ package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4;
 
 import android.graphics.Bitmap;
 
-import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.vision.PSVisionUtils;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
 import org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4.Paths.PathGenerator;
+import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.imgproc.Moments;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+
 
 @Autonomous(name = "r4.Auto", group = "r4")
 public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
@@ -27,17 +25,25 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
     String data;
 
     ElapsedTime time = new ElapsedTime();
-    private double cal = 0;
 
-    private Pose2d estimatedPose = new Pose2d(0, 0, 0);
-
-    Tasks task = Tasks.LAND;
+    Tasks task;
 
     int samplePos = 0;
-    int pictureComplete = 0;
+    boolean sample;
+    boolean startDepot;
+    Trajectory trajectory;
 
     enum Tasks {
-        LAND, PICTURE, TRAJECTORY, IDLE
+        UNRATCHET, LAND, PICTURE, PRETRAJECTORY, TRAJECTORY, IDLE
+    }
+
+    static String opencvLoad = "";
+    static {
+        if (!OpenCVLoader.initDebug()) {
+            opencvLoad = "Error Loading!";
+        } else {
+            opencvLoad = "Loaded Successfully!";
+        }
     }
 
     @Override
@@ -46,6 +52,13 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
         telemetry.addData("CONFIG", data);
 
         config(this);
+
+        startDepot = data.split(",")[2].split("=")[1].equals("true");
+        drive.estimatedPosition = (startDepot) ? new Vector2d(55, 89) : new Vector2d(55, 55);
+        gyro.cal = (startDepot) ? 135 : 225;
+        camera.load(this);
+
+        sample = data.split(",")[4].split("=")[1].equals("true");
     }
 
     @Override
@@ -56,36 +69,58 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
     @Override
     public void start() {
         time.reset();
+        if(sample)
+            camera.start();
+        if(data.split(",")[3].split("=")[1].equals("true"))
+            task = Tasks.UNRATCHET;
+        else
+            task = Tasks.PICTURE;
     }
 
     @Override
     public void loop() {
         switch (task) {
+            case UNRATCHET:
+                lift.extension.setPower(1);
+                lift.ratchetOn();
+                if (time.milliseconds()>500){
+                    task = task.LAND;
+                    time.reset();
+                    lift.bridge.setBridge2(90);
+                    lift.extension.setPower(0);
+                }
+                break;
             case LAND:
+                lift.extension.setPower(-1);
+                if (lift.extension.getEncoderPosition()<-7200){
+                    lift.extension.setPower(0);
+                    task = (sample) ? Tasks.PICTURE : Tasks.PRETRAJECTORY;
+                }
 
-                task = Tasks.PICTURE;
                 break;
             case PICTURE:
-                if (data.split(",")[4].split("=")[1].equals("true")) {
+                //Wait for picture
+                break;
+            case PRETRAJECTORY:
 
-                } else {
-                    pictureComplete = 101;
-                }
+                trajectory = PathGenerator.BuildPath(data, samplePos, DriveConstants_r4.BASE_CONSTRAINTS);
 
+                drive.followTrajectory(trajectory);
+                time.reset();
 
-                if (pictureComplete == 101) {
-                    task = Tasks.TRAJECTORY;
-
-                    Trajectory trajectory = PathGenerator.BuildPath(data, samplePos, DriveConstants_r4.BASE_CONSTRAINTS);
-
-                    drive.followTrajectory(trajectory);
-                    time.reset();
-                }
+                task = Tasks.TRAJECTORY;
                 break;
             case TRAJECTORY:
 
                 if (drive.isFollowingTrajectory()) {
                     telemetry.addData("drive.error", drive.getFollowingError());
+                    if ((trajectory.get(time.seconds()).getX()==20)&&trajectory.get(time.seconds()).getY()==120){
+                        drive.releaseMarker();
+                    }
+                    else{
+                        drive.unreleaseMarker();
+                    }
+                    telemetry.addData("targetPose",trajectory.get(time.seconds()));
                     drive.update();
                 } else {
                     task = Tasks.IDLE;
@@ -94,57 +129,38 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
             case IDLE:
                 break;
         }
+
+        telemetry.addData("pose", drive.getEstimatedPose());
     }
 
     @Override
     public Bitmap onFrame(Bitmap bm) {
-        //Mask
-        Mat input = new Mat();
-        Mat hsv = new Mat();
-        Bitmap bmp32 = bm.copy(Bitmap.Config.ARGB_8888, true);
-        Utils.bitmapToMat(bmp32, input);
-        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
-        Mat mask = new Mat();
-        Core.inRange(hsv, new Scalar(15, 100, 100), new Scalar(40, 255, 255), mask);
+        if(task == Tasks.PICTURE) {
+            Mat input = new Mat();
+            Mat hsvLeft = new Mat();
+            Mat hsvMiddle = new Mat();
+            Bitmap bmp32 = bm.copy(Bitmap.Config.ARGB_8888, true);
+            Utils.bitmapToMat(bmp32, input);
+            Rect rectCrop = new Rect(40, 100, 160, 160);
+            Mat leftMineral = input.submat(rectCrop);
+            rectCrop = new Rect(440, 150, 160, 120);
+            Mat middleMineral = input.submat(rectCrop);
+            PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(leftMineral), "R4-left", "/saved_images");
+            PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(middleMineral), "R4-middle", "/saved_images");
+            Imgproc.cvtColor(leftMineral, hsvLeft, Imgproc.COLOR_RGB2HSV);
+            Imgproc.cvtColor(middleMineral, hsvMiddle, Imgproc.COLOR_RGB2HSV);
+            double leftYellowArea = PSVisionUtils.hsvToTotalAreaInMask(hsvLeft, new Scalar(15, 100, 100), new Scalar(40, 255, 255), "leftY");
+            double middleYellowArea = PSVisionUtils.hsvToTotalAreaInMask(hsvMiddle, new Scalar(15, 100, 100), new Scalar(40, 255, 255), "middleY");
+            telemetry.addData("leftYellow", leftYellowArea);
+            telemetry.addData("middleYellow", middleYellowArea);
 
-        //Contours
-        List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
-        Imgproc.findContours(mask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-        double maxArea = 0;
-        List<MatOfPoint> biggest = new ArrayList<>();
-        int index = -1;
-        Iterator<MatOfPoint> each = contours.iterator();
-        while (each.hasNext()) {
-            MatOfPoint wrapper = each.next();
-            double area = Imgproc.contourArea(wrapper);
-            if (area > maxArea) {
-                maxArea = area;
-                List<MatOfPoint> current = new ArrayList<>();
-                current.add(wrapper);
-                biggest = current;
-            }
+            samplePos = ((leftYellowArea > 1000) ? 1 : ((middleYellowArea > 1000) ? 2 : 3));
+            telemetry.addData("sample.sample", samplePos);
+            telemetry.update();
+
+            task = Tasks.PRETRAJECTORY;
+            camera.stop();
         }
-
-        //todo test this code, it should create a mask with only the biggest contour
-        Mat mask2 = new Mat(mask.rows(), mask.cols(), mask.type(), Scalar.all(0));
-        Imgproc.drawContours(mask2, biggest, 0, new Scalar(1), Core.FILLED);
-
-
-        //@todo fix this so it only looks at the biggest contour
-        //Centroid
-        Moments mmnts = Imgproc.moments(mask, true);
-        double locationX = mmnts.get_m10() / mmnts.get_m00();
-        double posX = (input.width() / 2) - locationX;
-        double size = maxArea;
-        if (posX < Config_r4.con.sampleRange[0]) {
-            samplePos = 3;
-        } else if (posX > Config_r4.con.sampleRange[0] && posX < Config_r4.con.sampleRange[1]) {
-            samplePos = 2;
-        } else if (posX > Config_r4.con.sampleRange[1]) {
-            samplePos = 1;
-        }
-
-//        camera.stop();
-        return null;
+        return bm;
     }
 }

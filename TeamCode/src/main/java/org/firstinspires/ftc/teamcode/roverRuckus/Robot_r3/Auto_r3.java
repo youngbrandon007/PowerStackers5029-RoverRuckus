@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r3;
 import android.graphics.Bitmap;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
@@ -25,7 +26,8 @@ import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r3.Config_r3.Auto
 import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r3.Config_r3.AutoTasks.WAITPICTURE;
 
 
-@Autonomous(name = "r3.Auto", group = "r3")
+@Autonomous(name = "r4.Auto", group = "r4")
+@Disabled
 public class Auto_r3 extends Config_r3 implements UVCCamera.Callback{
 
     //General

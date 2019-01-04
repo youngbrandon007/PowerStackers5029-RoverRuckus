@@ -40,7 +40,6 @@ abstract class Config_r4 extends PSConfigOpMode {
     Drive drive;
     Camera camera;
     Collector collector;
-    Transfer transfer;
     Lift lift;
     Gyro gyro;
 
@@ -51,7 +50,6 @@ abstract class Config_r4 extends PSConfigOpMode {
         //robot parts
         drive = new Drive();
         collector = new Collector();
-        transfer = new Transfer();
         lift = new Lift();
         gyro = new Gyro();
 
@@ -67,6 +65,7 @@ abstract class Config_r4 extends PSConfigOpMode {
         PSMotor leftBack;
         PSMotor rightBack;
 
+        PSServo markerDepositor;
         double plf;
         double plb;
         double prf;
@@ -78,14 +77,14 @@ abstract class Config_r4 extends PSConfigOpMode {
 
         PIDCoefficients HEADING_PID;
         PIDCoefficients LATERAL_PID;
-        public final double K = (18 + 18) / 4;
+        public final double K = (17 + 17) / 4;
 
         double PIDoutput = 0.0;
 
         double P = 0.1;
         double I = 0.0;
         double D = 0.1;
-        private Vector2d estimatedPosition = new Vector2d(0,0);
+        Vector2d estimatedPosition = new Vector2d(0,0);
         private double[] lastRotations;
 
         public Drive() {
@@ -104,10 +103,12 @@ abstract class Config_r4 extends PSConfigOpMode {
             rightBack = robot.motorHandler.newDriveMotor("D.RB", PSEnum.MotorLoc.RIGHTBACK, 20);
             motors = Arrays.asList(leftFront, leftBack, rightBack, rightFront);
 
+            markerDepositor = robot.servoHandler.newServo("D.Marker",180,0.35,true);
+
             trajectoryFollower = new MecanumPIDVAFollower(this, LATERAL_PID, HEADING_PID,
                     DriveConstants_r4.kV, DriveConstants_r4.kA, DriveConstants_r4.kStatic);
             for (PSMotor motor : motors) {
-                motor.motorObject.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                motor.motorObject.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
         }
 
@@ -138,6 +139,13 @@ abstract class Config_r4 extends PSConfigOpMode {
 
         public void setMecanum(double angle, double speed, boolean PID) {
             robot.drive.mecanum.setMecanum(angle, speed, (PID) ? PIDoutput : 0, 1.0);
+        }
+
+        public void releaseMarker(){
+            markerDepositor.setPosition(1);
+        }
+        public void unreleaseMarker(){
+            markerDepositor.setPosition(0.35);
         }
 
         @Deprecated
@@ -182,10 +190,14 @@ abstract class Config_r4 extends PSConfigOpMode {
 
         @Override
         public void setMotorPowers(double v, double v1, double v2, double v3) {
-            leftFront.setPower(v);
-            leftBack.setPower(v1);
-            rightBack.setPower(-v2);
-            rightFront.setPower(-v3);
+            leftFront.setPower(v3);
+            leftBack.setPower(v2);
+            rightBack.setPower(-v1);
+            rightFront.setPower(-v);
+            telemetry.addData("V1",v);
+            telemetry.addData("V2",v1);
+            telemetry.addData("V3",v2);
+            telemetry.addData("V4",v3);
         }
 
         public TrajectoryBuilder trajectoryBuilder() {
@@ -231,10 +243,13 @@ abstract class Config_r4 extends PSConfigOpMode {
                 Vector2d robotPoseDelta = getPoseDelta(rotationDeltas).pos();
                 Vector2d fieldPoseDelta = robotPoseDelta.rotated(Math.toRadians(gyro.getHeading()));
 
+
+
                 estimatedPosition = estimatedPosition.plus(fieldPoseDelta);
             }
             lastRotations = rotations;
-            return new Pose2d(estimatedPosition, -Math.toRadians(gyro.getHeading()));
+            return new Pose2d(new Vector2d(estimatedPosition.getX(), estimatedPosition.getY()), Math.toRadians(gyro.getHeading()));
+//            return new Pose2d(new Vector2d(0, 0), 0);
         }
 
 
@@ -249,7 +264,7 @@ abstract class Config_r4 extends PSConfigOpMode {
             }
             double RADIUS = 2;
             double x = RADIUS * (rot[0] + rot[1] - rot[2] - rot[3]) / 4;
-            double y = RADIUS * (-rot[0] + rot[1] + rot[2] - rot[3]) / 4;
+            double y = RADIUS * (rot[0] - rot[1] + rot[2] - rot[3]) / 4;
             double h = RADIUS * (-rot[0] - rot[1] - rot[2] - rot[3]) / (4 * K);
             return new Pose2d(x, y, h);
         }
@@ -257,50 +272,16 @@ abstract class Config_r4 extends PSConfigOpMode {
 
     class Collector {
         public PSMotor extension;
-        public PSMotor sweeper;
-        public PSServo door;
-        public PSServo ramp;
+
         public Boolean sweeperOn = false;
 
         public Collector() {
             extension = robot.motorHandler.newMotor("C.E", 10);
-            sweeper = robot.motorHandler.newMotor("C.S", 3.7);
-            door = robot.servoHandler.newServo("C.D", 197, 0.00, false);
-            ramp = robot.servoHandler.newServo("C.R", 100, .62, true);
+
 
         }
 
-        public void initDoor() {
-            door.setPosition(.6);
-        }
 
-        public void openDoor() {
-            door.setPosition(0.01);
-        }
-
-        public void closeDoor() {
-            door.setPosition(0.55);
-        }
-
-        public void rampDown() {
-            ramp.setPosition(0.72);
-        }
-
-        public void rampUp() {
-            ramp.setPosition(0.62);
-        }
-    }
-
-    class Transfer {
-        public PSMotor shooter;
-        public boolean shooterOn = false;
-        public CRServo feeder;
-        public boolean feederOn = false;
-
-        public Transfer() {
-            shooter = robot.motorHandler.newMotor("T.S", 3.7);
-            feeder = hardwareMap.crservo.get("T.F");
-        }
     }
 
     class Lift {
@@ -346,16 +327,16 @@ abstract class Config_r4 extends PSConfigOpMode {
         public Lift() {
             extension = robot.motorHandler.newMotor("L.E", 70);
             drop = robot.servoHandler.newServo("L.SO", 140, .5, true);
-            ratchet = robot.servoHandler.newServo("L.D", 140, 0.3, false);
+            ratchet = robot.servoHandler.newServo("L.ratchet", 140, 0.2, false);
             bridge = new Bridge();
         }
 
         public void ratchetOn() {
-            lift.ratchet.setPosition(0.6);
+            lift.ratchet.setPosition(0.7);
         }
 
         public void ratchetOff() {
-            ratchet.setPosition(0);
+            ratchet.setPosition(0.2);
         }
     }
 
@@ -364,6 +345,7 @@ abstract class Config_r4 extends PSConfigOpMode {
 //        IntegratingGyroscope gyro;
         BNO055IMU gyro;
         Orientation angles;
+        double cal = 0;
 
 
         public Gyro() {
@@ -378,7 +360,7 @@ abstract class Config_r4 extends PSConfigOpMode {
 
         public double getHeading() {
             angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            return angles.firstAngle;
+            return (-angles.firstAngle) + cal;
         }
 
         public Orientation getOrientation() {

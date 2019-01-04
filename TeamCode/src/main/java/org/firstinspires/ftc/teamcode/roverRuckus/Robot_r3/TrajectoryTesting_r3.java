@@ -5,12 +5,14 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.path.heading.HeadingInterpolator;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 
 @TeleOp(name = "r3.Trajectory", group = "r3")
+@Disabled
 public class TrajectoryTesting_r3 extends Config_r3 {
 
 

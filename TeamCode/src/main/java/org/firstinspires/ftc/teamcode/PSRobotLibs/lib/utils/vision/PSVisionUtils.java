@@ -9,9 +9,12 @@ import com.vuforia.Image;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
@@ -19,6 +22,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 
@@ -114,6 +120,24 @@ public class PSVisionUtils {
         return new Point(mmnts.get_m10() / mmnts.get_m00(), mmnts.get_m01() / mmnts.get_m00());
     }
 
+    public static double hsvToTotalAreaInMask(Mat input, Scalar low, Scalar high, String name){
+        Mat mask = new Mat();
+        Core.inRange(input, low, high, mask);
+        PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(mask),"R4-mask"+ name, "/saved_images");
 
+        //Contours
+        List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+        Imgproc.findContours(mask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
+
+        double totalArea = 0;
+        Iterator<MatOfPoint> each = contours.iterator();
+        while (each.hasNext()) {
+            MatOfPoint wrapper = each.next();
+            double area = Imgproc.contourArea(wrapper);
+            totalArea += area;
+        }
+        return totalArea;
+    }
 
 }
