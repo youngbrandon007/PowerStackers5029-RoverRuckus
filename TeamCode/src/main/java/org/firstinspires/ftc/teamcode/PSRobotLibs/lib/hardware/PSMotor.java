@@ -88,7 +88,7 @@ public class PSMotor {
         setupEncoder();
     }
 
-    private void setupEncoder() {
+    public void setupEncoder() {
         motorObject.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorObject.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }

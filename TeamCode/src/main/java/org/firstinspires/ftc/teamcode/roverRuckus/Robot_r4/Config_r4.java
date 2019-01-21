@@ -59,7 +59,7 @@ abstract class Config_r4 extends PSConfigOpMode {
 
 
     class Drive extends MecanumDrive {
-        private final List<PSMotor> motors;
+        final List<PSMotor> motors;
         PSMotor leftFront;
         PSMotor rightFront;
         PSMotor leftBack;
@@ -85,7 +85,7 @@ abstract class Config_r4 extends PSConfigOpMode {
         double I = 0.0;
         double D = 0.1;
         Vector2d estimatedPosition = new Vector2d(0,0);
-        private double[] lastRotations;
+        double[] lastRotations;
 
         public Drive() {
             super(DriveConstants_r4.TRACK_WIDTH);
@@ -253,7 +253,7 @@ abstract class Config_r4 extends PSConfigOpMode {
         }
 
 
-        private double driveEncoderTicksToRadians(int ticks) {
+        double driveEncoderTicksToRadians(int ticks) {
             double ticksPerRev = 28*20;
             return 2 * Math.PI * ticks / ticksPerRev;
         }
@@ -272,15 +272,22 @@ abstract class Config_r4 extends PSConfigOpMode {
 
     class Collector {
         public PSMotor extension;
+        public PSMotor shooterRight;
+        public PSMotor shooterLeft;
 
-        public Boolean sweeperOn = false;
+        public PSServo collectorRotate;
 
         public Collector() {
             extension = robot.motorHandler.newMotor("C.E", 10);
-
-
+            shooterLeft = robot.motorHandler.newMotor("C.L", 3.7);
+            shooterRight = robot.motorHandler.newMotor("C.R", 3.7);
+            collectorRotate = robot.servoHandler.newServo("C.rotate",100,0,false);
         }
 
+        public void setCollectorPower(double power){
+            shooterRight.setPower(-power);
+            shooterLeft.setPower(power);
+        }
 
     }
 
@@ -288,6 +295,7 @@ abstract class Config_r4 extends PSConfigOpMode {
         class Bridge {
             public PSServo rotateR;
             public PSServo rotateL;
+            public PSServo doorServo;
             public double[] right = new double[]{0.55, 0.05}; //first value 0 degrees in robot, second 180 degrees toward lander
             public double[] left = new double[]{0.75, 0.25};
             public final double init = -20;
@@ -295,8 +303,10 @@ abstract class Config_r4 extends PSConfigOpMode {
             public final double out = 210;
 
             public Bridge() {
-                rotateL = robot.servoHandler.newServo("L.L", 240, .5, false);
-                rotateR = robot.servoHandler.newServo("L.R", 240, .5, false);
+                rotateL = robot.servoHandler.newServo("L.B.L", 240, .5, false);
+                rotateR = robot.servoHandler.newServo("L.B.R", 240, .5, false);
+                doorServo = robot.servoHandler.newServo("L.B.D", 140, .5, true);
+
             }
 
             public void setBridge(double input) {
@@ -316,7 +326,7 @@ abstract class Config_r4 extends PSConfigOpMode {
         }
 
         public PSMotor extension;
-        public PSServo drop;
+
         public PSServo ratchet;
         public final double dropInit = .5;
         public final double dropNormal = .2;
@@ -326,13 +336,12 @@ abstract class Config_r4 extends PSConfigOpMode {
 
         public Lift() {
             extension = robot.motorHandler.newMotor("L.E", 70);
-            drop = robot.servoHandler.newServo("L.SO", 140, .5, true);
             ratchet = robot.servoHandler.newServo("L.ratchet", 140, 0.2, false);
             bridge = new Bridge();
         }
 
         public void ratchetOn() {
-            lift.ratchet.setPosition(0.7);
+            lift.ratchet.setPosition(0.8);
         }
 
         public void ratchetOff() {
@@ -384,10 +393,6 @@ abstract class Config_r4 extends PSConfigOpMode {
         public void send() {
             RobotLiveSend.send(data, ip);
         }
-    }
-
-    enum AutoTasks {
-        UNRATCHET, LAND, TAKEPICTURE, SAMPLEPICTURE, SAMPLEDRIVE, WAITPICTURE, PARK, IDLE
     }
 
     class Auto {

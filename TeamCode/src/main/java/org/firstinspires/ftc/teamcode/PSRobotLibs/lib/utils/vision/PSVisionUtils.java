@@ -123,7 +123,7 @@ public class PSVisionUtils {
     public static double hsvToTotalAreaInMask(Mat input, Scalar low, Scalar high, String name){
         Mat mask = new Mat();
         Core.inRange(input, low, high, mask);
-        PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(mask),"R4-mask"+ name, "/saved_images");
+        //PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(mask),"R4-mask"+ name, "/saved_images");
 
         //Contours
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
