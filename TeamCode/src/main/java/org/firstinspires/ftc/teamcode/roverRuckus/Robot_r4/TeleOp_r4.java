@@ -47,9 +47,11 @@ public class TeleOp_r4 extends Config_r4 {
 
         //TODO collector rotate servo
         if (gamepad1.right_bumper){
-            collector.collectorRotate.setPosition(0.2);
+            collector.collectorRotate.setPosition(0);
         } else if (gamepad1.left_bumper){
-            collector.collectorRotate.setPosition(0.5);
+            collector.collectorRotate.setPosition(1);
+        } else {
+            collector.collectorRotate.off();
         }
         //Lift
         lift.extension.setPower((gamepad2.dpad_up) ? -1.0 : (gamepad2.dpad_down) ? 1.0 : 0.0);
