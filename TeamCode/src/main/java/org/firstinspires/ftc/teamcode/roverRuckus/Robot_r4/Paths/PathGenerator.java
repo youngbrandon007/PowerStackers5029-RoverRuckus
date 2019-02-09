@@ -24,7 +24,7 @@ public class PathGenerator {
         trajectoryBuilder = new TrajectoryBuilder((depotSide) ? paths.get(Points.STARTDEPOT)[0].getPose2d() : paths.get(Points.STARTCRATER)[0].getPose2d(),constraints);
 
         //delay
-        addElement(PathElement.newDelayFull(dataValueDouble(1)));
+        //addElement(PathElement.newDelayFull(dataValueDouble(1)));
 
         //Sample
         if(dataValueBool(4)){

@@ -57,7 +57,7 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
         startDepot = data.split(",")[2].split("=")[1].equals("true");
         drive.estimatedPosition = (startDepot) ? new Vector2d(55, 89) : new Vector2d(55, 55);
         gyro.cal = (startDepot) ? 135 : 225;
-        gyro.cal += (data.split(",")[3].split("=")[1].equals("true")) ? 5 : 0;
+        gyro.cal += (data.split(",")[3].split("=")[1].equals("true")) ? 2: 0;
         camera.load(this);
 
         sample = data.split(",")[4].split("=")[1].equals("true");
@@ -78,13 +78,14 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
         else
             task = Tasks.DELAY;
         delay = Double.valueOf(data.split(",")[1].split("=")[1]);
+        lift.bridge.setBridge2(20);
     }
 
     @Override
     public void loop() {
         switch (task) {
             case UNRATCHET:
-                lift.extension.setPower(1);
+                lift.extension.setPower(-1);
                 lift.ratchetOn();
                 if (time.milliseconds()>500){
                     task = task.LAND;
@@ -94,7 +95,7 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
                 }
                 break;
             case LAND:
-                lift.extension.setPower(-1);
+                lift.extension.setPower(1);
                 if (lift.extension.getEncoderPosition()<-8700){
                     lift.extension.setPower(0);
                     task = task.DRIVEBACK;
@@ -123,6 +124,7 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
                     task = task.DELAY;
                 }
             case DELAY:
+                collector.collectorRotate.setPosition(0.7);
                 if(time.milliseconds() >= delay * 1000){
                     task = (sample) ? Tasks.PICTURE : Tasks.PRETRAJECTORY;
                 }
@@ -143,8 +145,9 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
 
                 if (drive.isFollowingTrajectory()) {
                     telemetry.addData("drive.error", drive.getFollowingError());
-                    if ((trajectory.get(time.seconds()).getX()==20)&& (trajectory.get(time.seconds()).getY()==130)){
+                    if ((trajectory.get(time.seconds()).getY()==125)){ // (trajectory.get(time.seconds()).getX()==20)&&
                         drive.releaseMarker();
+                        lift.bridge.setBridge2(180);
                     }
                     else{
                         drive.unreleaseMarker();

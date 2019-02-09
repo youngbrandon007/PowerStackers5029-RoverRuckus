@@ -9,9 +9,11 @@ import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -286,7 +288,6 @@ abstract class Config_r4 extends PSConfigOpMode {
 
         public void setCollectorPower(double power){
             shooterRight.setPower(-power);
-            shooterLeft.setPower(power);
         }
 
     }
@@ -296,7 +297,7 @@ abstract class Config_r4 extends PSConfigOpMode {
             public PSServo rotateR;
             public PSServo rotateL;
             public PSServo doorServo;
-            public double[] right = new double[]{0.55, 0.05}; //first value 0 degrees in robot, second 180 degrees toward lander
+            public double[] right = new double[]{0.01, 0.09}; //first value 0 degrees in robot, second 180 degrees toward lander
             public double[] left = new double[]{0.75, 0.25};
             public final double init = -20;
             public final double vert = 90;
@@ -305,7 +306,7 @@ abstract class Config_r4 extends PSConfigOpMode {
             public Bridge() {
                 rotateL = robot.servoHandler.newServo("L.B.L", 240, .5, false);
                 rotateR = robot.servoHandler.newServo("L.B.R", 240, .5, false);
-                doorServo = robot.servoHandler.newServo("L.B.D", 140, .5, true);
+                doorServo = robot.servoHandler.newServo("L.B.D", 140, .5, false);
 
             }
 
@@ -328,10 +329,8 @@ abstract class Config_r4 extends PSConfigOpMode {
         public PSMotor extension;
 
         public PSServo ratchet;
-        public final double dropInit = .5;
-        public final double dropNormal = .2;
-        public final double dropOpposite = .8;
-        public double dropPos = .5;
+        public final double dropInit = .4;
+        public final double dropNormal = .7;
         public Bridge bridge;
 
         public Lift() {
@@ -341,16 +340,16 @@ abstract class Config_r4 extends PSConfigOpMode {
         }
 
         public void ratchetOn() {
-            lift.ratchet.setPosition(0.8);
+            lift.ratchet.setPosition(0.6);
         }
 
         public void ratchetOff() {
-            ratchet.setPosition(0.2);
+            ratchet.setPosition(0.8);
         }
     }
 
     class Gyro {
-        //        NavxMicroNavigationSensor navxMicro;
+//                NavxMicroNavigationSensor navxMicro;
 //        IntegratingGyroscope gyro;
         BNO055IMU gyro;
         Orientation angles;
