@@ -307,7 +307,6 @@ abstract class Config_r4 extends PSConfigOpMode {
                 rotateL = robot.servoHandler.newServo("L.B.L", 240, .5, false);
                 rotateR = robot.servoHandler.newServo("L.B.R", 240, .5, false);
                 doorServo = robot.servoHandler.newServo("L.B.D", 140, .5, false);
-
             }
 
             public void setBridge(double input) {
@@ -337,6 +336,8 @@ abstract class Config_r4 extends PSConfigOpMode {
             extension = robot.motorHandler.newMotor("L.E", 70);
             ratchet = robot.servoHandler.newServo("L.ratchet", 140, 0.2, false);
             bridge = new Bridge();
+
+            extension.motorObject.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
         public void ratchetOn() {
