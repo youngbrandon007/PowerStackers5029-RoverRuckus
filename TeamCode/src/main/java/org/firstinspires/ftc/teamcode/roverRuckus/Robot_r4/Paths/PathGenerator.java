@@ -23,7 +23,9 @@ public class PathGenerator {
         //Starting position
         trajectoryBuilder = new TrajectoryBuilder((depotSide) ? paths.get(Points.STARTDEPOT)[0].getPose2d() : paths.get(Points.STARTCRATER)[0].getPose2d(),constraints);
 
-        //delay
+        //Add all parts of robot movements to trajectory
+
+        //delay only on launcher application
         //addElement(PathElement.newDelayFull(dataValueDouble(1)));
 
         //Sample

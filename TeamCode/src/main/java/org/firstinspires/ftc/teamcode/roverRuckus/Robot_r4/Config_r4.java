@@ -39,110 +39,98 @@ import java.util.List;
 
 abstract class Config_r4 extends PSConfigOpMode {
 
-    Drive drive;
-    Camera camera;
-    Collector collector;
-    Lift lift;
-    Gyro gyro;
+    //Organization tree
+    Drive drive; //Drive section
+    Camera camera; //Camera object
+    Collector collector; //collector seciton
+    Lift lift; // lift section
+    Gyro gyro; // gyro object
+
 
     @Override
-    public void config(OpMode opMode) {
+    public void config(OpMode opMode) { //Create robot
+        //create robot object using PSrobot
         robot = new PSRobot(opMode);
 
-        //robot parts
+        // create and init all parts of robot
         drive = new Drive();
         collector = new Collector();
         lift = new Lift();
         gyro = new Gyro();
 
-        //extras
+        // create other objects, not inited untill need to save battery
         camera = new Camera();
     }
 
-
+    //drive object w/ drive functions and trajectory functions
     class Drive extends MecanumDrive {
+        //motor objects
         final List<PSMotor> motors;
         PSMotor leftFront;
         PSMotor rightFront;
         PSMotor leftBack;
         PSMotor rightBack;
 
+        //other drivebase motors and servos
         PSServo markerDepositor;
-        double plf;
-        double plb;
-        double prf;
-        double prb;
 
+        //third person drive setting for teleOp
         boolean thirdPerson = false;
 
+        //Trajectory object filled in later when trajectory is created
         TrajectoryFollower trajectoryFollower;
 
+        //PID coefficient
         PIDCoefficients HEADING_PID;
         PIDCoefficients LATERAL_PID;
+        //K coeffecient, (width + height) / 4
         public final double K = (17 + 17) / 4;
 
+        //svaed PIDoutput for output to motors and telementry
         double PIDoutput = 0.0;
 
-        double P = 0.1;
-        double I = 0.0;
-        double D = 0.1;
+        //last estimated position used to find current position
         Vector2d estimatedPosition = new Vector2d(0,0);
+        //encoder positions last update to find change
         double[] lastRotations;
 
+        //init
         public Drive() {
+            //load super class
             super(DriveConstants_r4.TRACK_WIDTH);
+            // load drive constraints from settings app
             DriveConstants_r4.BASE_CONSTRAINTS = ConstantsLoader.getDriveConstraints();
-            double[] rotationPID = ConstantsLoader.getRotationPIDVA();
-            double[] motionPID = ConstantsLoader.getMotionPIDVA();
+            // load pid coeffecients
+            double[] rotationPID = ConstantsLoader.getRotationPIDVA(); //heading
+            double[] motionPID = ConstantsLoader.getMotionPIDVA(); //motion (lateral)
+            //convert those into object for trajectory
             HEADING_PID = new PIDCoefficients(rotationPID[0], rotationPID[1], rotationPID[2]);
             LATERAL_PID = new PIDCoefficients(motionPID[0], motionPID[1], motionPID[2]);
+            //save V and A coeffecients for feed forward
             DriveConstants_r4.kV = motionPID[3];
             DriveConstants_r4.kA = motionPID[4];
 
+            //hardware map
             leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT, 20);
             rightFront = robot.motorHandler.newDriveMotor("D.RF", PSEnum.MotorLoc.RIGHTFRONT, 20);
             leftBack = robot.motorHandler.newDriveMotor("D.LB", PSEnum.MotorLoc.LEFTBACK, 20);
             rightBack = robot.motorHandler.newDriveMotor("D.RB", PSEnum.MotorLoc.RIGHTBACK, 20);
+            //add motors to list for easier handling of motors
             motors = Arrays.asList(leftFront, leftBack, rightBack, rightFront);
 
+            //init other drive base servos and motors
             markerDepositor = robot.servoHandler.newServo("D.Marker",180,0.35,true);
 
+            //init trajectory foller with both pid and other constants, trajectory added later in auto
             trajectoryFollower = new MecanumPIDVAFollower(this, LATERAL_PID, HEADING_PID,
                     DriveConstants_r4.kV, DriveConstants_r4.kA, DriveConstants_r4.kStatic);
+            //set motor zero power behavoirs, in teleOp this is COAST (for easy control), brake in auto for faster stopping
             for (PSMotor motor : motors) {
                 motor.motorObject.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
         }
 
-        public void resetEncoders() {
-            plf = drive.leftFront.getEncoderDistance(4);// - plf;
-            plb = drive.leftBack.getEncoderDistance(4);// - plb;
-            prf = drive.rightFront.getEncoderDistance(4);// - prf;
-            prb = drive.rightBack.getEncoderDistance(4);// - prb;
-        }
-
-        public double[] getPosition() {
-            double lf = drive.leftFront.getEncoderDistance(4) - plf;
-            double lb = drive.leftBack.getEncoderDistance(4) - plb;
-            double rf = drive.rightFront.getEncoderDistance(4) - prf;
-            double rb = drive.rightBack.getEncoderDistance(4) - prb;
-            double d1 = (lf - rb) / 2.0;
-            double d2 = (lb - rf) / 2.0;
-            return new double[]{d1, d2};
-        }
-
-        @Deprecated
-        public double distanceTraveled() {
-            double[] pos = getPosition();
-            double distance = Math.sqrt(Math.pow(pos[0], 2) + Math.pow(pos[1], 2));
-            return distance;
-        }
-
-
-        public void setMecanum(double angle, double speed, boolean PID) {
-            robot.drive.mecanum.setMecanum(angle, speed, (PID) ? PIDoutput : 0, 1.0);
-        }
-
+        //Marker positions
         public void releaseMarker(){
             markerDepositor.setPosition(1);
         }
@@ -150,36 +138,15 @@ abstract class Config_r4 extends PSConfigOpMode {
             markerDepositor.setPosition(0.35);
         }
 
-        @Deprecated
-        public boolean autoDrive(double angle, double distance, double speed, double PID) {
-            angle -= 45;
-            double xTarget = Math.sin(Math.toRadians(angle)) * distance;
-            double yTarget = Math.cos(Math.toRadians(angle)) * distance;
-            double[] currentPos = getPosition();
-            double xPos = currentPos[1];
-            double yPos = currentPos[0];
 
-            double travelAngle = Math.toDegrees(Math.atan2(xTarget - xPos, yTarget - yPos));
-            double distanceToPoint = Math.sqrt(Math.pow(xTarget - xPos, 2) + Math.pow(yTarget - yPos, 2));
-
-
-            telemetry.addData("pos.x", xPos);
-            telemetry.addData("pos.y", yPos);
-            telemetry.addData("target.x", xTarget);
-            telemetry.addData("target.y", yTarget);
-            telemetry.addData("distance", distanceToPoint);
-            telemetry.addData("angle", travelAngle);
-
-            robot.drive.mecanum.setMecanum(Math.toRadians(travelAngle), speed, PID, 1.0);
-
-            return (distanceToPoint < 50);
-        }
-
+        //trajectory callbacks
+        // trajectory requesting gyro heading
         @Override
         public double getExternalHeading() {
             return Math.toRadians(-gyro.getHeading());
         }
 
+        // trajectory request encoder values
         @NotNull
         @Override
         public List<Double> getWheelPositions() {
@@ -190,6 +157,7 @@ abstract class Config_r4 extends PSConfigOpMode {
             return wheelPositions;
         }
 
+        //trajectory output to motors
         @Override
         public void setMotorPowers(double v, double v1, double v2, double v3) {
             leftFront.setPower(v3);
@@ -202,6 +170,7 @@ abstract class Config_r4 extends PSConfigOpMode {
             telemetry.addData("V4",v3);
         }
 
+        //create starter of trajecotrybuilder to create trajecotry
         public TrajectoryBuilder trajectoryBuilder() {
             return new TrajectoryBuilder(getEstimatedPose(), DriveConstants_r4.BASE_CONSTRAINTS);
         }
@@ -219,14 +188,15 @@ abstract class Config_r4 extends PSConfigOpMode {
             updateFollower();
         }
 
+        //trajectory access
         public boolean isFollowingTrajectory() {
             return trajectoryFollower.isFollowing();
         }
-
         public Pose2d getFollowingError() {
             return trajectoryFollower.getLastError();
         }
 
+        //calculate estimated position using change in encoder values and gro value
         public Pose2d getEstimatedPose() {
             double[] rotations = new double[4];
 
@@ -251,15 +221,15 @@ abstract class Config_r4 extends PSConfigOpMode {
             }
             lastRotations = rotations;
             return new Pose2d(new Vector2d(estimatedPosition.getX(), estimatedPosition.getY()), Math.toRadians(gyro.getHeading()));
-//            return new Pose2d(new Vector2d(0, 0), 0);
         }
 
-
+        //converting function
         double driveEncoderTicksToRadians(int ticks) {
             double ticksPerRev = 28*20;
             return 2 * Math.PI * ticks / ticksPerRev;
         }
 
+        //calculate change in pos
         public Pose2d getPoseDelta(double[] rot) {
             if (rot.length != 4) {
                 throw new IllegalArgumentException("length must be four");
@@ -272,13 +242,17 @@ abstract class Config_r4 extends PSConfigOpMode {
         }
     }
 
+    //collector object
     class Collector {
+        //motors
         public PSMotor extension;
         public PSMotor shooterRight;
         public PSMotor shooterLeft;
 
+        //servos
         public PSServo collectorRotate;
 
+        //init
         public Collector() {
             extension = robot.motorHandler.newMotor("C.E", 10);
             shooterLeft = robot.motorHandler.newMotor("C.L", 3.7);
@@ -286,80 +260,105 @@ abstract class Config_r4 extends PSConfigOpMode {
             collectorRotate = robot.servoHandler.newServo("C.rotate",100,0,false);
         }
 
+        //set power, reversed
         public void setCollectorPower(double power){
             shooterRight.setPower(-power);
         }
 
     }
 
+    //lift section object
     class Lift {
+        //bridge part of lift
         class Bridge {
+            //servo objects
             public PSServo rotateR;
             public PSServo rotateL;
             public PSServo doorServo;
-            public double[] right = new double[]{0.01, 0.09}; //first value 0 degrees in robot, second 180 degrees toward lander
-            public double[] left = new double[]{0.75, 0.25};
-            public final double init = -20;
-            public final double vert = 90;
-            public final double out = 210;
 
+            //servo scalling
+            public double[] right = new double[]{0.01, 0.09}; //first value 0 degrees in robot, second 180 degrees toward lander
+            public double[] left = new double[]{0.75, 0.25}; //second value unused currently only one servo
+
+            //init
             public Bridge() {
+                //hardware map
                 rotateL = robot.servoHandler.newServo("L.B.L", 240, .5, false);
                 rotateR = robot.servoHandler.newServo("L.B.R", 240, .5, false);
                 doorServo = robot.servoHandler.newServo("L.B.D", 140, .5, false);
             }
 
+            //old bridge method
+            @Deprecated
             public void setBridge(double input) {
                 rotateR.setPosition(Math.abs(input));
                 rotateL.setPosition(Math.abs(input));
             }
 
+            //new bridge with degrees input
             public double setBridge2(double degrees) {
+                //set range to -90 to 270
                 degrees += (degrees < -90) ? 360 : (degrees > 270) ? -360 : 0;
+                //scale range to two motor settings
                 double r = Range.scale(degrees, 0, 180, right[0], right[1]);
                 double l = Range.scale(degrees, 0, 180, left[0], left[1]);
+                //output to motors
                 rotateR.setPosition(r);
                 rotateL.setPosition(l);
+                //return value for telemtry
                 return r;
 
             }
         }
 
+        //motors objects for lift
         public PSMotor extension;
 
+        //servo and positions
         public PSServo ratchet;
         public final double dropInit = .4;
         public final double dropNormal = .7;
+
+        //brdige seciton object
         public Bridge bridge;
 
+        //init
         public Lift() {
+            //hardwaremap
             extension = robot.motorHandler.newMotor("L.E", 70);
             ratchet = robot.servoHandler.newServo("L.ratchet", 140, 0.2, false);
             bridge = new Bridge();
 
+            //set settings of lift motor
             extension.motorObject.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
+        //rachet servo movement
         public void ratchetOn() {
             lift.ratchet.setPosition(0.6);
         }
-
         public void ratchetOff() {
             ratchet.setPosition(0.8);
         }
     }
 
+    //gyro class, rev or navX
     class Gyro {
-//                NavxMicroNavigationSensor navxMicro;
+        //navX gyro
+//         NavxMicroNavigationSensor navxMicro;
 //        IntegratingGyroscope gyro;
+        //Rev Gyro
         BNO055IMU gyro;
         Orientation angles;
+        //Calibration value for auto
         double cal = 0;
 
-
+        //init
         public Gyro() {
+            //init navX
 //            navxMicro = hardwareMap.get(NavxMicroNavigationSensor.class,"navx");
 //            gyro =(IntegratingGyroscope)navxMicro;
+            //init Rev
             BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
             parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
             gyro = hardwareMap.get(BNO055IMU.class, "gyro");
@@ -367,11 +366,13 @@ abstract class Config_r4 extends PSConfigOpMode {
 
         }
 
+        //get heading of gyro
         public double getHeading() {
             angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             return (-angles.firstAngle) + cal;
         }
 
+        //get all angles
         public Orientation getOrientation() {
             angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             return angles;
@@ -382,45 +383,57 @@ abstract class Config_r4 extends PSConfigOpMode {
     /*
      * Auto
      */
+    //robotlive object for output to dashboard
+    //not used at comp
+    //for debugging
     class RobotLive {
+        // data stroage object
         RobotLiveData data;
+        //web ip
         String ip = "http://50.5.236.197:400";
 
+        //init
         public RobotLive() {
+            //create data storage object
             data = RobotLiveSend.createNewRun(ip);
         }
 
+        //send data that has been added
         public void send() {
             RobotLiveSend.send(data, ip);
         }
     }
 
-    class Auto {
-
-    }
-
-    static class con {
-        final static double[] sampleRange = new double[]{-100, 100};
-    }
-
+    //camera object only used in auto to save battery
     class Camera {
+        //custom camera object
         UVCCamera camera;
 
+        //load camera (init)
         public void load(UVCCamera.Callback callback) {
+            //check if camera already exists
             if (camera == null) {
+                // find camera that is plugged into usb hub
                 camera = UVCCamera.getCamera(callback);
             }
         }
 
+        //start camera stream
         public void start() {
+            // check if camera exists
             if (camera != null) {
+                //start camera stream
                 camera.start();
             }
         }
 
+        //stop camera stream
         public void stop() {
+            //check if camera exists
             if (camera != null) {
+                //stop
                 camera.stop();
+                //remove storage of camera
                 camera = null;
             }
         }
