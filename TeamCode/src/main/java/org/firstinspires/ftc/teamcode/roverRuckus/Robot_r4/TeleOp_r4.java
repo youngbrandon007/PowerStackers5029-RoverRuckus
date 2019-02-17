@@ -54,17 +54,17 @@ public class TeleOp_r4 extends Config_r4 {
     public void loop() {
         //thrid person driving, disable if driver prefers
 
-//        if (gamepad1.x) {
-//            cal = gyro.getHeading();
-//            drive.thirdPerson = true;
-//        }else if(gamepad1.a){
-//            drive.thirdPerson = false;
-//        }
+        if (gamepad1.right_stick_button) {
+            cal = gyro.getHeading();
+            drive.thirdPerson = true;
+        } else if (gamepad1.left_stick_button) {
+            drive.thirdPerson = false;
+        }
         //debug telemtry
         telemetry.addData("gyro", gyro.getHeading());
 
         //Set automatic drive position
-        if(gamepad1.y){
+        if (gamepad1.y) {
             placePos = drive.getEstimatedPose();
         }
 
@@ -73,7 +73,7 @@ public class TeleOp_r4 extends Config_r4 {
             //if already started just update
             if (pathDrive) {
                 //only if trajectory is still active update
-                if(drive.isFollowingTrajectory()) {
+                if (drive.isFollowingTrajectory()) {
                     drive.update();
                 }
             } else {
@@ -101,24 +101,24 @@ public class TeleOp_r4 extends Config_r4 {
         }
 
         //collector in/out
-        collector.extension.setPower((gamepad1.dpad_up||gamepad2.right_bumper) ? 1 : ((gamepad1.dpad_down||gamepad2.left_bumper)?-1:0));
+        collector.extension.setPower((gamepad1.dpad_up || gamepad2.right_bumper) ? 1 : ((gamepad1.dpad_down || gamepad2.left_bumper) ? -1 : 0));
         //shooter toggle
-        if (gamepad1.x||gamepad2.x) {
+        if (gamepad1.x || gamepad2.x) {
             shooterOn = true;
-        }else if(gamepad1.a||gamepad2.y){
+        } else if (gamepad1.a || gamepad2.y) {
             shooterOn = false;
         }
         //shooter output
-        if (shooterOn){
+        if (shooterOn) {
             collector.shooterLeft.setPower(-1);
-        } else{
+        } else {
             collector.shooterLeft.setPower(0);
         }
         //collectory power
-        collector.setCollectorPower(gamepad1.right_trigger-(gamepad1.left_trigger));
+        collector.setCollectorPower(gamepad1.right_trigger - (gamepad1.left_trigger));
 
         //lift/lower collectory
-        if (gamepad1.right_bumper||gamepad2.a){
+        if (gamepad1.right_bumper || gamepad2.a) {
             collector.collectorRotate.setPosition(0.2);
         } else {
             collector.collectorRotate.setPosition(0.9);
@@ -127,19 +127,23 @@ public class TeleOp_r4 extends Config_r4 {
         lift.extension.setPower((gamepad2.dpad_up) ? 1.0 : (gamepad2.dpad_down) ? -1.0 : 0.0);
         //set brdige servo position
         if (!(abs(gamepad2.left_stick_x) < 0.6f && abs(gamepad2.left_stick_y) < 0.6f)) {
-            if (gamepad2.left_stick_x < -.9) telemetry.addData("bridge ", lift.bridge.setBridge2(0));
-            if (gamepad2.left_stick_x > .9) telemetry.addData("bridge ", lift.bridge.setBridge2(180));
-//            telemetry.addData("bride.pos", Math.toDegrees(atan2(-gamepad2.left_stick_y, -gamepad2.left_stick_x)));
+//            if (gamepad2.left_stick_x < -.9) telemetry.addData("bridge ", lift.bridge.setBridge2(0));
+//            if (gamepad2.left_stick_x > .9) telemetry.addData("bridge ", lift.bridge.setBridge2(180));
+
+            telemetry.addData("bride.pos", lift.bridge.setBridge2(Math.toDegrees(atan2(-gamepad2.left_stick_y, -gamepad2.left_stick_x))));
 //
         }
-        telemetry.addData("bridgeServoPos",lift.bridge.rotateL.getCachedPosition());
+        telemetry.addData("bridgeServoPos", lift.bridge.bridgeRotate.getCachedPosition());
 
         //move bridge for finer adjustement
         if (gamepad2.dpad_right) {
 
-            lift.bridge.rotateL.setPosition(lift.bridge.rotateL.getCachedPosition()+0.0005);
+            lift.bridge.bridgeRotate.setPosition(lift.bridge.bridgeRotate.getCachedPosition() + 0.001);
         } else if (gamepad2.dpad_left) {
-            lift.bridge.rotateL.setPosition(lift.bridge.rotateL.getCachedPosition()-0.0005);
+            lift.bridge.bridgeRotate.setPosition(lift.bridge.bridgeRotate.getCachedPosition() - 0.001);
+        }
+        if (gamepad2.b) {
+            lift.bridge.bridgeRotate.off();
         }
 
         //ratchet on/off

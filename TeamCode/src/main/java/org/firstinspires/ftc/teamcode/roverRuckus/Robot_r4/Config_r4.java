@@ -9,18 +9,14 @@ import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.PSRobotLibs.PSTelemetry;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSConfigOpMode;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobot;
@@ -29,7 +25,6 @@ import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSServo;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
 import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveData;
 import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveSend;
-import org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4.DriveConstants_r4;
 import org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4.Paths.ConstantsLoader;
 import org.jetbrains.annotations.NotNull;
 
@@ -272,27 +267,24 @@ abstract class Config_r4 extends PSConfigOpMode {
         //bridge part of lift
         class Bridge {
             //servo objects
-            public PSServo rotateR;
-            public PSServo rotateL;
+            public PSServo bridgeRotate;
             public PSServo doorServo;
 
             //servo scalling
-            public double[] right = new double[]{0.01, 0.09}; //first value 0 degrees in robot, second 180 degrees toward lander
-            public double[] left = new double[]{0.75, 0.25}; //second value unused currently only one servo
+            public double[] right = new double[]{0.04, 0.11}; //first value 0 degrees in robot, second 180 degrees toward lander
+//            public double[] left = new double[]{0.75, 0.25}; //second value unused currently only one servo
 
             //init
             public Bridge() {
                 //hardware map
-                rotateL = robot.servoHandler.newServo("L.B.L", 240, .5, false);
-                rotateR = robot.servoHandler.newServo("L.B.R", 240, .5, false);
+                bridgeRotate = robot.servoHandler.newServo("L.B.R", 240, .5, false);
                 doorServo = robot.servoHandler.newServo("L.B.D", 140, .5, false);
             }
 
             //old bridge method
             @Deprecated
             public void setBridge(double input) {
-                rotateR.setPosition(Math.abs(input));
-                rotateL.setPosition(Math.abs(input));
+                bridgeRotate.setPosition(Math.abs(input));
             }
 
             //new bridge with degrees input
@@ -301,10 +293,9 @@ abstract class Config_r4 extends PSConfigOpMode {
                 degrees += (degrees < -90) ? 360 : (degrees > 270) ? -360 : 0;
                 //scale range to two motor settings
                 double r = Range.scale(degrees, 0, 180, right[0], right[1]);
-                double l = Range.scale(degrees, 0, 180, left[0], left[1]);
+//                double l = Range.scale(degrees, 0, 180, left[0], left[1]);
                 //output to motors
-                rotateR.setPosition(r);
-                rotateL.setPosition(l);
+                bridgeRotate.setPosition(r);
                 //return value for telemtry
                 return r;
 
