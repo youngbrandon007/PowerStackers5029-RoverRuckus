@@ -109,7 +109,7 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
         switch (task) {
             case UNRATCHET:
                 //if hanging unrachet motor
-                lift.extension.setPower(-1);
+                lift.extension.setPower(1);
                 lift.ratchetOn();
                 //unrachtet for .5 seconds
                 if (time.milliseconds()>500){
@@ -125,9 +125,9 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
                 break;
             case LAND:
                 //lower robot
-                lift.extension.setPower(1);
+                lift.extension.setPower(-1);
                 //wait for encoder to pass fully extended
-                if (lift.extension.getEncoderPosition()<-8700){
+                if (lift.extension.getEncoderPosition()<lift.liftExtendTickCount){
                     //turn off lift
                     lift.extension.setPower(0);
                     //set next task
@@ -199,7 +199,7 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
                         //open marker release
                         drive.releaseMarker();
                         //set bridge positions
-                        lift.bridge.setBridge2(180);
+
                     } else{
                         //if not in marker position
                         //close marker servo
@@ -215,6 +215,7 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
                 }
                 break;
             case IDLE:
+                lift.bridge.setBridge2(160);
                 break;
         }
         //show pos

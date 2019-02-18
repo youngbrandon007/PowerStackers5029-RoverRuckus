@@ -32,6 +32,8 @@ public class TeleOp_r4 extends Config_r4 {
     // object for automatic drive
     Trajectory trajectory;
 
+    private int automaticHang = 0;
+
     //init
     @Override
     public void init() {
@@ -124,13 +126,33 @@ public class TeleOp_r4 extends Config_r4 {
             collector.collectorRotate.setPosition(0.9);
         }
         //Lift
-        lift.extension.setPower((gamepad2.dpad_up) ? 1.0 : (gamepad2.dpad_down) ? -1.0 : 0.0);
+        int liftEnc = lift.extension.getEncoderPosition();
+        telemetry.addData("lift", liftEnc);
+        if (gamepad2.right_stick_y > .8) {
+            lift.extension.setPower((liftEnc > lift.liftBelowHookHeight + 40) ? -1.0 : (liftEnc < lift.liftBelowHookHeight - 40) ? 1.0 : 0.0);
+        } else if (gamepad2.right_stick_y < -.8) {
+            if(automaticHang == 0) {
+                lift.extension.setPower((liftEnc > lift.liftHookHeight + 40) ? -1.0 : (liftEnc < lift.liftHookHeight - 40) ? 1.0 : 0.0);
+                if(liftEnc < lift.liftHookHeight + 40 && liftEnc > lift.liftHookHeight - 40){
+                    automaticHang = 1;
+                }
+            }else if(automaticHang == 1){
+                lift.extension.setPower((liftEnc > lift.liftHangHeight + 40) ? -1.0 : (liftEnc < lift.liftHangHeight - 40) ? 1.0 : 0.0);
+                if(liftEnc < lift.liftHangHeight + 40 && liftEnc > lift.liftHangHeight - 40){
+                    lift.ratchetOff();
+                }
+            }
+        } else {
+            automaticHang = 0;
+            lift.extension.setPower((gamepad2.dpad_up) ? -1.0 : (gamepad2.dpad_down) ? 1.0 : 0.0);
+        }
         //set brdige servo position
         if (!(abs(gamepad2.left_stick_x) < 0.6f && abs(gamepad2.left_stick_y) < 0.6f)) {
 //            if (gamepad2.left_stick_x < -.9) telemetry.addData("bridge ", lift.bridge.setBridge2(0));
 //            if (gamepad2.left_stick_x > .9) telemetry.addData("bridge ", lift.bridge.setBridge2(180));
 
-            telemetry.addData("bride.pos", lift.bridge.setBridge2(Math.toDegrees(atan2(-gamepad2.left_stick_y, -gamepad2.left_stick_x))));
+            telemetry.addData("bridge.pos", lift.bridge.setBridge2(Math.toDegrees(atan2(-gamepad2.left_stick_y, -gamepad2.left_stick_x))));
+            telemetry.addData("bridge.angle", Math.toDegrees(atan2(-gamepad2.left_stick_y, -gamepad2.left_stick_x)));
 //
         }
         telemetry.addData("bridgeServoPos", lift.bridge.bridgeRotate.getCachedPosition());

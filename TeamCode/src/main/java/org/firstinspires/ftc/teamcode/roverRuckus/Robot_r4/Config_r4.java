@@ -11,6 +11,7 @@ import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -130,7 +131,7 @@ abstract class Config_r4 extends PSConfigOpMode {
             markerDepositor.setPosition(1);
         }
         public void unreleaseMarker(){
-            markerDepositor.setPosition(0.35);
+            markerDepositor.setPosition(0.32);
         }
 
 
@@ -253,6 +254,7 @@ abstract class Config_r4 extends PSConfigOpMode {
             shooterLeft = robot.motorHandler.newMotor("C.L", 3.7);
             shooterRight = robot.motorHandler.newMotor("C.R", 3.7);
             collectorRotate = robot.servoHandler.newServo("C.rotate",100,0,false);
+            shooterLeft.motorObject.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
         //set power, reversed
@@ -304,6 +306,10 @@ abstract class Config_r4 extends PSConfigOpMode {
 
         //motors objects for lift
         public PSMotor extension;
+        public int liftExtendTickCount = -8700;
+        public int liftBelowHookHeight = 3500;
+        public int liftHookHeight = 1500;
+        public int liftHangHeight = 6000;
 
         //servo and positions
         public PSServo ratchet;
