@@ -307,9 +307,9 @@ abstract class Config_r4 extends PSConfigOpMode {
         //motors objects for lift
         public PSMotor extension;
         public int liftExtendTickCount = -8700;
-        public int liftBelowHookHeight = 3500;
-        public int liftHookHeight = 1500;
-        public int liftHangHeight = 6000;
+        public int liftBelowHookHeight = 3000;
+        public int liftHookHeight = 1000;
+        public int liftHangHeight = 5500;
 
         //servo and positions
         public PSServo ratchet;

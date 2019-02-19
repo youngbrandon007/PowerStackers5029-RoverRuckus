@@ -41,7 +41,7 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
 
     //states of auto
     enum Tasks {
-        DELAY, UNRATCHET, LAND, DRIVEBACK,  PICTURE, PRETRAJECTORY, TRAJECTORY, IDLE
+        DELAY, UNRATCHET, LAND, DRIVEBACK,  PICTURE, PRETRAJECTORY, TRAJECTORY, FLIPBRIDGE, IDLE
     }
 
     //load opencv for image capture
@@ -199,7 +199,11 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
                         //open marker release
                         drive.releaseMarker();
                         //set bridge positions
-
+                        lift.bridge.setBridge2(160);
+                        lift.extension.setPower(1);
+                        if (lift.extension.getEncoderPosition()>-5500){
+                            lift.extension.setPower(0);
+                        }
                     } else{
                         //if not in marker position
                         //close marker servo
@@ -214,8 +218,16 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
                     task = Tasks.IDLE;
                 }
                 break;
+//            case FLIPBRIDGE:
+//
+//                break;
+
             case IDLE:
-                lift.bridge.setBridge2(160);
+                if (lift.extension.getEncoderPosition()<-9000){
+                    lift.extension.setPower(0);
+                } else {
+                    lift.extension.setPower(-1);
+                }
                 break;
         }
         //show pos

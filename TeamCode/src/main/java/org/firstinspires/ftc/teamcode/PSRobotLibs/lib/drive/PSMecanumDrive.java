@@ -59,6 +59,10 @@ public class PSMecanumDrive extends PSDriveAbstract {
         double speed = mecSpeedFromJoystick(pad);
         double rotation = mecSpinFromJoystick(pad);
 
+        //adjustment
+        speed = .5*Math.pow((2*(speed-.5)),3)+.5;
+//        rotation = (rotation>=0?1:-1)*(Math.pow(Math.abs(rotation),7));
+        rotation *= .5;
         setMecanum(angle, speed, rotation*scale, 1.0);
 
     }
@@ -81,6 +85,10 @@ public class PSMecanumDrive extends PSDriveAbstract {
         double angle = mecDirectionFromJoystick(pad);
         double speed = mecSpeedFromJoystick(pad);
         double rotation = mecSpinFromJoystick(pad);
+
+        //adjustment
+        speed = .5*Math.pow(2*(speed-.5),3)+.5;
+        rotation = (rotation>=0?1:-1)*(Math.pow(Math.abs(rotation),2));
 
         setMecanumThridPerson(angle, speed, rotation*scale, 1, gyroAngle);
     }
@@ -138,7 +146,7 @@ public class PSMecanumDrive extends PSDriveAbstract {
     }
 
     private static double mecSpinFromJoystick(Gamepad pad) {
-        return (abs(pad.right_stick_x) > 0.15f)
+        return (abs(pad.right_stick_x) > 0.05f)
                 ? pad.right_stick_x : 0.0;
     }
 
@@ -148,8 +156,8 @@ public class PSMecanumDrive extends PSDriveAbstract {
 
     private static double mecSpeedFromJoystick(Gamepad pad) {
         // If the joystick is close enough to the middle, return a 0 (no movement)
-        if (abs(pad.left_stick_x) < 0.15f
-                && abs(pad.left_stick_y) < 0.15f) {
+        if (abs(pad.left_stick_x) < 0.05f
+                && abs(pad.left_stick_y) < 0.05f) {
             return 0.0;
         } else {
             return sqrt((pad.left_stick_y * pad.left_stick_y)

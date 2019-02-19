@@ -95,10 +95,10 @@ public class TeleOp_r4 extends Config_r4 {
             //check if third person driving is on
             if (drive.thirdPerson) {
                 //update drive using gyro angle
-                robot.drive.mecanum.updateMecanumThirdPerson(gamepad1, (gamepad1.right_stick_button) ? 1.0 : .5, -Math.toRadians(gyro.getHeading() - cal));
+                robot.drive.mecanum.updateMecanumThirdPerson(gamepad1, (true) ? 1.0 : .5, -Math.toRadians(gyro.getHeading() - cal));
             } else {
                 //udpate drive without third person driving
-                robot.drive.mecanum.updateMecanum(gamepad1, (gamepad1.right_stick_button) ? 1.0 : .5);
+                robot.drive.mecanum.updateMecanum(gamepad1, (true) ? 1.0 : .5);
             }
         }
 
@@ -117,7 +117,7 @@ public class TeleOp_r4 extends Config_r4 {
             collector.shooterLeft.setPower(0);
         }
         //collectory power
-        collector.setCollectorPower(gamepad1.right_trigger - (gamepad1.left_trigger));
+        collector.setCollectorPower(gamepad1.right_trigger+gamepad2.right_trigger - (gamepad1.left_trigger+gamepad2.left_trigger));
 
         //lift/lower collectory
         if (gamepad1.right_bumper || gamepad2.a) {
