@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4;
+package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r5;
 
 import android.graphics.Bitmap;
 
@@ -18,8 +18,8 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 
-@Autonomous(name = "r4.Auto", group = "r4")
-public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
+@Autonomous(name = "r5.Auto", group = "r5")
+public class Auto_r5 extends Config_r5 implements UVCCamera.Callback {
 
     //data form auto app
     String data;
@@ -179,7 +179,7 @@ public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
                 break;
             case PRETRAJECTORY:
                 //build trajectory based on smaple position, same function called by trajectory preview in app
-                trajectory = PathGenerator.BuildPath(data, samplePos, DriveConstants_r4.BASE_CONSTRAINTS);
+                trajectory = PathGenerator.BuildPath(data, samplePos, DriveConstants_r5.BASE_CONSTRAINTS);
 
                 //set follow trajectory
                 drive.followTrajectory(trajectory);

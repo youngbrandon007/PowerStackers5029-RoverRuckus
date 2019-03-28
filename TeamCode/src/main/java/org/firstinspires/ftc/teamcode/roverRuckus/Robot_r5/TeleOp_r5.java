@@ -1,24 +1,21 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4;
+package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r5;
 
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.atan2;
-import static java.lang.Math.sqrt;
 
-@TeleOp(name = "r4.Tele", group = "r4")
-public class TeleOp_r4 extends Config_r4 {
+@TeleOp(name = "r5.Tele", group = "r4")
+public class TeleOp_r5 extends Config_r5 {
 
     //calibaration value for 3rd person driving
     double cal = 0.0;

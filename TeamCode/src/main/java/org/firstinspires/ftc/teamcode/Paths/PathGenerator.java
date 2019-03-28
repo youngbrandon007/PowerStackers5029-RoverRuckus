@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4.Paths;
+package org.firstinspires.ftc.teamcode.Paths;
 
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
 
-import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4.Paths.PathPoints.Points;
-import static org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4.Paths.PathPoints.paths;
+import static org.firstinspires.ftc.teamcode.Paths.PathPoints.Points;
+import static org.firstinspires.ftc.teamcode.Paths.PathPoints.paths;
 
 public class PathGenerator {
 

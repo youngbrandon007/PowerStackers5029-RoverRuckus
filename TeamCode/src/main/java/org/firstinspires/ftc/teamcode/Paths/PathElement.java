@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4.Paths;
+package org.firstinspires.ftc.teamcode.Paths;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;

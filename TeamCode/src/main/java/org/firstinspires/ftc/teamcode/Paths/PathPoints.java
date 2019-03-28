@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4.Paths;
+package org.firstinspires.ftc.teamcode.Paths;
 
 import android.os.Environment;
 

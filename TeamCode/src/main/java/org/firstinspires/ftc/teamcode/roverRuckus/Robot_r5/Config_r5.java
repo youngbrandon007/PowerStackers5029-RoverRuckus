@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4;
+package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r5;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-abstract class Config_r4 extends PSConfigOpMode {
+abstract class Config_r5 extends PSConfigOpMode {
 
     //Organization tree
     Drive drive; //Drive section
@@ -93,9 +93,9 @@ abstract class Config_r4 extends PSConfigOpMode {
         //init
         public Drive() {
             //load super class
-            super(DriveConstants_r4.TRACK_WIDTH);
+            super(DriveConstants_r5.TRACK_WIDTH);
             // load drive constraints from settings app
-            DriveConstants_r4.BASE_CONSTRAINTS = ConstantsLoader.getDriveConstraints();
+            DriveConstants_r5.BASE_CONSTRAINTS = ConstantsLoader.getDriveConstraints();
             // load pid coeffecients
             double[] rotationPID = ConstantsLoader.getRotationPIDVA(); //heading
             double[] motionPID = ConstantsLoader.getMotionPIDVA(); //motion (lateral)
@@ -103,8 +103,8 @@ abstract class Config_r4 extends PSConfigOpMode {
             HEADING_PID = new PIDCoefficients(rotationPID[0], rotationPID[1], rotationPID[2]);
             LATERAL_PID = new PIDCoefficients(motionPID[0], motionPID[1], motionPID[2]);
             //save V and A coeffecients for feed forward
-            DriveConstants_r4.kV = motionPID[3];
-            DriveConstants_r4.kA = motionPID[4];
+            DriveConstants_r5.kV = motionPID[3];
+            DriveConstants_r5.kA = motionPID[4];
 
             //hardware map
             leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT, 20);
@@ -119,7 +119,7 @@ abstract class Config_r4 extends PSConfigOpMode {
 
             //init trajectory foller with both pid and other constants, trajectory added later in auto
             trajectoryFollower = new MecanumPIDVAFollower(this, LATERAL_PID, HEADING_PID,
-                    DriveConstants_r4.kV, DriveConstants_r4.kA, DriveConstants_r4.kStatic);
+                    DriveConstants_r5.kV, DriveConstants_r5.kA, DriveConstants_r5.kStatic);
             //set motor zero power behavoirs, in teleOp this is COAST (for easy control), brake in auto for faster stopping
             for (PSMotor motor : motors) {
                 motor.motorObject.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -148,7 +148,7 @@ abstract class Config_r4 extends PSConfigOpMode {
         public List<Double> getWheelPositions() {
             List<Double> wheelPositions = new ArrayList<>();
             for (PSMotor motor : motors) {
-                wheelPositions.add(DriveConstants_r4.encoderTicksToInches(motor.getEncoderPosition()));
+                wheelPositions.add(DriveConstants_r5.encoderTicksToInches(motor.getEncoderPosition()));
             }
             return wheelPositions;
         }
@@ -168,7 +168,7 @@ abstract class Config_r4 extends PSConfigOpMode {
 
         //create starter of trajecotrybuilder to create trajecotry
         public TrajectoryBuilder trajectoryBuilder() {
-            return new TrajectoryBuilder(getEstimatedPose(), DriveConstants_r4.BASE_CONSTRAINTS);
+            return new TrajectoryBuilder(getEstimatedPose(), DriveConstants_r5.BASE_CONSTRAINTS);
         }
 
         public void followTrajectory(Trajectory trajectory) {
