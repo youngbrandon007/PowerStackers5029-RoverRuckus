@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r5;
 
-import android.support.annotation.NonNull;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,10 +10,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 @TeleOp(name = "Cluster")
 public class ClusterDetection extends LinearOpMode{
@@ -167,18 +162,3 @@ public class ClusterDetection extends LinearOpMode{
     }
 }
 
-class Mineral{
-    public double x;
-    public double y;
-    public double z;
-    public String type;
-    public Recognition obj;
-
-    public Mineral(Recognition rec, double x, double y, double z){
-        this.obj = rec;
-        this.type = rec.getLabel();
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-}
