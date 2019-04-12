@@ -15,6 +15,8 @@ public class PathElement {
     public final static int DELAY = 4;
     public final static int REVERSE = 6;
     public final static int DRIVE = 7;
+    public final static int BEGINCOMPOSITE = 8;
+    public final static int CLOSECOMPOSITE = 9;
     
     public int type;
     private double x;
@@ -67,7 +69,13 @@ public class PathElement {
         return new PathElement[]{new PathElement(DELAY, time, 0, 0, 0)};
     }
 
+    public static PathElement[] newBeginComp(){
+        return new PathElement[]{new PathElement(BEGINCOMPOSITE, 0, 0, 0, 0)};
+    }
 
+    public static PathElement[] newCloseComp(){
+        return new PathElement[]{new PathElement(CLOSECOMPOSITE, 0, 0, 0, 0)};
+    }
 
     //functions
     public Pose2d getPose2d(){

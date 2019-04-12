@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Paths;
 
 import android.os.Environment;
 
+import org.opencv.core.Point;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,9 +56,9 @@ public class PathPoints {
         return getDir("points.txt");
     }
 
-    public static void createPointsFileOneTimeOnly(){
+    public static void overridePoints(){
         ArrayList<String> data = new ArrayList<>();
-        oldPoints();
+        loadPoints();
         for(Map.Entry<Points, PathElement[]> entry : paths.entrySet()){
             Points p = entry.getKey();
             PathElement[] elements = entry.getValue();
@@ -90,38 +92,51 @@ public class PathPoints {
         }
     }
 
-    private static void oldPoints(){
+    private static void loadPoints(){
 
-        //CRATER
+//        //CRATER
+//        paths.clear();
+//        paths.put(Points.STARTCRATER, new PathElement[]{PathElement.newStart(57, 57, 225)});
+//        paths.put(Points.CRATERNOSAMPLE, new PathElement[]{PathElement.newStrafe( 45, 45)});
+//        paths.put(Points.CRATERSAMPLE1, new PathElement[]{PathElement.newStrafe( 35, 55), PathElement.newStrafe(30, 50), PathElement.newStrafe(35, 55)});
+//        paths.put(Points.CRATERSAMPLE2, new PathElement[]{PathElement.newStrafe( 45, 45), PathElement.newStrafe(40, 40), PathElement.newStrafe(45, 45)});
+//        paths.put(Points.CRATERSAMPLE3, new PathElement[]{PathElement.newStrafe( 55, 35), PathElement.newStrafe(50, 30), PathElement.newStrafe(55, 35)});
+//        paths.put(Points.CRATERCLAIM, new PathElement[]{PathElement.newRot(135),PathElement.newSpline(20,120, 60)});
+//
+//        paths.put(Points.PARKFROMDEPOTTOALLIANCECLOSE, new PathElement[]{PathElement.newReverse(true),PathElement.newSpline(12,55, 90)});
+//        paths.put(Points.PARKFROMDEPOTTOALLIANCEFAR, new PathElement[]{PathElement.newReverse(true),PathElement.newSpline(45,45, 135), PathElement.newSpline(60, 12, 90)});
+//        paths.put(Points.PARKFROMDEPOTTOOPPONET, new PathElement[]{PathElement.newRot(45), PathElement.newSpline(84, 132, 0)});
+//
+//        paths.put(Points.PARKFROMCRATERLANDERTOALLIANCECLOSE, new PathElement[]{PathElement.newDrive(12)});
+//
+//        //DEPOT
+//        paths.put(Points.STARTDEPOT, new PathElement[]{PathElement.newStart( 57, 87, 135)});
+//        paths.put(Points.DEPOTNOSAMPLE, new PathElement[]{PathElement.newStrafe( 45, 99)});
+//        paths.put(Points.DEPOTSAMPLE1, new PathElement[]{PathElement.newStrafe( 55, 109), PathElement.newStrafe(50, 114), PathElement.newStrafe(55, 109)});
+//        paths.put(Points.DEPOTSAMPLE2, new PathElement[]{PathElement.newStrafe( 45, 99), PathElement.newStrafe(40, 104), PathElement.newStrafe(45, 99)});
+//        paths.put(Points.DEPOTSAMPLE3, new PathElement[]{PathElement.newStrafe( 35, 89), PathElement.newStrafe(30, 94), PathElement.newStrafe(35, 89)});
+//        paths.put(Points.DEPOTCLAIM, new PathElement[]{PathElement.newStrafe(22, 76), PathElement.newRot(135),PathElement.newSpline(20,120, 60)});
+//
+//        paths.put(Points.PARKFROMDEPOTLANDERTOALLIANCECLOSE, new PathElement[]{PathElement.newRot(225),PathElement.newSpline(12,55, 270)});
+//        paths.put(Points.PARKFROMDEPOTLANDERTOALLIANCEFAR, new PathElement[]{PathElement.newRot(225),PathElement.newStrafe(20,72), PathElement.newRot(315), PathElement.newSpline(60, 12, 270)});
+//        paths.put(Points.PARKFROMDEPOTLANDERTOOPPONET, new PathElement[]{PathElement.newRot(45), PathElement.newSpline(86, 130, 25)});
+
         paths.clear();
+//        paths.put(Points.)
+        //crater
         paths.put(Points.STARTCRATER, new PathElement[]{PathElement.newStart(57, 57, 225)});
-        paths.put(Points.CRATERNOSAMPLE, new PathElement[]{PathElement.newStrafe( 45, 45)});
-        paths.put(Points.CRATERSAMPLE1, new PathElement[]{PathElement.newStrafe( 35, 55), PathElement.newStrafe(27, 47), PathElement.newStrafe(35, 55)});
-        paths.put(Points.CRATERSAMPLE2, new PathElement[]{PathElement.newStrafe( 45, 45), PathElement.newStrafe(37, 37), PathElement.newStrafe(45, 45)});
-        paths.put(Points.CRATERSAMPLE3, new PathElement[]{PathElement.newStrafe( 55, 35), PathElement.newStrafe(47, 27), PathElement.newStrafe(55, 35)});
-        paths.put(Points.CRATERCLAIM, new PathElement[]{PathElement.newRot(135),PathElement.newSpline(20,120, 60)});
+        paths.put(Points.CRATERCLAIM, new PathElement[]{});
+        paths.put(Points.CRATERSAMPLE1, new PathElement[]{});
+        paths.put(Points.CRATERSAMPLE2, new PathElement[]{});
+        paths.put(Points.CRATERSAMPLE3, new PathElement[]{});
 
-        paths.put(Points.CRATERDOUBLESAMPLE1, new PathElement[]{ PathElement.newStrafe(40, 124), PathElement.newStrafe(20,120)});
-        paths.put(Points.CRATERDOUBLESAMPLE2, new PathElement[]{PathElement.newStrafe(30, 114), PathElement.newStrafe(20,120)});
-        paths.put(Points.CRATERDOUBLESAMPLE3, new PathElement[]{PathElement.newStrafe(20, 104), PathElement.newStrafe(20,120)});
 
-        paths.put(Points.PARKFROMDEPOTTOALLIANCECLOSE, new PathElement[]{PathElement.newReverse(true),PathElement.newSpline(12,55, 90)});
-        paths.put(Points.PARKFROMDEPOTTOALLIANCEFAR, new PathElement[]{PathElement.newReverse(true),PathElement.newSpline(45,45, 135), PathElement.newSpline(60, 12, 90)});
-        paths.put(Points.PARKFROMDEPOTTOOPPONET, new PathElement[]{PathElement.newRot(45), PathElement.newSpline(84, 132, 0)});
-
-        paths.put(Points.PARKFROMCRATERLANDERTOALLIANCECLOSE, new PathElement[]{PathElement.newDrive(12)});
-
-        //DEPOT
         paths.put(Points.STARTDEPOT, new PathElement[]{PathElement.newStart( 57, 87, 135)});
-        paths.put(Points.DEPOTNOSAMPLE, new PathElement[]{PathElement.newStrafe( 45, 99)});
-        paths.put(Points.DEPOTSAMPLE1, new PathElement[]{PathElement.newStrafe( 55, 109), PathElement.newStrafe(47, 117), PathElement.newStrafe(55, 109)});
-        paths.put(Points.DEPOTSAMPLE2, new PathElement[]{PathElement.newStrafe( 45, 99), PathElement.newStrafe(37, 107), PathElement.newStrafe(45, 99)});
-        paths.put(Points.DEPOTSAMPLE3, new PathElement[]{PathElement.newStrafe( 35, 89), PathElement.newStrafe(27, 97), PathElement.newStrafe(35, 89)});
-        paths.put(Points.DEPOTCLAIM, new PathElement[]{PathElement.newStrafe(22, 76), PathElement.newRot(135),PathElement.newSpline(20,120, 60)});
+        paths.put(Points.DEPOTSAMPLE1, new PathElement[]{});
+        paths.put(Points.DEPOTSAMPLE2, new PathElement[]{});
+        paths.put(Points.DEPOTSAMPLE3, new PathElement[]{});
+        paths.put(Points.DEPOTCLAIM, new PathElement[]{});
 
-        paths.put(Points.PARKFROMDEPOTLANDERTOALLIANCECLOSE, new PathElement[]{PathElement.newRot(225),PathElement.newSpline(12,55, 270)});
-        paths.put(Points.PARKFROMDEPOTLANDERTOALLIANCEFAR, new PathElement[]{PathElement.newRot(225),PathElement.newStrafe(20,72), PathElement.newRot(315), PathElement.newSpline(60, 12, 270)});
-        paths.put(Points.PARKFROMDEPOTLANDERTOOPPONET, new PathElement[]{PathElement.newRot(45), PathElement.newSpline(86, 130, 25)});
     }
 
     enum Points{
