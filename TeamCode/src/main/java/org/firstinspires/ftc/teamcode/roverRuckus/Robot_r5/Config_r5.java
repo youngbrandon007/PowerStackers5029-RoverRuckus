@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r5;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.acmerobotics.roadrunner.drive.Localizer;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.acmerobotics.roadrunner.followers.MecanumPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
@@ -10,8 +11,10 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -66,7 +69,6 @@ abstract class Config_r5 extends PSConfigOpMode {
         PSMotor rightFront;
         PSMotor leftBack;
         PSMotor rightBack;
-
         //other drivebase motors and servos
         PSServo markerDepositor;
 
@@ -90,6 +92,10 @@ abstract class Config_r5 extends PSConfigOpMode {
         //encoder positions last update to find change
         double[] lastRotations;
 
+        double xPrev = 0;
+        double yPrev = 0;
+        double lastAngle = 0;
+
         //init
         public Drive() {
             //load super class
@@ -105,7 +111,6 @@ abstract class Config_r5 extends PSConfigOpMode {
             //save V and A coeffecients for feed forward
             DriveConstants_r5.kV = motionPID[3];
             DriveConstants_r5.kA = motionPID[4];
-
             //hardware map
             leftFront = robot.motorHandler.newDriveMotor("D.LF", PSEnum.MotorLoc.LEFTFRONT, 20);
             rightFront = robot.motorHandler.newDriveMotor("D.RF", PSEnum.MotorLoc.RIGHTFRONT, 20);
@@ -194,31 +199,60 @@ abstract class Config_r5 extends PSConfigOpMode {
 
         //calculate estimated position using change in encoder values and gro value
         public Pose2d getEstimatedPose() {
-            double[] rotations = new double[4];
+//            double[] rotations = new double[4];
+//
+//            for (int i = 0; i < 4; i++) {
+//                int encoderPosition = motors.get(i).getEncoderPosition();
+//                rotations[i] = driveEncoderTicksToRadians(encoderPosition);
+//
+//            }
+//
+//            if (lastRotations != null) {
+//                double[] rotationDeltas = new double[4];
+//                for (int i = 0; i < 4; i++) {
+//                    rotationDeltas[i] = rotations[i] - lastRotations[i];
+//                }
+//
+//                Vector2d robotPoseDelta = getPoseDelta(rotationDeltas).pos();
+//                Vector2d fieldPoseDelta = robotPoseDelta.rotated(Math.toRadians(gyro.getHeading()));
+//
+//
+//
+//                estimatedPosition = estimatedPosition.plus(fieldPoseDelta);
+//            }
+//            lastRotations = rotations;
+//            return new Pose2d(new Vector2d(estimatedPosition.getX(), estimatedPosition.getY()), Math.toRadians(gyro.getHeading()));
 
-            for (int i = 0; i < 4; i++) {
-                int encoderPosition = motors.get(i).getEncoderPosition();
-                rotations[i] = driveEncoderTicksToRadians(encoderPosition);
-
-            }
-
-            if (lastRotations != null) {
-                double[] rotationDeltas = new double[4];
-                for (int i = 0; i < 4; i++) {
-                    rotationDeltas[i] = rotations[i] - lastRotations[i];
-                }
-
-                Vector2d robotPoseDelta = getPoseDelta(rotationDeltas).pos();
-                Vector2d fieldPoseDelta = robotPoseDelta.rotated(Math.toRadians(gyro.getHeading()));
-
-
-
-                estimatedPosition = estimatedPosition.plus(fieldPoseDelta);
-            }
-            lastRotations = rotations;
-            return new Pose2d(new Vector2d(estimatedPosition.getX(), estimatedPosition.getY()), Math.toRadians(gyro.getHeading()));
+            double yTrackerWheelCounts = collector.shooterRight.getEncoderPosition();
+            double xTrackerWheelCounts = collector.shooterLeft.getEncoderPosition();
+            double yTrackerWheelCountsChange = yTrackerWheelCounts - yPrev;
+            double xTrackerWheelCountsChange = xTrackerWheelCounts - xPrev;
+            double wheelCirm = 3*Math.PI;
+            double yWheelFromCenter = 7.125;
+            double xWheelFromCenter = 7.375;
+            double heading = gyro.getHeading();
+            double angleChange = heading-lastAngle;
+            double xTrackerWheelInches = -((wheelCirm*(xTrackerWheelCountsChange/4096.0))+(xWheelFromCenter*4.0*Math.PI*(angleChange/360.0)));
+            double yTrackerWheelInches = -((wheelCirm*(yTrackerWheelCountsChange/4096.0))-(yWheelFromCenter*4.0*Math.PI*(angleChange/360.0)));
+            xPrev = xTrackerWheelCounts;
+            yPrev = yTrackerWheelCounts;
+            Vector2d change = new Vector2d(xTrackerWheelInches, yTrackerWheelInches);
+            change = change.rotated(Math.toRadians(heading));
+            estimatedPosition = estimatedPosition.plus(change);
+            lastAngle = heading;
+            return new Pose2d(new Vector2d(estimatedPosition.getX(), estimatedPosition.getY()), Math.toRadians(heading));
         }
+        public Pose2d getTrackerWheelPos(){
+            int xTrackerWheelCounts = collector.shooterRight.getEncoderPosition();
+            int yTrackerWheelCounts = collector.shooterLeft.getEncoderPosition();
+            double wheelCirm = 3*Math.PI;
+            double xWheelFromCenter = 7.125;
+            double yWheelFromCenter = 7.375;
+            double xTrackerWheelInches = (wheelCirm/xTrackerWheelCounts)-(xWheelFromCenter*2*Math.PI*(gyro.getAngleChange()/360));
+            double yTrackerWheelInches = wheelCirm/yTrackerWheelCounts-(yWheelFromCenter*2*Math.PI*(gyro.getAngleChange()/360));
 
+            return new Pose2d(xTrackerWheelInches,yTrackerWheelInches,gyro.getHeading());
+        }
         //converting function
         double driveEncoderTicksToRadians(int ticks) {
             double ticksPerRev = 28*20;
@@ -269,39 +303,59 @@ abstract class Config_r5 extends PSConfigOpMode {
         //bridge part of lift
         class Bridge {
             //servo objects
-            public PSServo bridgeRotate;
+            //public PSServo bridgeRotate;
+            public CRServo bridgeLeft;
+            public CRServo bridgeRight;
             public PSServo doorServo;
+            public PSServo canopy;
 
             //servo scalling
             public double[] right = new double[]{0.04, 0.11}; //first value 0 degrees in robot, second 180 degrees toward lander
-//            public double[] left = new double[]{0.75, 0.25}; //second value unused currently only one servo
 
             //init
             public Bridge() {
                 //hardware map
-                bridgeRotate = robot.servoHandler.newServo("L.B.R", 240, .5, false);
+                //bridgeRotate = robot.servoHandler.newServo("L.B.R", 240, .5, false);
                 doorServo = robot.servoHandler.newServo("L.B.D", 140, .5, false);
+                bridgeLeft = hardwareMap.get(CRServo.class, "L.B.L");
+                bridgeRight = hardwareMap.get(CRServo.class, "L.B.R");
+                canopy = robot.servoHandler.newServo("L.B.C", 180, 0, false);
+            }
+
+            public void openBridge(){
+                bridgeRight.setPower(1);
+                bridgeLeft.setPower(-1);
+            }
+
+            public void closeBridge(){
+                bridgeRight.setPower(-1);
+                bridgeLeft.setPower(1);
+            }
+
+            public void stopBridge(){
+                bridgeRight.setPower(0);
+                bridgeLeft.setPower(0);
             }
 
             //old bridge method
-            @Deprecated
-            public void setBridge(double input) {
-                bridgeRotate.setPosition(Math.abs(input));
-            }
-
-            //new bridge with degrees input
-            public double setBridge2(double degrees) {
-                //set range to -90 to 270
-                degrees += (degrees < -90) ? 360 : (degrees > 270) ? -360 : 0;
-                //scale range to two motor settings
-                double r = Range.scale(degrees, 0, 180, right[0], right[1]);
-//                double l = Range.scale(degrees, 0, 180, left[0], left[1]);
-                //output to motors
-                bridgeRotate.setPosition(r);
-                //return value for telemtry
-                return r;
-
-            }
+//            @Deprecated
+//            public void setBridge(double input) {
+//                bridgeRotate.setPosition(Math.abs(input));
+//            }
+//
+//            //new bridge with degrees input
+//            public double setBridge2(double degrees) {
+//                //set range to -90 to 270
+//                degrees += (degrees < -90) ? 360 : (degrees > 270) ? -360 : 0;
+//                //scale range to two motor settings
+//                double r = Range.scale(degrees, 0, 180, right[0], right[1]);
+////                double l = Range.scale(degrees, 0, 180, left[0], left[1]);
+//                //output to motors
+//                bridgeRotate.setPosition(r);
+//                //return value for telemtry
+//                return r;
+//
+//            }
         }
 
         //motors objects for lift
@@ -349,7 +403,8 @@ abstract class Config_r5 extends PSConfigOpMode {
         Orientation angles;
         //Calibration value for auto
         double cal = 0;
-
+        double lastGyroAngle =0 ;
+        double angleChange =0;
         //init
         public Gyro() {
             //init navX
@@ -360,15 +415,21 @@ abstract class Config_r5 extends PSConfigOpMode {
             parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
             gyro = hardwareMap.get(BNO055IMU.class, "gyro");
             gyro.initialize(parameters);
-
+//            lastGyroAngle = getHeading();
+//            angleChange = getHeading()-lastGyroAngle;
         }
 
         //get heading of gyro
         public double getHeading() {
             angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
             return (-angles.firstAngle) + cal;
         }
-
+        public double getAngleChange(){
+            angleChange = getHeading()-lastGyroAngle;
+            lastGyroAngle = getHeading();
+            return angleChange;
+        }
         //get all angles
         public Orientation getOrientation() {
             angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
