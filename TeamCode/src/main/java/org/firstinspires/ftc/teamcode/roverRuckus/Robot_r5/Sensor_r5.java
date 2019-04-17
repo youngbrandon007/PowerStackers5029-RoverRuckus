@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r5;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
-@TeleOp(name = "r5.sensor", group = "r4")
+@TeleOp(name = "r5.sensor", group = "r5")
 
 public class Sensor_r5 extends Config_r5 {
     @Override

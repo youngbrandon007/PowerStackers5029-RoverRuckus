@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.vision.PSVisionUtils;
@@ -19,6 +20,7 @@ import org.opencv.imgproc.Imgproc;
 
 
 @Autonomous(name = "r4.Auto", group = "r4")
+@Disabled
 public class Auto_r4 extends Config_r4 implements UVCCamera.Callback {
 
     //data form auto app

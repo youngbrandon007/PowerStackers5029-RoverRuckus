@@ -5,10 +5,12 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.drive.Localizer;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
+import com.acmerobotics.roadrunner.drive.TwoTrackingWheelLocalizer;
 import com.acmerobotics.roadrunner.followers.MecanumPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
+import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -88,6 +90,7 @@ abstract class Config_r5 extends PSConfigOpMode {
         double PIDoutput = 0.0;
 
         //last estimated position used to find current position
+        Pose2d prevTrackerWheel = new Pose2d(0, 0);
         Vector2d estimatedPosition = new Vector2d(0,0);
         //encoder positions last update to find change
         double[] lastRotations;
@@ -95,6 +98,8 @@ abstract class Config_r5 extends PSConfigOpMode {
         double xPrev = 0;
         double yPrev = 0;
         double lastAngle = 0;
+
+        TrackerWheelLocalizer trackerWheels;
 
         //init
         public Drive() {
@@ -123,12 +128,17 @@ abstract class Config_r5 extends PSConfigOpMode {
             markerDepositor = robot.servoHandler.newServo("D.Marker",180,0.35,true);
 
             //init trajectory foller with both pid and other constants, trajectory added later in auto
+            
             trajectoryFollower = new MecanumPIDVAFollower(this, LATERAL_PID, HEADING_PID,
                     DriveConstants_r5.kV, DriveConstants_r5.kA, DriveConstants_r5.kStatic);
+
+
             //set motor zero power behavoirs, in teleOp this is COAST (for easy control), brake in auto for faster stopping
             for (PSMotor motor : motors) {
                 motor.motorObject.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
+
+            trackerWheels = new TrackerWheelLocalizer();
         }
 
         //Marker positions
@@ -223,24 +233,46 @@ abstract class Config_r5 extends PSConfigOpMode {
 //            lastRotations = rotations;
 //            return new Pose2d(new Vector2d(estimatedPosition.getX(), estimatedPosition.getY()), Math.toRadians(gyro.getHeading()));
 
-            double yTrackerWheelCounts = collector.shooterRight.getEncoderPosition();
-            double xTrackerWheelCounts = collector.shooterLeft.getEncoderPosition();
-            double yTrackerWheelCountsChange = yTrackerWheelCounts - yPrev;
-            double xTrackerWheelCountsChange = xTrackerWheelCounts - xPrev;
-            double wheelCirm = 3*Math.PI;
-            double yWheelFromCenter = 7.125;
-            double xWheelFromCenter = 7.375;
-            double heading = gyro.getHeading();
-            double angleChange = heading-lastAngle;
-            double xTrackerWheelInches = -((wheelCirm*(xTrackerWheelCountsChange/4096.0))+(xWheelFromCenter*4.0*Math.PI*(angleChange/360.0)));
-            double yTrackerWheelInches = -((wheelCirm*(yTrackerWheelCountsChange/4096.0))-(yWheelFromCenter*4.0*Math.PI*(angleChange/360.0)));
-            xPrev = xTrackerWheelCounts;
-            yPrev = yTrackerWheelCounts;
-            Vector2d change = new Vector2d(xTrackerWheelInches, yTrackerWheelInches);
-            change = change.rotated(Math.toRadians(heading));
-            estimatedPosition = estimatedPosition.plus(change);
-            lastAngle = heading;
-            return new Pose2d(new Vector2d(estimatedPosition.getX(), estimatedPosition.getY()), Math.toRadians(heading));
+
+//            //Test two
+//            double yTrackerWheelCounts = collector.shooterRight.getEncoderPosition();
+//            double xTrackerWheelCounts = collector.shooterLeft.getEncoderPosition();
+//            double yTrackerWheelCountsChange = yTrackerWheelCounts - yPrev;
+//            double xTrackerWheelCountsChange = xTrackerWheelCounts - xPrev;
+//            double wheelCirm = 3*Math.PI;
+//            double yWheelFromCenter = 7.125;
+//            double xWheelFromCenter = 7.375;
+//            double heading = gyro.getHeading();
+//            double angleChange = heading-lastAngle;
+//            double xTrackerWheelInches = -((wheelCirm*(xTrackerWheelCountsChange/4096.0))+(xWheelFromCenter*4.0*Math.PI*(angleChange/360.0)));
+//            double yTrackerWheelInches = -((wheelCirm*(yTrackerWheelCountsChange/4096.0))-(yWheelFromCenter*4.0*Math.PI*(angleChange/360.0)));
+//            xPrev = xTrackerWheelCounts;
+//            yPrev = yTrackerWheelCounts;
+//            Vector2d change = new Vector2d(xTrackerWheelInches, yTrackerWheelInches);
+//            change = change.rotated(Math.toRadians(heading));
+//            estimatedPosition = estimatedPosition.plus(change);
+//            lastAngle = heading;
+//            return new Pose2d(new Vector2d(estimatedPosition.getX(), estimatedPosition.getY()), Math.toRadians(heading));
+
+
+
+
+//            double heading = gyro.getHeading();
+//
+//            trackerWheels.update();
+//            Pose2d newPose = trackerWheels.getPoseEstimate();
+//
+//            Vector2d change = new Vector2d(newPose.getX() - prevTrackerWheel.getX(), newPose.getY() - prevTrackerWheel.getY());
+//            change = change.rotated(Math.toRadians(heading));
+//
+//            estimatedPosition = estimatedPosition.plus(change);
+//
+//            prevTrackerWheel = newPose;
+//
+//            return new Pose2d(estimatedPosition.getX(), estimatedPosition.getY(), heading);
+
+            trackerWheels.update();
+            return trackerWheels.getPoseEstimate();
         }
         public Pose2d getTrackerWheelPos(){
             int xTrackerWheelCounts = collector.shooterRight.getEncoderPosition();
@@ -269,6 +301,47 @@ abstract class Config_r5 extends PSConfigOpMode {
             double y = RADIUS * (rot[0] - rot[1] + rot[2] - rot[3]) / 4;
             double h = RADIUS * (-rot[0] - rot[1] - rot[2] - rot[3]) / (4 * K);
             return new Pose2d(x, y, h);
+        }
+
+        public class TrackerWheelLocalizer extends TwoTrackingWheelLocalizer{
+            public double TICKS_PER_REV = 4096;
+            public double WHEEL_RADIUS = 1.5; // in
+            public double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
+
+            public double LATERAL_DISTANCE = 10; // in; distance between the left and right wheels
+            public double FORWARD_OFFSET = 4; // in; offset of the lateral wheel
+
+            public TrackerWheelLocalizer(){
+                super(Arrays.asList(
+                        new Vector2d(0, 7.375),
+                        new Vector2d(-7.125, 0)), Arrays.asList(0.0, Math.PI / 2));
+            }
+
+            @Override
+            public double getHeading() {
+                return Math.toRadians(gyro.getHeading());
+            }
+
+
+            public double encoderTicksToInches(double ticks) {
+                return WHEEL_RADIUS * 2.0 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
+            }
+
+            @NotNull
+            @Override
+            public List<Double> getWheelPositions() {
+
+                //            double yTrackerWheelCounts = collector.shooterRight.getEncoderPosition();
+                //            double xTrackerWheelCounts = collector.shooterLeft.getEncoderPosition();
+                telemetry.addData("X", collector.shooterLeft.getEncoderPosition()) ;
+                telemetry.addData("Y", collector.shooterRight.getEncoderPosition()) ;
+                telemetry.addData("XINCH",encoderTicksToInches(collector.shooterLeft.getEncoderPosition()) );
+                 telemetry.addData("YINCH",encoderTicksToInches(collector.shooterRight.getEncoderPosition()) );
+                return Arrays.asList(
+                        encoderTicksToInches(collector.shooterLeft.getEncoderPosition()),
+                        encoderTicksToInches(collector.shooterRight.getEncoderPosition())
+                );
+            }
         }
     }
 

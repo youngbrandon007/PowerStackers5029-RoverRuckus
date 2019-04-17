@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -18,6 +19,7 @@ import static java.lang.Math.atan2;
 import static java.lang.Math.sqrt;
 
 @TeleOp(name = "r4.Tele", group = "r4")
+@Disabled
 public class TeleOp_r4 extends Config_r4 {
 
     //calibaration value for 3rd person driving

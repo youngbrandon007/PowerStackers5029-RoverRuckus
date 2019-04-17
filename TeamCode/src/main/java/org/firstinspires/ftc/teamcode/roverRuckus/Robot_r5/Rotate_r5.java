@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "t.rot", group = "r4")
-@Disabled
+@TeleOp(name = "t.rot", group = "r5")
+
 public class Rotate_r5 extends Config_r5 {
 
 

@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "t.linex", group = "r4")
-@Disabled
+@TeleOp(name = "t.linex", group = "r5")
+
 public class Line_r5 extends Config_r5 {
 
 
