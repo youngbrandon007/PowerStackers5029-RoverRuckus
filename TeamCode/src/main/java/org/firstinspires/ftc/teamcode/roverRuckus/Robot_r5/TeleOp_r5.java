@@ -30,7 +30,7 @@ public class TeleOp_r5 extends Config_r5 {
     double cal = 0.0;
     //Toggle shooter variable
     private boolean shooterOn = false;
-
+    private boolean collectorLift = false;
     //Automatic drive on/off
     private boolean pathDrive = false;
     //location to automatically drive robot to place
@@ -139,7 +139,7 @@ public class TeleOp_r5 extends Config_r5 {
         }
 
         if(gamepad1.left_bumper || gamepad2.left_bumper){
-            lift.bridge.doorServo.setPosition(.8);
+            lift.bridge.doorServo.setPosition(1);
         }else{
             lift.bridge.doorServo.setPosition(.67);
         }
@@ -147,8 +147,7 @@ public class TeleOp_r5 extends Config_r5 {
         switch (mode){
             case Collect:
                 //collector in/out
-                collector.extension.setPower((gamepad1.dpad_up || gamepad2.right_bumper) ? -1 : ((gamepad1.dpad_down || gamepad2.left_bumper) ? 1 : 0));
-
+                collector.extension.setPower(((gamepad1.dpad_up || gamepad2.right_bumper) ? -1 : ((gamepad1.dpad_down || gamepad2.left_bumper) ? 1 : 0))+gamepad1.right_stick_y);
                 if (gamepad1.x || gamepad2.x) {
                     shooterOn = true;
                 } else if (gamepad1.y || gamepad2.y) {
@@ -178,9 +177,14 @@ public class TeleOp_r5 extends Config_r5 {
                 break;
         }
         Pose2d rob = drive.getEstimatedPose();
+        Pose2d TW = drive.getTrackerWheelPos();
+
         telemetry.addData("POSE.X", rob.getX());
         telemetry.addData("POSE.Y", rob.getY());
         telemetry.addData("POSE.HEADING", rob.getHeading());
+        telemetry.addData("TW.X", TW.getX());
+        telemetry.addData("TW.Y", TW.getY());
+        telemetry.addData("TW.HEADING", TW.getHeading());
 //        double yTrackerWheelCounts = collector.shooterRight.getEncoderPosition();
 //        double xTrackerWheelCounts = collector.shooterLeft.getEncoderPosition();
 //        double yTrackerWheelCountsChange = yTrackerWheelCounts - yPrev;
