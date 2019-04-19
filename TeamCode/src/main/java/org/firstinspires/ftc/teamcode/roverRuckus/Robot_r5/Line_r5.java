@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "t.linex", group = "r5")
-
+@Disabled
 public class Line_r5 extends Config_r5 {
 
 

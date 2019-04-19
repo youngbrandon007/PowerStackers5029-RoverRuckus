@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
 import com.acmerobotics.roadrunner.path.heading.HeadingInterpolator;
+import com.acmerobotics.roadrunner.path.heading.SplineInterpolator;
 
 public class PathElement {
 
@@ -21,60 +22,62 @@ public class PathElement {
     public int type;
     private double x;
     private double y;
-    private double interpolator;
+    private double interpolatorStart;
+    private double interpolatorEnd;
     private double rot;
 
-    public PathElement(int type, double x, double y, double rot , double interpolator){
+    public PathElement(int type, double x, double y, double rot , double interpolatorStart, double interpolatorEnd){
         this.type = type;
         this.x = x;
         this.y = y;
-        this.interpolator = interpolator;
+        this.interpolatorStart = interpolatorStart;
+        this.interpolatorEnd = interpolatorEnd;
         this.rot = rot;
     }
 
     //Statics
     public static PathElement newStart(double x, double y, double head){
-        return new PathElement(START, x, y, head, 0);
+        return new PathElement(START, x, y, head, 0, 0);
     }
 
-    public static PathElement newSpline(double x, double y, double head, double rot){
-        return new PathElement(SPLINEINTERPOLER, x, y, head, rot);
+    public static PathElement newSpline(double x, double y, double head, double start, double end){
+        return new PathElement(SPLINEINTERPOLER, x, y, head, start,end);
     }
 
     public static PathElement newSpline(double x, double y, double head) {
-        return new PathElement(SPLINE, x, y, head, 0);
+        return new PathElement(SPLINE, x, y, head, 0, 0);
     }
 
     public static PathElement newStrafe(double x, double y){
-        return new PathElement(STRAFE, x, y, 0.0, 0);
+        return new PathElement(STRAFE, x, y, 0.0, 0, 0);
     }
 
     public static PathElement newRot(double rot){
-        return new PathElement(ROTATE, 0, 0, rot, 0);
+        return new PathElement(ROTATE, 0, 0, rot, 0, 0);
     }
 
     public static PathElement newDelay(double time){
-        return new PathElement(DELAY, time, 0, 0, 0);
+        return new PathElement(DELAY, time, 0, 0, 0, 0);
     }
 
     public static PathElement newReverse(boolean reversed){
-        return new PathElement(REVERSE, (reversed) ? 1 : 0, 0, 0, 0);
+        return new PathElement(REVERSE, (reversed) ? 1 : 0, 0, 0, 0, 0);
     }
 
     public static PathElement newDrive(double distance){
-        return new PathElement(DRIVE, distance, 0, 0, 0);
+        return new PathElement(DRIVE, distance, 0, 0, 0, 0);
     }
 
     public static PathElement[] newDelayFull(double time){
-        return new PathElement[]{new PathElement(DELAY, time, 0, 0, 0)};
+        return new PathElement[]{new PathElement(DELAY, time, 0, 0, 0, 0)};
     }
 
-    public static PathElement[] newBeginComp(){
-        return new PathElement[]{new PathElement(BEGINCOMPOSITE, 0, 0, 0, 0)};
+    public static PathElement newBeginComp(){
+        return new PathElement(BEGINCOMPOSITE, 0, 0, 0, 0, 0);
     }
 
-    public static PathElement[] newCloseComp(){
-        return new PathElement[]{new PathElement(CLOSECOMPOSITE, 0, 0, 0, 0)};
+    public static PathElement newCloseComp(){
+        return new PathElement(CLOSECOMPOSITE, 0, 0, 0, 0, 0);
     }
 
     //functions
@@ -87,7 +90,7 @@ public class PathElement {
     }
 
     public HeadingInterpolator getInterpolator(){
-        return new ConstantInterpolator(Math.toRadians(interpolator));
+        return new SplineInterpolator(Math.toRadians(interpolatorStart), Math.toRadians(interpolatorEnd));
     }
 
     public double getRot(){
@@ -107,6 +110,6 @@ public class PathElement {
     }
 
     public String toString(){
-        return type + "," + x + "," + y +"," + rot + "," + interpolator;
+        return type + "," + x + "," + y +"," + rot + "," + interpolatorStart + "," + interpolatorEnd;
     }
 }

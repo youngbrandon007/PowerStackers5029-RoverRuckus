@@ -13,7 +13,7 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-@Autonomous(name = "r5.SampleTest", group = "r4")
+@Autonomous(name = "r5.SampleTest", group = "r5")
 
 public class SampleTest_r5 extends Config_r5 implements UVCCamera.Callback{
 
@@ -68,9 +68,9 @@ public class SampleTest_r5 extends Config_r5 implements UVCCamera.Callback{
         Mat hsvMiddle = new Mat();
         Bitmap bmp32 = bm.copy(Bitmap.Config.ARGB_8888, true);
         Utils.bitmapToMat(bmp32, input);
-        Rect rectCrop = new Rect(40, 100 ,160 , 160);
+        Rect rectCrop = new Rect(40, 360 ,160 , 120);
         Mat leftMineral = input.submat(rectCrop);
-        rectCrop = new Rect(440, 150 , 160, 120);
+        rectCrop = new Rect(480, 360 , 160, 120);
         Mat middleMineral = input.submat(rectCrop);
         PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(leftMineral),"R4-left", "/saved_images");
         PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(middleMineral),"R4-middle", "/saved_images");

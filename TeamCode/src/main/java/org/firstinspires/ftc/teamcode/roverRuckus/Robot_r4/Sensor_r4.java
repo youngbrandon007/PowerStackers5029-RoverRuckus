@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
 @TeleOp(name = "r4.sensor", group = "r4")
-
+@Disabled
 public class Sensor_r4 extends Config_r4 {
     @Override
     public void init() {

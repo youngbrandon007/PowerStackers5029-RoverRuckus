@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r5;
 
+import android.graphics.Color;
+import android.os.Environment;
+
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
-import com.acmerobotics.roadrunner.drive.Localizer;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.acmerobotics.roadrunner.drive.TwoTrackingWheelLocalizer;
 import com.acmerobotics.roadrunner.followers.MecanumPIDVAFollower;
@@ -11,14 +13,15 @@ import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.util.Angle;
-import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.lynx.LynxNackException;
+import com.qualcomm.hardware.lynx.commands.core.LynxI2cConfigureChannelCommand;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -27,6 +30,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSConfigOpMode;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSEnum;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.PSRobot;
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.LEDRiver;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSServo;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
@@ -34,8 +38,12 @@ import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveData;
 import org.firstinspires.ftc.teamcode.RobotLive.RobotLiveSend;
 import org.firstinspires.ftc.teamcode.Paths.ConstantsLoader;
 import org.jetbrains.annotations.NotNull;
-import org.opencv.core.Mat;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,6 +58,7 @@ abstract class Config_r5 extends PSConfigOpMode {
     Collector collector; //collector seciton
     Lift lift; // lift section
     Gyro gyro; // gyro object
+    Lights lights;
 
 
     @Override
@@ -65,6 +74,7 @@ abstract class Config_r5 extends PSConfigOpMode {
 
         // create other objects, not inited untill need to save battery
         camera = new Camera();
+        lights = new Lights();
     }
 
     //drive object w/ drive functions and trajectory functions
@@ -95,7 +105,7 @@ abstract class Config_r5 extends PSConfigOpMode {
 
         //last estimated position used to find current position
         Pose2d prevTrackerWheel = new Pose2d(0, 0);
-        Vector2d estimatedPosition = new Vector2d(0,0);
+        Vector2d calibrationPosition = new Vector2d(0,0);
         //encoder positions last update to find change
         double[] lastRotations;
 
@@ -235,10 +245,10 @@ abstract class Config_r5 extends PSConfigOpMode {
 //
 //
 //
-//                estimatedPosition = estimatedPosition.plus(fieldPoseDelta);
+//                calibrationPosition = calibrationPosition.plus(fieldPoseDelta);
 //            }
 //            lastRotations = rotations;
-//            return new Pose2d(new Vector2d(estimatedPosition.getX(), estimatedPosition.getY()), Math.toRadians(gyro.getHeading()));
+//            return new Pose2d(new Vector2d(calibrationPosition.getX(), calibrationPosition.getY()), Math.toRadians(gyro.getHeading()));
 
 
 //            //Test two
@@ -257,9 +267,9 @@ abstract class Config_r5 extends PSConfigOpMode {
 //            yPrev = yTrackerWheelCounts;
 //            Vector2d change = new Vector2d(xTrackerWheelInches, yTrackerWheelInches);
 //            change = change.rotated(Math.toRadians(heading));
-//            estimatedPosition = estimatedPosition.plus(change);
+//            calibrationPosition = calibrationPosition.plus(change);
 //            lastAngle = heading;
-//            return new Pose2d(new Vector2d(estimatedPosition.getX(), estimatedPosition.getY()), Math.toRadians(heading));
+//            return new Pose2d(new Vector2d(calibrationPosition.getX(), calibrationPosition.getY()), Math.toRadians(heading));
 
 
 
@@ -272,14 +282,15 @@ abstract class Config_r5 extends PSConfigOpMode {
 //            Vector2d change = new Vector2d(newPose.getX() - prevTrackerWheel.getX(), newPose.getY() - prevTrackerWheel.getY());
 //            change = change.rotated(Math.toRadians(heading));
 //
-//            estimatedPosition = estimatedPosition.plus(change);
+//            calibrationPosition = calibrationPosition.plus(change);
 //
 //            prevTrackerWheel = newPose;
 //
-//            return new Pose2d(estimatedPosition.getX(), estimatedPosition.getY(), heading);
+//            return new Pose2d(calibrationPosition.getX(), calibrationPosition.getY(), heading);
 
             trackerWheels.update();
-            return trackerWheels.getPoseEstimate();
+            Pose2d trackerWheelPose = trackerWheels.getPoseEstimate();
+            return new Pose2d(trackerWheelPose.getX() + calibrationPosition.getX(),-trackerWheelPose.getY() + calibrationPosition.getY(),Math.toRadians(gyro.getHeading()));
         }
 
         public Pose2d getTrackerWheelPos(){
@@ -298,10 +309,10 @@ abstract class Config_r5 extends PSConfigOpMode {
 //            double yTrackerWheelInches = wheelCirm/yTrackerWheelCounts-(yWheelFromCenter*2*Math.PI*(gyro.getAngleChange()/360));
             double xTrackerWheelRot = xTrackerWheelCounts/4096.0;
             double yTrackerWheelRot = yTrackerWheelCounts/4096.0;
-            telemetry.addData("xEnc", xTrackerWheelCounts);
-            telemetry.addData("yEnc", yTrackerWheelCounts);
-            telemetry.addData("xRot", xTrackerWheelRot);
-            telemetry.addData("yRot", yTrackerWheelRot);
+//            telemetry.addData("xEnc", xTrackerWheelCounts);
+//            telemetry.addData("yEnc", yTrackerWheelCounts);
+//            telemetry.addData("xRot", xTrackerWheelRot);
+//            telemetry.addData("yRot", yTrackerWheelRot);
             double firstWheelRotation = xTrackerWheelRot;
             double secondWheelRotation = yTrackerWheelRot;
             double heading = Math.toRadians(-gyro.getHeading());
@@ -336,12 +347,12 @@ abstract class Config_r5 extends PSConfigOpMode {
 
                 Vector2d robotPoseDelta = new Vector2d(deltaX, deltaY);
                 Vector2d fieldPoseDelta = robotPoseDelta.rotated(heading);
-                estimatedPosition = estimatedPosition.plus(fieldPoseDelta);
+                calibrationPosition = calibrationPosition.plus(fieldPoseDelta);
 
             firstWheelLastRotation = firstWheelRotation;
             secondWheelLastRotation = secondWheelRotation;
             lastAngle = heading;
-            estimatedPose = new Pose2d(estimatedPosition, Math.toDegrees(heading));
+            estimatedPose = new Pose2d(calibrationPosition, Math.toDegrees(heading));
             return estimatedPose;
         }
         //converting function
@@ -390,10 +401,10 @@ abstract class Config_r5 extends PSConfigOpMode {
 
                 //            double yTrackerWheelCounts = collector.shooterRight.getEncoderPosition();
                 //            double xTrackerWheelCounts = collector.shooterLeft.getEncoderPosition();
-                telemetry.addData("X", collector.shooterLeft.getEncoderPosition()) ;
-                telemetry.addData("Y", collector.shooterRight.getEncoderPosition()) ;
-                telemetry.addData("XINCH",encoderTicksToInches(collector.shooterLeft.getEncoderPosition()) );
-                 telemetry.addData("YINCH",encoderTicksToInches(collector.shooterRight.getEncoderPosition()) );
+//                telemetry.addData("X", collector.shooterLeft.getEncoderPosition()) ;
+//                telemetry.addData("Y", collector.shooterRight.getEncoderPosition()) ;
+//                telemetry.addData("XINCH",encoderTicksToInches(collector.shooterLeft.getEncoderPosition()) );
+//                 telemetry.addData("YINCH",encoderTicksToInches(collector.shooterRight.getEncoderPosition()) );
                 return Arrays.asList(
                         encoderTicksToInches(-collector.shooterLeft.getEncoderPosition()),
                         encoderTicksToInches(collector.shooterRight.getEncoderPosition())
@@ -434,8 +445,8 @@ abstract class Config_r5 extends PSConfigOpMode {
         class Bridge {
             //servo objects
             //public PSServo bridgeRotate;
-            public CRServo bridgeLeft;
-            public CRServo bridgeRight;
+            public PSServo bridgeLeft;
+            public PSServo bridgeRight;
             public PSServo doorServo;
             public PSServo canopy;
 
@@ -447,24 +458,24 @@ abstract class Config_r5 extends PSConfigOpMode {
                 //hardware map
                 //bridgeRotate = robot.servoHandler.newServo("L.B.R", 240, .5, false);
                 doorServo = robot.servoHandler.newServo("L.B.D", 140, .5, false);
-                bridgeLeft = hardwareMap.get(CRServo.class, "L.B.L");
-                bridgeRight = hardwareMap.get(CRServo.class, "L.B.R");
+                bridgeLeft = robot.servoHandler.newServo("L.B.L", 180, 0.5, false);
+                bridgeRight = robot.servoHandler.newServo("L.B.R", 180, 0.5, false);
                 canopy = robot.servoHandler.newServo("L.B.C", 180, 0, false);
             }
 
             public void openBridge(){
-                bridgeRight.setPower(1);
-                bridgeLeft.setPower(-1);
+                bridgeRight.setPosition(1);
+                bridgeLeft.setPosition(0);
             }
 
             public void closeBridge(){
-                bridgeRight.setPower(-1);
-                bridgeLeft.setPower(1);
+                bridgeRight.setPosition(0);
+                bridgeLeft.setPosition(1);
             }
 
             public void stopBridge(){
-                bridgeRight.setPower(0);
-                bridgeLeft.setPower(0);
+                bridgeRight.off();
+                bridgeLeft.off();
             }
 
             //old bridge method
@@ -624,6 +635,171 @@ abstract class Config_r5 extends PSConfigOpMode {
                 //remove storage of camera
                 camera = null;
             }
+        }
+    }
+
+    public void savePosition(){
+
+        Pose2d pos = drive.getEstimatedPose();
+        Long mill = System.currentTimeMillis();
+        String line = pos.getX() + "," + pos.getY() + "," + pos.getHeading() + "," + mill + "," + collector.extension.getEncoderPosition();
+        try {
+
+            File f = new File(getDir("transitionPosition.txt"));
+            if(f.exists()) f.delete();
+            f.createNewFile();
+            FileOutputStream fOut = new FileOutputStream(f);
+            OutputStreamWriter out = new OutputStreamWriter(fOut);
+
+            out.append(line);
+            out.close();
+            fOut.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Pose2d getSavedPosition(){
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File(getDir("transitionPosition.txt"))));
+            String[] line = br.readLine().split(",");
+            Pose2d pos = new Pose2d(Double.valueOf(line[0]), -Double.valueOf(line[1]), -Double.valueOf(line[2]));
+            br.close();
+            return pos;
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Long getSavedTime(){
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File(getDir("transitionPosition.txt"))));
+            String[] line = br.readLine().split(",");
+            Long time = Long.valueOf(line[3]);
+            br.close();
+            return time;
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public int getExtEncoderPos(){
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File(getDir("transitionPosition.txt"))));
+            String[] line = br.readLine().split(",");
+            int pos = Integer.valueOf(line[4]);
+            br.close();
+            return pos;
+        }catch(Exception e){
+            e.printStackTrace();
+            return -1500;
+        }
+    }
+
+    private static String getDir(String file){
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/auto/" + file;
+    }
+
+    public void setColor(String color){
+        try {
+
+            File f = new File(getDir("lightColor.txt"));
+            if(f.exists()) f.delete();
+            f.createNewFile();
+            FileOutputStream fOut = new FileOutputStream(f);
+            OutputStreamWriter out = new OutputStreamWriter(fOut);
+
+            out.append(color);
+            out.close();
+            fOut.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getColor(){
+        try {
+            FileReader fileReader = new FileReader(new File(getDir("lightColor.txt")));
+            BufferedReader br = new BufferedReader(fileReader);
+            String pos = br.readLine();
+            br.close();
+            fileReader.close();
+            return pos;
+        }catch(Exception e){
+            e.printStackTrace();
+            return "red";
+        }
+    }
+
+    class Lights{
+        LynxModule revHub;
+        LEDRiver ledRiver;
+
+        String allianceColor = "red";
+        public Lights(){
+            revHub = hardwareMap.get(LynxModule.class, "Rev Expansion Hub 2");
+            try {
+                new LynxI2cConfigureChannelCommand(revHub, 1, LynxI2cConfigureChannelCommand.SpeedCode.FAST_400K).send();
+            } catch (LynxNackException | InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            ledRiver = hardwareMap.get(LEDRiver.IMPL, "LEDriver");
+            ledRiver.setMode(LEDRiver.Mode.SOLID);
+            ledRiver.setLEDMode(LEDRiver.LEDMode.RGB);
+            ledRiver.setColorDepth(LEDRiver.ColorDepth.BIT_24);
+            ledRiver.setColor(0, new LEDRiver.Color(255, 0, 0, 0));
+            ledRiver.setColor(1,  new LEDRiver.Color(255, 255, 0, 0));
+            ledRiver.setColor(2,  new LEDRiver.Color(0, 255, 0, 0));
+
+            ledRiver.apply();
+        }
+
+        public void loadTeamColor(){
+            allianceColor = getColor();
+        }
+
+        public void load(){
+            ledRiver.setLEDCount(125);
+            ledRiver.save();
+        }
+
+        public void solid(LEDRiver.Color color){
+            ledRiver.setMode(LEDRiver.Mode.SOLID).setColor(color);
+            ledRiver.apply();
+        }
+
+        public void setTeamColor(){
+            if(allianceColor.equals( "red")){
+                solid(new LEDRiver.Color(255, 0, 0, 0));
+            }else{
+                solid(new LEDRiver.Color(0, 0, 255, 0));
+            }
+        }
+
+        public void setBrightness(double value){
+            ledRiver.setBrightness(value);
+            ledRiver.apply();
+        }
+
+        public void theatre(){
+            if(allianceColor.equals("red")){
+                ledRiver.setColor(0, new LEDRiver.Color(255, 0, 0, 0));
+                ledRiver.setColor(1,  new LEDRiver.Color(255, 127, 0, 0));
+                ledRiver.setColor(2,  new LEDRiver.Color(255, 255, 0, 0));
+                ledRiver.apply();
+            }else{
+                ledRiver.setColor(0, new LEDRiver.Color(0, 0, 255, 0));
+                ledRiver.setColor(1,  new LEDRiver.Color(0, 255, 255, 0));
+                ledRiver.setColor(2,  new LEDRiver.Color(0, 255, 0, 0));
+                ledRiver.apply();
+            }
+            ledRiver.setMode(LEDRiver.Mode.PATTERN);
+            ledRiver.setPattern(LEDRiver.Pattern.THEATRE_RUNNING.builder());
+            ledRiver.apply();
         }
     }
 }

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4;
 import android.graphics.Bitmap;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.utils.vision.PSVisionUtils;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.vision.UVC.UVCCamera;
@@ -14,7 +15,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 @Autonomous(name = "r4.SampleTest", group = "r4")
-
+@Disabled
 public class SampleTest_r4 extends Config_r4 implements UVCCamera.Callback{
 
     //General

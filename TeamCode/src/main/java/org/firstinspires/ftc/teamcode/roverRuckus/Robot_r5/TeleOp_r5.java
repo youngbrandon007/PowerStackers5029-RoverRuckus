@@ -10,12 +10,12 @@ import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.LEDRiver;
 import org.firstinspires.ftc.teamcode.PSRobotLibs.lib.hardware.PSMotor;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.atan2;
 
-@TeleOp(name = "r5.Tele", group = "r4")
+@TeleOp(name = "r5.Tele", group = "r5")
 public class TeleOp_r5 extends Config_r5 {
 
     private double lastAngle =0;
@@ -53,6 +53,8 @@ public class TeleOp_r5 extends Config_r5 {
 
     Action action = Action.PICK;
 
+    long startTime;
+
     //init
     @Override
     public void init() {
@@ -68,7 +70,40 @@ public class TeleOp_r5 extends Config_r5 {
         for (PSMotor motor : drive.motors) {
             motor.motorObject.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
+
+        //drive.calibrationPosition = new Vector2d(57, 57);
+        Pose2d savedPosition = getSavedPosition();
+        gyro.cal = Math.toDegrees(-savedPosition.getHeading());
+
+        drive.trackerWheels.setPoseEstimate(savedPosition);
         //telemetry.addData("bridge.pos", lift.bridge.setBridge2(Math.toDegrees(atan2(-0, -1))));
+
+        startTime = getSavedTime();
+
+        lift.bridge.canopy.setPosition(0);
+    }
+
+    @Override
+    public void init_loop(){
+        long now = System.currentTimeMillis();
+        if(startTime + 35 > now && startTime + 36 < now){
+            lights.setBrightness(0);
+            lights.solid(new LEDRiver.Color(255, 0, 0 ,0));
+        }
+        if(startTime + 36 > now && startTime + 37 < now){
+            lights.setBrightness(0);
+            lights.solid(new LEDRiver.Color(255, 255, 0 ,0));
+        }
+        if(startTime + 37 > now && startTime + 38 < now){
+            lights.setBrightness(0);
+            lights.solid(new LEDRiver.Color(0, 255, 0 ,0));
+        }
+
+    }
+
+    @Override
+    public void start(){
+        lights.setTeamColor();
     }
 
     //loop
@@ -93,13 +128,13 @@ public class TeleOp_r5 extends Config_r5 {
             case PICK:
                 robot.drive.mecanum.updateMecanum(gamepad1, 1.0);
                 if(gamepad1.right_stick_button){
-                    drive.estimatedPosition = new Vector2d(0, 0);
-                    gyro.cal = 225;
+                    //drive.calibrationPosition = new Vector2d(0, 0);
+                    placePos = drive.getEstimatedPose();
                 }
                 if(gamepad1.dpad_right){
-                    trajectory = new TrajectoryBuilder(drive.getEstimatedPose(), new DriveConstraints(50.0, 70.0, 2, 3))
+                    trajectory = new TrajectoryBuilder(drive.getEstimatedPose(), DriveConstants_r5.BASE_CONSTRAINTS)
                             // .lineTo(new Vector2d(0, 0),LinearInterpolator(drive.getEstimatedPose().getHeading(), 0))
-                            .lineTo(new Vector2d(0,0), new SplineInterpolator(drive.getEstimatedPose().getHeading(), Math.toRadians(225)))
+                            .lineTo(placePos.pos(), new SplineInterpolator(drive.getEstimatedPose().getHeading(), placePos.getHeading()))
                             .build();
 
                     drive.followTrajectory(trajectory);
@@ -118,13 +153,15 @@ public class TeleOp_r5 extends Config_r5 {
         }
 
         telemetry.addData("Action", action);
+        telemetry.addData("Error", drive.getFollowingError());
+        telemetry.addData("pose", drive.getEstimatedPose());
 
-        lift.extension.setPower((gamepad2.dpad_up) ? -1.0 : (gamepad2.dpad_down) ? 1.0 : 0.0);
+        lift.extension.setPower((gamepad2.dpad_up || (mode == TeleMode.Hang) ? gamepad1.dpad_up : false) ? -1.0 : (gamepad2.dpad_down || (mode == TeleMode.Hang) ? gamepad1.dpad_down : false) ? 1.0 : 0.0);
 
         if(gamepad2.right_stick_x > .8){
             lift.bridge.openBridge();
             telemetry.addData("S","Open");
-        }else if(gamepad2.left_stick_x < -.8){
+        }else if(gamepad2.right_stick_x < -.8){
             lift.bridge.closeBridge();
             telemetry.addData("S","Close");
         }else{
@@ -171,20 +208,19 @@ public class TeleOp_r5 extends Config_r5 {
                 }
                 break;
             case Hang:
-                lift.extension.setPower((gamepad1.dpad_up) ? -1.0 : (gamepad1.dpad_down) ? 1.0 : 0.0);
                 break;
             case AutoPlace:
                 break;
         }
-        Pose2d rob = drive.getEstimatedPose();
-        Pose2d TW = drive.getTrackerWheelPos();
-
-        telemetry.addData("POSE.X", rob.getX());
-        telemetry.addData("POSE.Y", rob.getY());
-        telemetry.addData("POSE.HEADING", rob.getHeading());
-        telemetry.addData("TW.X", TW.getX());
-        telemetry.addData("TW.Y", TW.getY());
-        telemetry.addData("TW.HEADING", TW.getHeading());
+//        Pose2d rob = drive.getEstimatedPose();
+//        Pose2d TW = drive.getTrackerWheelPos();
+//
+//        telemetry.addData("POSE.X", rob.getX());
+//        telemetry.addData("POSE.Y", rob.getY());
+//        telemetry.addData("POSE.HEADING", rob.getHeading());
+//        telemetry.addData("TW.X", TW.getX());
+//        telemetry.addData("TW.Y", TW.getY());
+//        telemetry.addData("TW.HEADING", TW.getHeading());
 //        double yTrackerWheelCounts = collector.shooterRight.getEncoderPosition();
 //        double xTrackerWheelCounts = collector.shooterLeft.getEncoderPosition();
 //        double yTrackerWheelCountsChange = yTrackerWheelCounts - yPrev;

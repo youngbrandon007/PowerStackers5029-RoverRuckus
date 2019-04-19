@@ -25,7 +25,7 @@ public class PathPoints {
             PathElement[] elements = new PathElement[pointArray.length - 1];
             for(int i = 0; i < elements.length; i++){
                 String[] elementArray = pointArray[i + 1].split(",");
-                elements[i] = new PathElement(Integer.valueOf(elementArray[0]), Double.valueOf(elementArray[1]),  Double.valueOf(elementArray[2]),  Double.valueOf(elementArray[3]),  Double.valueOf(elementArray[4]));
+                elements[i] = new PathElement(Integer.valueOf(elementArray[0]), Double.valueOf(elementArray[1]),  Double.valueOf(elementArray[2]),  Double.valueOf(elementArray[3]),  Double.valueOf(elementArray[4]), Double.valueOf(elementArray[5]));
             }
 
             paths.put(Points.valueOf(name), elements);
@@ -125,10 +125,10 @@ public class PathPoints {
 //        paths.put(Points.)
         //crater
         paths.put(Points.STARTCRATER, new PathElement[]{PathElement.newStart(57, 57, 225)});
-        paths.put(Points.CRATERCLAIM, new PathElement[]{});
-        paths.put(Points.CRATERSAMPLE1, new PathElement[]{});
-        paths.put(Points.CRATERSAMPLE2, new PathElement[]{});
-        paths.put(Points.CRATERSAMPLE3, new PathElement[]{});
+        paths.put(Points.CRATERCLAIM, new PathElement[]{PathElement.newBeginComp(),PathElement.newDrive(4),PathElement.newSpline(33, 60, 135, 225, 250), PathElement.newSpline(9, 90, 90, 225, 270), PathElement.newSpline(20, 120, 70, 270, 250), PathElement.newCloseComp(), PathElement.newSpline(20,120, 250, 250, 250)});//PathElement.newSpline(30, 57, 135)
+        paths.put(Points.CRATERSAMPLE1, new PathElement[]{PathElement.newBeginComp(), PathElement.newSpline(14, 90, 270, 250, 270), PathElement.newSpline(26, 64, 315, 270, 250), PathElement.newSpline(30, 46, 225, 250, 225), PathElement.newCloseComp()});
+        paths.put(Points.CRATERSAMPLE2, new PathElement[]{PathElement.newBeginComp(), PathElement.newSpline(14, 90, 270, 250, 270), PathElement.newSpline(26, 64, 315, 270, 250), PathElement.newSpline(44, 56, 225, 225, 225), PathElement.newSpline(38, 38, 225, 250, 225), PathElement.newCloseComp()});
+        paths.put(Points.CRATERSAMPLE3, new PathElement[]{PathElement.newBeginComp(), PathElement.newSpline(14, 90, 270, 250, 270), PathElement.newSpline(26, 64, 315, 270, 250),  PathElement.newSpline(44, 56, 225, 225, 225), PathElement.newSpline(56, 44, 225, 225, 225),PathElement.newSpline(46, 30, 225, 250, 225), PathElement.newCloseComp()});
 
 
         paths.put(Points.STARTDEPOT, new PathElement[]{PathElement.newStart( 57, 87, 135)});

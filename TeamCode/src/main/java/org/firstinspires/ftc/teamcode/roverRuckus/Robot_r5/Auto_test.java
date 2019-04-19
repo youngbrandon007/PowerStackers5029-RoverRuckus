@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous(name="TransitionTest", group = "r4")
+@Disabled
 public class Auto_test extends Config_r5 {
 
     Trajectory trajectory;
@@ -69,7 +71,7 @@ public class Auto_test extends Config_r5 {
         telemetry.update();
         AutoTransitioner.transitionOnStop(this, "r5.Tele");
 
-        drive.estimatedPosition = new Vector2d(48, 48);
+        drive.calibrationPosition = new Vector2d(48, 48);
         gyro.cal = 225;
     }
 
@@ -157,7 +159,7 @@ public class Auto_test extends Config_r5 {
             case PICK:
                 robot.drive.mecanum.updateMecanum(gamepad1, 1.0);
                 if(gamepad1.x){
-                    drive.estimatedPosition = new Vector2d(48, 48);
+                    drive.calibrationPosition = new Vector2d(48, 48);
                     gyro.cal = 225;
                 }
                 if(gamepad1.b){

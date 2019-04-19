@@ -22,7 +22,7 @@ public class LEDRiverTesting extends LinearOpMode {
         }
 
         LEDRiver ledRiver = hardwareMap.get(LEDRiver.IMPL, "LEDriver");
-        ledRiver.setLEDCount(300);
+        ledRiver.setLEDCount(110);
         ledRiver.save();
         ledRiver.setMode(LEDRiver.Mode.SOLID);
         ledRiver.setLEDMode(LEDRiver.LEDMode.RGB);

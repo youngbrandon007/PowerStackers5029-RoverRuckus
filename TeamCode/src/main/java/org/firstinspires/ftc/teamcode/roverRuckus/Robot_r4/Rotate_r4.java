@@ -33,7 +33,7 @@ public class Rotate_r4 extends Config_r4 {
     @Override
     public void start() {
         Trajectory trajectory = drive.trajectoryBuilder()
-                .turn(Math.toRadians(270))
+                .turn(Math.toRadians(180))
                 .build();
 
         drive.followTrajectory(trajectory);

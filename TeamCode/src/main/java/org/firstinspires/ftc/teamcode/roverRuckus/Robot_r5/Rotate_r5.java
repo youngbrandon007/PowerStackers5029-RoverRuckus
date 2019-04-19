@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "t.rot", group = "r5")
-
+@Disabled
 public class Rotate_r5 extends Config_r5 {
 
 
@@ -32,7 +32,7 @@ public class Rotate_r5 extends Config_r5 {
     @Override
     public void start() {
         Trajectory trajectory = drive.trajectoryBuilder()
-                .turn(Math.toRadians(270))
+                .turn(Math.toRadians(180))
                 .build();
 
         drive.followTrajectory(trajectory);

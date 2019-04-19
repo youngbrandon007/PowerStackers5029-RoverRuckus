@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r5;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TeleOp(name = "Cluster")
+@Disabled
 public class ClusterDetection extends LinearOpMode{
 
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";

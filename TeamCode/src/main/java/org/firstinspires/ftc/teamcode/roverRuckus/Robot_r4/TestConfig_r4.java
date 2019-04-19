@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.roverRuckus.Robot_r4;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "r4.Config",group = "r4")
+@Disabled
 public class TestConfig_r4 extends OpMode{
 
     @Override
