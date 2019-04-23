@@ -33,15 +33,22 @@ public class PreAuto extends Config_r5{
 
         AutoTransitioner.transitionOnStop(this, "r5.Auto");
 
-        lights.load();
-
-        lights.solid(new LEDRiver.Color(0, 255, 0, 0));
-        lights.setBrightness(7);
+//        lights.load();
+//
+//        lights.solid(new LEDRiver.Color(0, 255, 0, 0));
+//        lights.setBrightness(7);
+        drive.unreleaseMarker();
     }
 
     @Override
     public void loop() {
         robot.drive.mecanum.updateMecanum(gamepad1, 1.0);
+
+        if(gamepad1.right_trigger > .5){
+            drive.releaseMarker();
+        }else{
+            drive.unreleaseMarker();
+        }
 
         if(gamepad2.right_stick_x > .8){
             lift.bridge.openBridge();
@@ -68,21 +75,21 @@ public class PreAuto extends Config_r5{
 
         if(gamepad1.x){
             setColor("blue");
-            lights.loadTeamColor();
+            //lights.loadTeamColor();
             telemetry.addData("Change", "blue");
         }
         if(gamepad1.b){
             setColor("red");
-            lights.loadTeamColor();
+            //lights.loadTeamColor();
             telemetry.addData("Change", "red");
         }
 
-        telemetry.addData("Team Color",  "-" + lights.allianceColor + "-");
+        //telemetry.addData("Team Color",  "-" + lights.allianceColor + "-");
 
-        lights.setTeamColor();
+        //lights.setTeamColor();
 
         lift.extension.setPower((gamepad1.dpad_up || gamepad2.dpad_up) ? -1.0 : (gamepad1.dpad_down || gamepad2.dpad_down) ? 1.0 : 0.0);
-        collector.extension.setPower(((gamepad1.dpad_up || gamepad2.right_bumper) ? -1 : ((gamepad1.dpad_down || gamepad2.left_bumper) ? 1 : 0))+gamepad1.right_stick_y);
+        collector.extension.setPower(((gamepad2.right_bumper) ? -1 : ((gamepad2.left_bumper) ? 1 : 0))+gamepad1.right_stick_y);
 
     }
 

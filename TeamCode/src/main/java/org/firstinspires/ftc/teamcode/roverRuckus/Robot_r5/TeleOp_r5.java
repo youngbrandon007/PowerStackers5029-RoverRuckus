@@ -18,9 +18,14 @@ import static java.lang.Math.abs;
 @TeleOp(name = "r5.Tele", group = "r5")
 public class TeleOp_r5 extends Config_r5 {
 
-    private double lastAngle =0;
+    private double lastAngle = 0;
+    private boolean autoPlaceInPos = false;
+    private double slidePos = 0;
+    private double autoSlidePower;
+    private boolean toggleCollectorLift = false;
+    private boolean autoSlide = false;
 
-    enum TeleMode{
+    enum TeleMode {
         Collect,
         Hang,
         AutoPlace
@@ -47,7 +52,7 @@ public class TeleOp_r5 extends Config_r5 {
     double yPrev = 0;
     Vector2d position = new Vector2d(0, 0);
 
-    enum Action{
+    enum Action {
         PICK, DRIVETOPLACE
     }
 
@@ -84,26 +89,28 @@ public class TeleOp_r5 extends Config_r5 {
     }
 
     @Override
-    public void init_loop(){
-        long now = System.currentTimeMillis();
-        if(startTime + 35 > now && startTime + 36 < now){
-            lights.setBrightness(0);
-            lights.solid(new LEDRiver.Color(255, 0, 0 ,0));
-        }
-        if(startTime + 36 > now && startTime + 37 < now){
-            lights.setBrightness(0);
-            lights.solid(new LEDRiver.Color(255, 255, 0 ,0));
-        }
-        if(startTime + 37 > now && startTime + 38 < now){
-            lights.setBrightness(0);
-            lights.solid(new LEDRiver.Color(0, 255, 0 ,0));
-        }
+    public void init_loop() {
+        double timeFromStartOfMatch = (System.currentTimeMillis() - startTime) / 1000;
+        telemetry.addData("Time", timeFromStartOfMatch);
+        telemetry.update();
+//        if (5 < timeFromStartOfMatch && 6 > timeFromStartOfMatch) {
+//            lights.setBrightness(0);
+//            lights.solid(new LEDRiver.Color(255, 0, 0, 0));
+//        }
+//        if (6 < timeFromStartOfMatch && 7 < timeFromStartOfMatch) {
+//            lights.setBrightness(0);
+//            lights.solid(new LEDRiver.Color(255, 255, 0, 0));
+//        }
+//        if (7 < timeFromStartOfMatch && 8 > timeFromStartOfMatch) {
+//            lights.setBrightness(0);
+//            lights.solid(new LEDRiver.Color(0, 255, 0, 0));
+//        }
 
     }
 
     @Override
-    public void start(){
-        lights.setTeamColor();
+    public void start() {
+//        lights.setTeamColor();
     }
 
     //loop
@@ -112,11 +119,10 @@ public class TeleOp_r5 extends Config_r5 {
         //thrid person driving, disable if driver prefers
 
 
-
-        if(gamepad1.a){
+        if (gamepad1.a) {
             mode = TeleMode.Collect;
         }
-        if(gamepad1.b){
+        if (gamepad1.b) {
             mode = TeleMode.Hang;
         }
         telemetry.addData("Mode", mode);
@@ -124,17 +130,34 @@ public class TeleOp_r5 extends Config_r5 {
 
 
         //actions
-        switch(action){
+        switch (action) {
             case PICK:
-                robot.drive.mecanum.updateMecanum(gamepad1, 1.0);
-                if(gamepad1.right_stick_button){
+                if (gamepad1.left_stick_button) {
+                    drive.thirdPerson = true;
+                    cal = gyro.getHeading();
+                }
+                if (gamepad1.a) {
+                    drive.thirdPerson = false;
+                }
+                if (drive.thirdPerson) {
+                    robot.drive.mecanum.updateMecanumThirdPerson(gamepad1, (mode == TeleMode.Hang) ? 1.0 : .5, -Math.toRadians(gyro.getHeading() - cal));
+
+                } else {
+                    robot.drive.mecanum.updateMecanum(gamepad1, (mode == TeleMode.Hang) ? 0.5 : 1);
+
+                }
+                if (gamepad1.right_stick_button) {
                     //drive.calibrationPosition = new Vector2d(0, 0);
                     placePos = drive.getEstimatedPose();
+                    slidePos = collector.extension.getEncoderPosition();
                 }
-                if(gamepad1.dpad_right){
+                if (gamepad1.dpad_right) {
                     trajectory = new TrajectoryBuilder(drive.getEstimatedPose(), DriveConstants_r5.BASE_CONSTRAINTS)
                             // .lineTo(new Vector2d(0, 0),LinearInterpolator(drive.getEstimatedPose().getHeading(), 0))
+//                            .beginComposite()
+//                            .lineTo(new Vector2d(placePos.getX() - 10, placePos.getY() - 10), new SplineInterpolator(drive.getEstimatedPose().getHeading(), placePos.getHeading()))
                             .lineTo(placePos.pos(), new SplineInterpolator(drive.getEstimatedPose().getHeading(), placePos.getHeading()))
+//                            .closeComposite()
                             .build();
 
                     drive.followTrajectory(trajectory);
@@ -146,7 +169,13 @@ public class TeleOp_r5 extends Config_r5 {
             case DRIVETOPLACE:
                 if (drive.isFollowingTrajectory()) {
                     drive.update();
-                }else{
+                    if (collector.extension.getEncoderPosition() < slidePos) {
+                        autoSlidePower = 1;
+                    } else {
+                        autoSlidePower = 0;
+                    }
+                } else {
+
                     action = Action.PICK;
                 }
                 break;
@@ -157,34 +186,63 @@ public class TeleOp_r5 extends Config_r5 {
         telemetry.addData("pose", drive.getEstimatedPose());
 
         lift.extension.setPower((gamepad2.dpad_up || (mode == TeleMode.Hang) ? gamepad1.dpad_up : false) ? -1.0 : (gamepad2.dpad_down || (mode == TeleMode.Hang) ? gamepad1.dpad_down : false) ? 1.0 : 0.0);
+        collector.extension.setPower(((gamepad2.right_bumper) ? -1 : ((gamepad2.left_bumper) ? 1 : 0)) + ((Math.abs(gamepad1.right_stick_y) > 0.5) ? gamepad1.right_stick_y : 0) + autoSlidePower);
 
-        if(gamepad2.right_stick_x > .8){
+        if (gamepad2.right_stick_x > .8)
+
+        {
             lift.bridge.openBridge();
-            telemetry.addData("S","Open");
-        }else if(gamepad2.right_stick_x < -.8){
+            telemetry.addData("S", "Open");
+        } else if (gamepad2.right_stick_x < -.8)
+
+        {
             lift.bridge.closeBridge();
-            telemetry.addData("S","Close");
-        }else{
+            telemetry.addData("S", "Close");
+        } else
+
+        {
             lift.bridge.stopBridge();
-            telemetry.addData("S","Stop");
+            telemetry.addData("S", "Stop");
         }
 
-        if(gamepad2.left_stick_x > .8){
+        if (gamepad2.left_stick_x > .8)
+
+        {
             lift.bridge.canopy.setPosition(0);
-        }else if(gamepad2.left_stick_x < -.8){
+        } else if (gamepad2.left_stick_x < -.8)
+
+        {
             lift.bridge.canopy.setPosition(1.0);
         }
 
-        if(gamepad1.left_bumper || gamepad2.left_bumper){
+        autoPlaceInPos = (drive.getEstimatedPose().
+
+                getY() > placePos.getY() - 2) && (drive.getEstimatedPose().
+
+                getX() > placePos.getX() - 2) && (drive.getEstimatedPose().
+
+                getY() < placePos.
+
+                getY() + 2) & (drive.getEstimatedPose().
+
+                getX() < placePos.
+
+                getX() + 2);
+        if (gamepad1.left_bumper)
+
+        {
             lift.bridge.doorServo.setPosition(1);
-        }else{
+        } else
+
+        {
             lift.bridge.doorServo.setPosition(.67);
         }
 
-        switch (mode){
+        switch (mode)
+
+        {
             case Collect:
                 //collector in/out
-                collector.extension.setPower(((gamepad1.dpad_up || gamepad2.right_bumper) ? -1 : ((gamepad1.dpad_down || gamepad2.left_bumper) ? 1 : 0))+gamepad1.right_stick_y);
                 if (gamepad1.x || gamepad2.x) {
                     shooterOn = true;
                 } else if (gamepad1.y || gamepad2.y) {
@@ -192,19 +250,37 @@ public class TeleOp_r5 extends Config_r5 {
                 }
                 //shooter output
                 if (shooterOn) {
-                    double shooterPower = gamepad1.left_trigger*2-1;
+                    double shooterPower = gamepad1.left_trigger * 2 - 1;
                     collector.shooterLeft.setPower(shooterPower);
                 } else {
                     collector.shooterLeft.setPower(0);
                 }
 
-                collector.setCollectorPower(gamepad1.right_trigger+gamepad2.right_trigger - (gamepad1.left_trigger+gamepad2.left_trigger));
+                collector.setCollectorPower(gamepad1.right_trigger + gamepad2.right_trigger - (gamepad1.left_trigger + gamepad2.left_trigger));
 
                 //lift/lower collectory
-                if (gamepad1.right_bumper || gamepad2.a) {
-                    collector.collectorRotate.setPosition(0.2);
+                if (gamepad1.right_bumper || gamepad2.a || toggleCollectorLift) {
+                    collector.collectorRotate.setPosition(1);
                 } else {
-                    collector.collectorRotate.setPosition(0.9);
+                    collector.collectorRotate.setPosition(0.2);
+                }
+                if (gamepad1.right_bumper) {
+                    toggleCollectorLift = false;
+                }
+
+                if (gamepad1.a) {
+                    autoSlide = true;
+                    toggleCollectorLift = true;
+                }
+                if (autoSlide) {
+                    if (collector.extension.getEncoderPosition() < slidePos - 100) {
+                        autoSlidePower = 1;
+                    } else if (collector.extension.getEncoderPosition() > slidePos + 100) {
+                        autoSlidePower = -0.5;
+                    } else {
+                        autoSlidePower = 0;
+                        autoSlide = false;
+                    }
                 }
                 break;
             case Hang:

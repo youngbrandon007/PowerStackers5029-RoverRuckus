@@ -86,8 +86,10 @@ public class Auto_r5 extends Config_r5 implements UVCCamera.Callback {
         camera.load(this);
 
         trajectory = PathGenerator.BuildPath(data, 2, DriveConstants_r5.BASE_CONSTRAINTS);
+        lift.bridge.canopy.setPosition(1);
 
-        lights.theatre();
+        drive.unreleaseMarker();
+        //lights.theatre();
     }
 
     // wait for start loop
@@ -122,7 +124,7 @@ public class Auto_r5 extends Config_r5 implements UVCCamera.Callback {
             next(Tasks.PICTURE);
         }
 
-        collector.collectorRotate.setPosition(0.2);
+        collector.collectorRotate.setPosition(1.0);
 
         AutoTransitioner.transitionOnStop(this, "r5.Tele");
     }
@@ -179,6 +181,18 @@ public class Auto_r5 extends Config_r5 implements UVCCamera.Callback {
             case TRAJECTORY:
                 if(drive.isFollowingTrajectory()){
                     drive.update();
+                    Pose2d curTarget = trajectory.get(taskTime.seconds());
+                    if(curTarget.getX() < 24 && curTarget.getY() > 115&&!startDepot){
+
+                            drive.releaseMarker();
+
+                    }else if(curTarget.getX() < 18 && curTarget.getY() > 115&&startDepot&&gyro.getHeading()<300&&gyro.getHeading()>260){
+                        drive.releaseMarker();
+                    }
+
+                    else{
+                        drive.unreleaseMarker();
+                    }
                 }else{
                     robot.drive.stop();
                     next(Tasks.IDLE);
@@ -231,9 +245,12 @@ public class Auto_r5 extends Config_r5 implements UVCCamera.Callback {
                 }
                 break;
             case IDLE:
-                if(collector.extension.getEncoderPosition() > -1500){
-                    collector.extension.setPower(-.5);
-                }else{
+                if(collector.extension.getEncoderPosition() > -2000&&taskTime.seconds()<4){
+                    collector.extension.setPower(-1);
+                }else if(collector.extension.getEncoderPosition() < -1000&&taskTime.seconds()<8&&taskTime.seconds()>4){
+                    collector.extension.setPower(1);
+                }
+                else{
                     collector.extension.setPower(0);
                 }
                 if (lift.extension.getEncoderPosition()>-13300){
@@ -241,14 +258,14 @@ public class Auto_r5 extends Config_r5 implements UVCCamera.Callback {
                 }else{
                     lift.extension.setPower(0);
                 }
-                if(taskTime.seconds() < 4){
+                if(taskTime.seconds() >4 && taskTime.seconds()<8){
                     lift.bridge.openBridge();
                     lift.bridge.doorServo.setPosition(.8);
                     lift.bridge.canopy.setPosition(1.0);
                 }else{
                     lift.bridge.stopBridge();
                 }
-                if(taskTime.seconds() > 4 && taskTime.seconds() < 6){
+                if(taskTime.seconds() > 7 && taskTime.seconds() < 8){
                     lift.bridge.canopy.setPosition(0.0);
                 }
                 break;
@@ -273,10 +290,10 @@ public class Auto_r5 extends Config_r5 implements UVCCamera.Callback {
             Bitmap bmp32 = bm.copy(Bitmap.Config.ARGB_8888, true);
             Utils.bitmapToMat(bmp32, input);
             //crop section for left mineral
-            Rect rectCrop = new Rect(40, 360, 160, 120);
+            Rect rectCrop = new Rect(0, 120 ,160 , 120);
             Mat leftMineral = input.submat(rectCrop);
             //crop seciton for middle mineral
-            rectCrop = new Rect(480, 360, 160, 120);
+            rectCrop = new Rect(320, 120 , 160, 120);
             Mat middleMineral = input.submat(rectCrop);
             //save images for debugging (slows down program)
             //PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(leftMineral), "R4-left", "/saved_images");
@@ -294,7 +311,7 @@ public class Auto_r5 extends Config_r5 implements UVCCamera.Callback {
             telemetry.addData("middleYellow", middleYellowArea);
 
             //determine position based on pixel area of gold in the left and middle minerals
-            samplePos = ((leftYellowArea > middleYellowArea && leftYellowArea > 100) ? 2 : ((middleYellowArea > 100) ? 3 : 1));
+            samplePos = ((leftYellowArea > middleYellowArea && leftYellowArea > 200) ? 1 : ((middleYellowArea > 200) ? 2 : 3));
             //telemetry for debugging
             telemetry.addData("sample.sample", samplePos);
             telemetry.update();

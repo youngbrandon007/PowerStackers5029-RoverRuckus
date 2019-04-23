@@ -54,7 +54,6 @@ public class PSVisionUtils {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
             out.close();
-
         } catch (Exception e) {
             e.printStackTrace();
         }

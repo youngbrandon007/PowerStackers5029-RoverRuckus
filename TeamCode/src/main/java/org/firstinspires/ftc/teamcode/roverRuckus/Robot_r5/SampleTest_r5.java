@@ -68,12 +68,12 @@ public class SampleTest_r5 extends Config_r5 implements UVCCamera.Callback{
         Mat hsvMiddle = new Mat();
         Bitmap bmp32 = bm.copy(Bitmap.Config.ARGB_8888, true);
         Utils.bitmapToMat(bmp32, input);
-        Rect rectCrop = new Rect(40, 360 ,160 , 120);
+        Rect rectCrop = new Rect(0, 120 ,160 , 120);
         Mat leftMineral = input.submat(rectCrop);
-        rectCrop = new Rect(480, 360 , 160, 120);
+        rectCrop = new Rect(320, 120 , 160, 120);
         Mat middleMineral = input.submat(rectCrop);
-        PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(leftMineral),"R4-left", "/saved_images");
-        PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(middleMineral),"R4-middle", "/saved_images");
+        PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(leftMineral),"R5-left", "/saved_r5");
+        PSVisionUtils.saveImageToFile(PSVisionUtils.matToBitmap(middleMineral),"R5-middle", "/saved_r5");
 
         Imgproc.cvtColor(leftMineral, hsvLeft, Imgproc.COLOR_RGB2HSV);
         Imgproc.cvtColor(middleMineral, hsvMiddle, Imgproc.COLOR_RGB2HSV);
@@ -83,6 +83,8 @@ public class SampleTest_r5 extends Config_r5 implements UVCCamera.Callback{
 //        double middleWhiteArea = PSVisionUtils.hsvToTotalAreaInMask(hsvMiddle, new Scalar(0,0,180),new Scalar(180,20,255),"middleW");
         telemetry.addData("leftYellow",leftYellowArea);
         telemetry.addData("middleYellow",middleYellowArea);
+
+        PSVisionUtils.saveImageToFile(bm, "frame_save", "/saved_r5");
 
 //        Core.inRange(hsvLeft, new Scalar(15, 100, 100), new Scalar(40, 255, 255), maskYellowLeft);
 //        Core.inRange(hsvMiddle, new Scalar(15, 100, 100), new Scalar(40, 255, 255), maskYellowMiddle);
@@ -123,7 +125,7 @@ public class SampleTest_r5 extends Config_r5 implements UVCCamera.Callback{
 //        telemetry.addData("sample.size", size);
         telemetry.update();
 
-        return bm;
+        return null;
     }
 
 

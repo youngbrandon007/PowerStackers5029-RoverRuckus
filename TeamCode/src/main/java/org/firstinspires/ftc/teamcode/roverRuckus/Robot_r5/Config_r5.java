@@ -58,7 +58,7 @@ abstract class Config_r5 extends PSConfigOpMode {
     Collector collector; //collector seciton
     Lift lift; // lift section
     Gyro gyro; // gyro object
-    Lights lights;
+    //Lights lights;
 
 
     @Override
@@ -74,7 +74,7 @@ abstract class Config_r5 extends PSConfigOpMode {
 
         // create other objects, not inited untill need to save battery
         camera = new Camera();
-        lights = new Lights();
+        //lights = new Lights();
     }
 
     //drive object w/ drive functions and trajectory functions
@@ -163,7 +163,7 @@ abstract class Config_r5 extends PSConfigOpMode {
             markerDepositor.setPosition(1);
         }
         public void unreleaseMarker(){
-            markerDepositor.setPosition(0.32);
+            markerDepositor.setPosition(0.38);
         }
 
 
@@ -460,7 +460,7 @@ abstract class Config_r5 extends PSConfigOpMode {
                 doorServo = robot.servoHandler.newServo("L.B.D", 140, .5, false);
                 bridgeLeft = robot.servoHandler.newServo("L.B.L", 180, 0.5, false);
                 bridgeRight = robot.servoHandler.newServo("L.B.R", 180, 0.5, false);
-                canopy = robot.servoHandler.newServo("L.B.C", 180, 0, false);
+                canopy = robot.servoHandler.newServo("L.B.C", 180, 1, false);
             }
 
             public void openBridge(){
@@ -474,8 +474,8 @@ abstract class Config_r5 extends PSConfigOpMode {
             }
 
             public void stopBridge(){
-                bridgeRight.off();
-                bridgeLeft.off();
+                bridgeRight.setPosition(.5);
+                bridgeLeft.setPosition(.5);
             }
 
             //old bridge method

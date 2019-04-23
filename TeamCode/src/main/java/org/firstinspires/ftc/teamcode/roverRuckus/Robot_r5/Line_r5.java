@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "t.linex", group = "r5")
-@Disabled
 public class Line_r5 extends Config_r5 {
 
 
@@ -40,7 +39,7 @@ public class Line_r5 extends Config_r5 {
     @Override
     public void start() {
         trajectory = drive.trajectoryBuilder()
-                .lineTo(new Vector2d(48, 0), new ConstantInterpolator(0))
+                .lineTo(new Vector2d(60, 0), new ConstantInterpolator(0))
 //                .forward(20)
 //                .splineTo(new Pose2d(40,20,Math.PI/2))
 //                .splineTo(new Pose2d(40,20,-Math.PI/2))

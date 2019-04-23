@@ -155,7 +155,7 @@ public class UVCCamera {
         public void onNewFrame(@NonNull CameraCaptureSession session, @NonNull CameraCaptureRequest request, @NonNull CameraFrame cameraFrame) {
             cameraFrame.copyToBitmap(bitmap);
             Bitmap save = callback.onFrame(bitmap);
-            if (save != null) PSVisionUtils.saveImageToFile(save, "frame", "/saved_images");
+            if (save != null) PSVisionUtils.saveImageToFile(save, "frame_save", "/saved_images");
 
         }
     }

@@ -45,7 +45,7 @@ public class Liney_r4 extends Config_r4 {
 //                .strafeRight(20)
 //                .splineTo(new Pose2d(20,20,Math.PI/2))
 //                .splineTo(new Pose2d(40,20,-Math.PI/2))
-
+                .setReversed(true)
                 .build();
 
 
